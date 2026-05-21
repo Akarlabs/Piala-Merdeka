@@ -172,6 +172,7 @@
       <button class="admin-tab" onclick="showTab('tab-matches',this)">Input Jadwal</button>
       <button class="admin-tab" onclick="showTab('tab-scores',this)">Input Skor</button>
       <button class="admin-tab" onclick="showTab('tab-data',this)">Lihat Data</button>
+      <button class="admin-tab" onclick="showTab('tab-sponsors',this)">Sponsor</button>
     </div>
 
     <!-- TAB: INPUT PESERTA -->
@@ -334,23 +335,88 @@
 
     <!-- TAB: LIHAT DATA -->
     <div class="tab-panel" id="tab-data">
-      <div style="display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap;">
-        <button class="btn btn-secondary btn-sm" onclick="loadAllData()">↻ Refresh</button>
+      <!-- FILTER BAR -->
+      <div class="form-card" style="margin-bottom:16px;">
+        <div class="form-row">
+          <div class="form-group">
+            <label>Filter Kategori</label>
+            <select id="d-category" onchange="applyDataFilter()">
+              <option value="">Semua</option>
+              <option value="rookie">Rookie</option>
+              <option value="beginner">Beginner</option>
+              <option value="upper_beginner">Upper Beginner</option>
+              <option value="intermediate">Intermediate</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Filter Gender</label>
+            <select id="d-gender" onchange="applyDataFilter()">
+              <option value="">Semua</option>
+              <option value="men">Men's</option>
+              <option value="women">Women's</option>
+            </select>
+          </div>
+          <div class="form-group" style="justify-content:flex-end;">
+            <label>&nbsp;</label>
+            <button class="btn btn-secondary btn-sm" onclick="loadAllData()">↻ Refresh</button>
+          </div>
+        </div>
       </div>
+
       <div class="form-card" style="overflow-x:auto;">
-        <div class="form-title">Semua Pasangan</div>
+        <div class="form-title" id="pairs-count">Semua Pasangan</div>
         <table class="data-table" id="pairs-table">
           <thead><tr><th>Kategori</th><th>Gender</th><th>Grup</th><th>Pasangan</th><th>Kota</th><th>Aksi</th></tr></thead>
           <tbody id="pairs-tbody"><tr><td colspan="6" style="text-align:center;color:var(--text-muted);padding:20px;">Loading...</td></tr></tbody>
         </table>
       </div>
       <div class="form-card" style="overflow-x:auto;margin-top:16px;">
-        <div class="form-title">Semua Match</div>
+        <div class="form-title" id="matches-count">Semua Match</div>
         <table class="data-table">
           <thead><tr><th>Kat</th><th>Gender</th><th>Fase</th><th>Grup</th><th>Pasangan 1</th><th>vs</th><th>Pasangan 2</th><th>Skor</th><th>Court</th><th>Aksi</th></tr></thead>
           <tbody id="matches-tbody"><tr><td colspan="10" style="text-align:center;color:var(--text-muted);padding:20px;">Loading...</td></tr></tbody>
         </table>
       </div>
+    </div>
+
+    <!-- TAB: SPONSOR -->
+    <div class="tab-panel" id="tab-sponsors">
+      <div class="form-card">
+        <div class="form-title">Tambah Sponsor</div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Tier</label>
+            <select id="sp-tier">
+              <option value="smash">🏆 Smash (Title)</option>
+              <option value="spin">💫 Spin (Co-Sponsor)</option>
+              <option value="volley">⭐ Volley</option>
+              <option value="slice">Slice</option>
+              <option value="twist">Twist</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Nama Sponsor</label>
+            <input type="text" id="sp-name" placeholder="Nama brand">
+          </div>
+          <div class="form-group">
+            <label>Urutan</label>
+            <input type="number" id="sp-order" value="1" min="1" max="10">
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group" style="grid-column:1/-1">
+            <label>Logo URL (opsional)</label>
+            <input type="text" id="sp-logo" placeholder="https://drive.google.com/... atau link gambar lainnya">
+          </div>
+        </div>
+        <div style="font-size:11px;color:var(--text-muted);margin-bottom:12px;">
+          💡 Upload logo ke Google Drive → klik kanan → "Get link" → ubah jadi public → paste link di sini
+        </div>
+        <button class="btn btn-primary" onclick="addSponsor()">+ Tambah Sponsor</button>
+      </div>
+
+      <!-- SPONSOR LIST -->
+      <div id="sponsors-list"></div>
     </div>
 
   </div>
@@ -565,11 +631,25 @@
     } catch(e) { showToast('Gagal simpan skor', true); }
   }
 
+  // ---- FILTER ----
+  function applyDataFilter() { renderPairsTable(); renderMatchesTable(); }
+  function getDataFilters() {
+    return {
+      cat: document.getElementById('d-category')?.value || '',
+      gender: document.getElementById('d-gender')?.value || ''
+    };
+  }
+
   // ---- TABLES ----
   function renderPairsTable() {
+    const { cat, gender } = getDataFilters();
+    const filtered = allPairs.filter(p =>
+      (!cat || p.category === cat) && (!gender || p.gender === gender)
+    );
+    document.getElementById('pairs-count').textContent = `Pasangan (${filtered.length})`;
     const tbody = document.getElementById('pairs-tbody');
-    if (!allPairs.length) { tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;color:var(--text-muted);padding:20px;">Belum ada data</td></tr>'; return; }
-    tbody.innerHTML = allPairs.map(p => `
+    if (!filtered.length) { tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;color:var(--text-muted);padding:20px;">Belum ada data</td></tr>'; return; }
+    tbody.innerHTML = filtered.map(p => `
       <tr>
         <td><span class="badge badge-cat">${p.category}</span></td>
         <td><span class="badge ${p.gender==='men'?'badge-men':'badge-women'}">${p.gender}</span></td>
@@ -581,9 +661,14 @@
   }
 
   function renderMatchesTable() {
+    const { cat, gender } = getDataFilters();
+    const filtered = allMatches.filter(m =>
+      (!cat || m.category === cat) && (!gender || m.gender === gender)
+    );
+    document.getElementById('matches-count').textContent = `Match (${filtered.length})`;
     const tbody = document.getElementById('matches-tbody');
-    if (!allMatches.length) { tbody.innerHTML = '<tr><td colspan="10" style="text-align:center;color:var(--text-muted);padding:20px;">Belum ada data</td></tr>'; return; }
-    tbody.innerHTML = allMatches.map(m => {
+    if (!filtered.length) { tbody.innerHTML = '<tr><td colspan="10" style="text-align:center;color:var(--text-muted);padding:20px;">Belum ada data</td></tr>'; return; }
+    tbody.innerHTML = filtered.map(m => {
       const p1 = allPairs.find(p => p.id === m.pair1_id);
       const p2 = allPairs.find(p => p.id === m.pair2_id);
       const hasScore = m.score1 !== null;
@@ -620,6 +705,104 @@
       showToast('✓ Jadwal dihapus');
       await loadAllData();
     } catch(e) { showToast('Gagal hapus', true); }
+  }
+
+  // ---- SPONSORS ----
+  let allSponsors = [];
+
+  const TIER_LABELS = {
+    smash: '🏆 Smash (Title)',
+    spin: '💫 Spin',
+    volley: '⭐ Volley',
+    slice: 'Slice',
+    twist: 'Twist'
+  };
+  const TIER_ORDER = { smash:1, spin:2, volley:3, slice:4, twist:5 };
+
+  async function loadSponsors() {
+    try {
+      const res = await fetch(`${SUPABASE_URL}/rest/v1/sponsors?select=*&order=tier_order,name_order`, { headers: headers() });
+      allSponsors = await res.json();
+      renderSponsors();
+    } catch(e) { showToast('Gagal load sponsor', true); }
+  }
+
+  async function addSponsor() {
+    const name = document.getElementById('sp-name').value.trim();
+    if (!name) { showToast('Nama sponsor wajib diisi', true); return; }
+    const tier = document.getElementById('sp-tier').value;
+    const data = {
+      tier,
+      name,
+      logo_url: document.getElementById('sp-logo').value.trim() || null,
+      tier_order: TIER_ORDER[tier] || 9,
+      name_order: parseInt(document.getElementById('sp-order').value) || 1,
+      active: true
+    };
+    try {
+      const res = await fetch(`${SUPABASE_URL}/rest/v1/sponsors`, {
+        method: 'POST', headers: headers(), body: JSON.stringify(data)
+      });
+      if (!res.ok) throw new Error();
+      showToast(`✓ ${name} ditambahkan`);
+      document.getElementById('sp-name').value = '';
+      document.getElementById('sp-logo').value = '';
+      await loadSponsors();
+    } catch(e) { showToast('Gagal tambah sponsor', true); }
+  }
+
+  async function toggleSponsor(id, active) {
+    try {
+      await fetch(`${SUPABASE_URL}/rest/v1/sponsors?id=eq.${id}`, {
+        method: 'PATCH', headers: headers(), body: JSON.stringify({ active: !active })
+      });
+      showToast(active ? '✓ Sponsor disembunyikan' : '✓ Sponsor diaktifkan');
+      await loadSponsors();
+    } catch(e) { showToast('Gagal update', true); }
+  }
+
+  async function deleteSponsor(id) {
+    if (!confirm('Hapus sponsor ini?')) return;
+    try {
+      await fetch(`${SUPABASE_URL}/rest/v1/sponsors?id=eq.${id}`, { method: 'DELETE', headers: headers() });
+      showToast('✓ Sponsor dihapus');
+      await loadSponsors();
+    } catch(e) { showToast('Gagal hapus', true); }
+  }
+
+  function renderSponsors() {
+    const container = document.getElementById('sponsors-list');
+    if (!allSponsors.length) {
+      container.innerHTML = '<div style="text-align:center;padding:40px;color:var(--text-muted);font-size:12px;letter-spacing:2px;text-transform:uppercase;">Belum ada sponsor</div>';
+      return;
+    }
+    // Group by tier
+    const grouped = {};
+    allSponsors.forEach(s => {
+      if (!grouped[s.tier]) grouped[s.tier] = [];
+      grouped[s.tier].push(s);
+    });
+    container.innerHTML = Object.entries(grouped).map(([tier, sponsors]) => `
+      <div class="form-card" style="margin-bottom:12px;">
+        <div class="form-title">${TIER_LABELS[tier] || tier}</div>
+        ${sponsors.map(s => `
+          <div style="display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid rgba(255,255,255,0.04);">
+            ${s.logo_url ? `<img src="${s.logo_url}" style="width:40px;height:40px;object-fit:contain;background:#fff;padding:4px;">` : `<div style="width:40px;height:40px;background:var(--gray);display:flex;align-items:center;justify-content:center;font-size:10px;color:var(--text-muted);">NO IMG</div>`}
+            <div style="flex:1;">
+              <div style="font-family:'Barlow Condensed',sans-serif;font-size:16px;font-weight:700;${s.active?'':'opacity:0.4;text-decoration:line-through;'}">${s.name}</div>
+              ${s.logo_url ? `<div style="font-size:10px;color:var(--text-muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:200px;">${s.logo_url}</div>` : ''}
+            </div>
+            <button class="btn btn-sm ${s.active?'btn-secondary':'btn-green'}" onclick="toggleSponsor('${s.id}',${s.active})">${s.active?'Hide':'Show'}</button>
+            <button class="btn btn-danger" onclick="deleteSponsor('${s.id}')">Hapus</button>
+          </div>`).join('')}
+      </div>`).join('');
+  }
+
+  // Override showTab to load sponsors when tab opened
+  const _origShowTab = showTab;
+  function showTab(id, btn) {
+    _origShowTab(id, btn);
+    if (id === 'tab-sponsors') loadSponsors();
   }
 </script>
 </body>
