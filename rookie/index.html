@@ -121,7 +121,7 @@
   <span class="cur">ROOKIE</span>
 </nav>
 
-<div id="sponsor-bar" class="sponsor-bar"><div class="s-smash">Memuat sponsor...</div></div>
+<div id="sponsor-bar" class="sponsor-bar" style="display:none;"></div>
 
 <div class="page-header">
   <div class="cat-badge">Max 1 Tahun Latihan · Doubles</div>
@@ -349,22 +349,25 @@
   function renderSponsorBar(sponsors) {
     const smash = sponsors.filter(s => s.tier === 'smash');
     const spin = sponsors.filter(s => s.tier === 'spin');
+    const bar = document.getElementById('sponsor-bar');
+    if (!bar) return;
+    // Kalau tidak ada sponsor sama sekali, sembunyikan bar
+    if (!smash.length && !spin.length) { bar.style.display = 'none'; return; }
+    bar.style.display = '';
     const smashHtml = smash.length
       ? smash.map(s => s.logo_url
           ? `<img src="${s.logo_url}" style="height:36px;object-fit:contain;vertical-align:middle;max-width:180px;" title="${s.name}">`
           : `<span style="font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:3px;color:#fff;">${s.name}</span>`
         ).join('<span style="margin:0 12px;color:#555;">·</span>')
-      : '<span style="color:#555;font-size:12px;letter-spacing:2px;">SPONSOR UTAMA</span>';
+      : '';
     const spinHtml = spin.length
       ? spin.map(s => s.logo_url
           ? `<img src="${s.logo_url}" style="height:24px;object-fit:contain;vertical-align:middle;max-width:120px;" title="${s.name}">`
           : `<span style="font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:700;letter-spacing:1px;color:#f0f0f0;border:1px solid rgba(255,255,255,0.15);padding:4px 10px;">${s.name}</span>`
         ).join('')
       : '';
-    const bar = document.getElementById('sponsor-bar');
-    if (!bar) return;
     bar.innerHTML = `
-      <div style="text-align:center;">${smashHtml}</div>
+      ${smashHtml ? `<div style="text-align:center;">${smashHtml}</div>` : ''}
       ${spinHtml ? `<div class="s-spin-row"><span class="s-spin-label">Co-Sponsor</span><div style="display:flex;gap:16px;align-items:center;flex-wrap:wrap;">${spinHtml}</div></div>` : ''}
     `;
   }
