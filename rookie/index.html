@@ -199,15 +199,22 @@
 
   function calcStandings(pairs, matches) {
     const stats = {};
-    pairs.forEach(p => { stats[p.id] = { pair: p, w:0, l:0, played:0, pts:0 }; });
+    pairs.forEach(p => { stats[p.id] = { pair: p, w:0, l:0, played:0, pts:0, gf:0, ga:0 }; });
     matches.forEach(m => {
       if (m.score1 === null || m.score2 === null) return;
       const wId = m.score1 > m.score2 ? m.pair1_id : m.pair2_id;
       const lId = m.score1 > m.score2 ? m.pair2_id : m.pair1_id;
-      if (stats[wId]) { stats[wId].w++; stats[wId].played++; stats[wId].pts += 3; }
-      if (stats[lId]) { stats[lId].l++; stats[lId].played++; }
+      const wScore = m.score1 > m.score2 ? m.score1 : m.score2;
+      const lScore = m.score1 > m.score2 ? m.score2 : m.score1;
+      if (stats[wId]) { stats[wId].w++; stats[wId].played++; stats[wId].pts += 3; stats[wId].gf += wScore; stats[wId].ga += lScore; }
+      if (stats[lId]) { stats[lId].l++; stats[lId].played++; stats[lId].gf += lScore; stats[lId].ga += wScore; }
     });
-    return Object.values(stats).sort((a,b) => b.pts - a.pts || b.w - a.w);
+    // Sort: pts desc → game diff desc → games for desc
+    return Object.values(stats).sort((a,b) =>
+      (b.pts - a.pts) ||
+      ((b.gf - b.ga) - (a.gf - a.ga)) ||
+      (b.gf - a.gf)
+    );
   }
 
   function renderGroups(gender) {
