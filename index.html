@@ -3,377 +3,380 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Upper Beginner — Piala Merdeka 2026</title>
+<title>Piala Merdeka 2026 · Malbo Sportainment</title>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow+Condensed:wght@400;600;700;900&family=Barlow:wght@400;500&display=swap" rel="stylesheet">
 <style>
   :root {
     --red: #C0392B; --red-dark: #96281B; --red-light: #E74C3C;
     --dark: #1a1a1a; --darker: #111111; --gray: #2d2d2d; --gray-light: #3d3d3d;
-    --text: #f0f0f0; --text-muted: #888; --green: #27AE60; --green-dark: #1E8449;
+    --text: #f0f0f0; --text-muted: #888; --green: #27AE60;
   }
   * { margin: 0; padding: 0; box-sizing: border-box; }
   html { color-scheme: dark; }
-  body { font-family: 'Barlow', sans-serif; background: var(--darker); color: var(--text); min-height: 100vh; }
+  body { font-family: 'Barlow', sans-serif; background: var(--darker); color: var(--text); line-height: 1.6; }
 
-  .topnav { background: var(--dark); padding: 14px 20px; display: flex; align-items: center; gap: 12px; border-bottom: 2px solid var(--red); position: sticky; top: 0; z-index: 100; }
-  .topnav a { font-size: 11px; letter-spacing: 2px; color: var(--text-muted); text-decoration: none; text-transform: uppercase; font-weight: 600; }
-  .topnav a:hover { color: var(--red-light); }
-  .topnav .sep { color: rgba(255,255,255,0.15); }
-  .topnav .cur { font-family: 'Barlow Condensed',sans-serif; font-size: 15px; font-weight: 700; color: var(--text); letter-spacing: 1px; }
-
-  .sponsor-bar { background: var(--dark); border-bottom: 1px solid rgba(255,255,255,0.05); padding: 14px 20px; display: flex; flex-direction: column; align-items: center; gap: 8px; }
-  .s-smash { font-family: 'Bebas Neue',sans-serif; font-size: 20px; letter-spacing: 4px; color: white; background: var(--red); padding: 7px 32px; }
-  .s-spin-row { display: flex; gap: 8px; align-items: center; }
-  .s-spin-label { font-size: 8px; letter-spacing: 2px; color: var(--text-muted); text-transform: uppercase; font-weight: 700; }
-  .s-spin { font-family: 'Barlow Condensed',sans-serif; font-size: 13px; font-weight: 700; color: rgba(255,255,255,0.4); padding: 4px 14px; border: 1px solid rgba(255,255,255,0.1); letter-spacing: 1px; }
-
-  .page-header { max-width: 1200px; margin: 0 auto; padding: 28px 20px 0; }
-  .cat-badge { display: inline-block; background: var(--red); font-size: 9px; letter-spacing: 3px; padding: 4px 10px; text-transform: uppercase; font-weight: 700; margin-bottom: 8px; }
-  .page-title { font-family: 'Bebas Neue',sans-serif; font-size: clamp(44px,8vw,80px); letter-spacing: 4px; line-height: 1; margin-bottom: 4px; }
-  .page-desc { font-size: 13px; color: var(--text-muted); letter-spacing: 1px; }
-
-  .controls { display: flex; border-top: 1px solid rgba(255,255,255,0.08); margin-top: 16px; }
-  .gender-tabs { display: flex; flex: 1; }
-  .gender-tab { flex: 1; padding: 14px 16px; font-family: 'Barlow Condensed',sans-serif; font-size: 15px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; cursor: pointer; border: none; border-bottom: 3px solid transparent; color: var(--text-muted); background: transparent; transition: all 0.15s; text-align: center; }
-  .gender-tab.active { color: var(--text); border-bottom-color: var(--red); background: rgba(192,57,43,0.08); }
-  .phase-tabs { display: flex; border-left: 1px solid rgba(255,255,255,0.08); }
-  .phase-tab { padding: 14px 18px; font-family: 'Barlow Condensed',sans-serif; font-size: 13px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; cursor: pointer; border: none; border-bottom: 3px solid transparent; color: var(--text-muted); background: transparent; transition: all 0.15s; white-space: nowrap; }
-  .phase-tab.active { color: var(--text); border-bottom-color: var(--gray-light); }
-
-  .main { max-width: 1200px; margin: 0 auto; padding: 28px 20px 80px; }
-
-  .loading { text-align: center; padding: 60px 20px; font-family: 'Barlow Condensed',sans-serif; font-size: 14px; letter-spacing: 3px; color: var(--text-muted); text-transform: uppercase; }
-  @keyframes blink { 0%,80%,100%{opacity:0} 40%{opacity:1} }
-  .ld { display: inline-block; animation: blink 1.2s infinite; }
-  .ld:nth-child(2){animation-delay:.2s} .ld:nth-child(3){animation-delay:.4s}
-
-  .groups-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(290px,1fr)); gap: 12px; }
-  .group-card { background: var(--dark); border: 1px solid rgba(255,255,255,0.06); overflow: hidden; }
-  .group-header { background: var(--gray); padding: 10px 16px; display: flex; align-items: center; justify-content: space-between; }
-  .group-name { font-family: 'Bebas Neue',sans-serif; font-size: 20px; letter-spacing: 2px; color: var(--red-light); }
-  .group-meta { font-size: 10px; letter-spacing: 1px; color: var(--text-muted); text-align: right; }
-
-  .standings-table { width: 100%; border-collapse: collapse; }
-  .standings-table th { font-size: 8px; letter-spacing: 2px; color: var(--text-muted); text-transform: uppercase; padding: 7px 12px; text-align: left; border-bottom: 1px solid rgba(255,255,255,0.06); font-weight: 700; background: rgba(255,255,255,0.02); }
-  .standings-table th:not(:first-child) { text-align: center; width: 36px; }
-  .standings-table td { padding: 9px 12px; font-size: 13px; border-bottom: 1px solid rgba(255,255,255,0.04); vertical-align: middle; }
-  .standings-table td:not(:first-child) { text-align: center; }
-  .standings-table tr:last-child td { border-bottom: none; }
-
-  .rank-num { display: inline-flex; width: 20px; height: 20px; align-items: center; justify-content: center; font-size: 10px; font-weight: 700; margin-right: 8px; vertical-align: middle; }
-  .rank-1 .rank-num { background: var(--red); color: white; }
-  .rank-2 .rank-num { background: var(--gray-light); color: var(--text-muted); }
-  .rank-3 .rank-num { border: 1px solid rgba(255,255,255,0.1); color: var(--text-muted); }
-  .pair-name { font-family: 'Barlow Condensed',sans-serif; font-size: 14px; font-weight: 700; vertical-align: middle; }
-  .pair-city { font-size: 10px; color: var(--text-muted); margin-top: 1px; }
-  .lolos { font-size: 7px; letter-spacing: 1px; padding: 2px 5px; background: var(--green-dark); color: white; font-weight: 700; margin-left: 6px; vertical-align: middle; }
-  .stat { font-family: 'Barlow Condensed',sans-serif; font-size: 17px; font-weight: 700; }
-  .stat.w { color: var(--green); } .stat.l { color: var(--red-light); }
-
-  .group-matches { border-top: 1px solid rgba(255,255,255,0.06); }
-  .matches-header { font-size: 8px; letter-spacing: 3px; color: var(--text-muted); text-transform: uppercase; padding: 8px 12px 4px; font-weight: 700; background: rgba(255,255,255,0.02); }
-  .match-row { display: flex; align-items: center; padding: 7px 12px; gap: 6px; border-bottom: 1px solid rgba(255,255,255,0.03); font-size: 12px; }
-  .match-row:last-child { border-bottom: none; }
-  .match-time { font-size: 9px; color: var(--text-muted); min-width: 38px; font-weight: 700; font-family: 'Barlow Condensed',sans-serif; }
-  .match-court { font-size: 9px; color: var(--red-light); min-width: 90px; font-family: 'Barlow Condensed',sans-serif; font-weight: 600; }
-  .match-pair { flex: 1; font-family: 'Barlow Condensed',sans-serif; font-size: 13px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-  .match-vs { font-size: 9px; color: var(--text-muted); font-weight: 700; padding: 0 2px; flex-shrink: 0; }
-  .match-score { font-family: 'Bebas Neue',sans-serif; font-size: 17px; letter-spacing: 1px; min-width: 48px; text-align: center; flex-shrink: 0; }
-  .match-score.done { color: var(--text); } .match-score.tbd { color: rgba(255,255,255,0.18); font-size: 13px; }
-
-  .empty-state { padding: 20px; text-align: center; font-size: 11px; color: var(--text-muted); letter-spacing: 2px; text-transform: uppercase; }
-
-  .gender-panel { display: none; } .gender-panel.active { display: block; }
-  .phase-panel { display: none; } .phase-panel.active { display: block; }
-
-  .round-label { font-size: 10px; letter-spacing: 4px; color: var(--text-muted); text-transform: uppercase; font-weight: 700; margin: 32px 0 12px; padding-bottom: 8px; border-bottom: 1px solid rgba(255,255,255,0.06); }
-  .bracket-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px,1fr)); gap: 8px; }
-  .bracket-match { background: var(--dark); border: 1px solid rgba(255,255,255,0.06); overflow: hidden; }
-  .bracket-match-head { background: var(--gray); padding: 6px 12px; display: flex; justify-content: space-between; align-items: center; }
-  .bm-num { font-size: 9px; letter-spacing: 2px; color: var(--text-muted); font-weight: 700; text-transform: uppercase; }
-  .bm-time { font-size: 10px; color: var(--red-light); font-weight: 600; font-family: 'Barlow Condensed',sans-serif; }
-  .bm-pair { display: flex; align-items: center; padding: 10px 14px; border-bottom: 1px solid rgba(255,255,255,0.04); gap: 10px; }
-  .bm-pair:last-child { border-bottom: none; }
-  .bm-pair.winner { background: rgba(39,174,96,0.1); border-left: 3px solid var(--green); }
-  .bm-name { flex: 1; font-family: 'Barlow Condensed',sans-serif; font-size: 15px; font-weight: 700; }
-  .bm-score { font-family: 'Bebas Neue',sans-serif; font-size: 22px; min-width: 24px; text-align: center; }
-  .bm-score.tbd { color: rgba(255,255,255,0.15); font-size: 16px; }
-
-  .champion { background: linear-gradient(135deg,var(--red-dark),var(--red)); border: 2px solid var(--red-light); padding: 32px; text-align: center; margin-top: 32px; }
-  .champion-label { font-size: 10px; letter-spacing: 5px; color: rgba(255,255,255,0.6); text-transform: uppercase; font-weight: 700; margin-bottom: 8px; }
-  .champion-name { font-family: 'Bebas Neue',sans-serif; font-size: 48px; letter-spacing: 4px; color: white; }
-  .champion-tbd { font-family: 'Bebas Neue',sans-serif; font-size: 32px; letter-spacing: 4px; color: rgba(255,255,255,0.2); }
-
-  @media (max-width:600px) {
-    .phase-tabs { display: none; }
-    .mobile-phase { display: flex !important; gap: 4px; padding: 10px 16px; border-top: 1px solid rgba(255,255,255,0.06); background: var(--dark); }
-    .mobile-phase button { flex: 1; padding: 8px; font-family: 'Barlow Condensed',sans-serif; font-size: 13px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; cursor: pointer; border: 1px solid rgba(255,255,255,0.1); color: var(--text-muted); background: transparent; }
-    .mobile-phase button.active { background: var(--gray-light); color: var(--text); border-color: var(--gray-light); }
+  /* HERO */
+  .hero {
+    background: linear-gradient(135deg, var(--dark) 0%, var(--darker) 100%);
+    padding: 60px 20px 80px;
+    text-align: center;
+    border-bottom: 2px solid var(--red);
   }
-  .mobile-phase { display: none; }
+  .hero-label { font-size: 11px; letter-spacing: 3px; color: var(--text-muted); text-transform: uppercase; margin-bottom: 8px; }
+  .hero-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(48px, 8vw, 88px);
+    letter-spacing: 4px;
+    color: var(--text);
+    line-height: 0.9;
+    margin-bottom: 12px;
+  }
+  .hero-sub {
+    font-size: 16px;
+    color: var(--text-muted);
+    margin-bottom: 24px;
+    letter-spacing: 1px;
+  }
+  .hero-date {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    color: var(--red-light);
+    text-transform: uppercase;
+  }
+
+  /* SPONSOR SECTION */
+  .sponsor-section {
+    background: var(--dark);
+    padding: 40px 20px;
+    margin: 0;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+  }
+  .sponsor-title {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 12px;
+    letter-spacing: 3px;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    margin-bottom: 20px;
+    text-align: center;
+  }
+
+  /* SPONSOR TIERS */
+  .sponsor-grid {
+    max-width: 1000px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+
+  .tier {
+    background: var(--darker);
+    border: 1px solid rgba(255,255,255,0.06);
+    padding: 20px;
+  }
+  .tier-name {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 16px;
+    letter-spacing: 3px;
+    color: var(--red-light);
+    text-transform: uppercase;
+    margin-bottom: 12px;
+  }
+  .tier-sponsors {
+    font-size: 13px;
+    color: var(--text);
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+  .sponsor-name {
+    background: rgba(192, 57, 43, 0.15);
+    padding: 6px 12px;
+    border-left: 2px solid var(--red);
+    font-weight: 600;
+  }
+
+  /* CATEGORIES GRID */
+  .categories-section {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 60px 20px;
+  }
+  .section-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 48px;
+    letter-spacing: 3px;
+    margin-bottom: 40px;
+    text-align: center;
+  }
+
+  .cat-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 16px;
+  }
+
+  .cat-card {
+    background: var(--dark);
+    border: 1px solid rgba(192, 57, 43, 0.3);
+    padding: 24px;
+    cursor: pointer;
+    transition: all 0.2s;
+    text-decoration: none;
+    color: inherit;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  .cat-card:hover {
+    border-color: var(--red);
+    background: rgba(192, 57, 43, 0.08);
+    transform: translateY(-2px);
+  }
+
+  .cat-badge {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 10px;
+    letter-spacing: 2px;
+    color: var(--text-muted);
+    text-transform: uppercase;
+  }
+  .cat-name {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 32px;
+    letter-spacing: 2px;
+    color: var(--red-light);
+    line-height: 1;
+  }
+  .cat-info {
+    font-size: 12px;
+    color: var(--text-muted);
+    line-height: 1.5;
+  }
+
+  /* PRIZE POOL */
+  .prize-section {
+    background: linear-gradient(135deg, rgba(192, 57, 43, 0.15) 0%, rgba(192, 57, 43, 0.08) 100%);
+    padding: 40px 20px;
+    text-align: center;
+    border: 1px solid rgba(192, 57, 43, 0.3);
+    margin: 60px 20px 0;
+  }
+  .prize-label {
+    font-size: 11px;
+    letter-spacing: 3px;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+  .prize-amount {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(36px, 6vw, 64px);
+    color: var(--red-light);
+    letter-spacing: 2px;
+    line-height: 1;
+    margin-bottom: 4px;
+  }
+  .prize-sub {
+    font-size: 13px;
+    color: var(--text-muted);
+    letter-spacing: 1px;
+  }
+
+  /* DATES & VENUE */
+  .info-grid {
+    max-width: 1200px;
+    margin: 60px auto 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 16px;
+    padding: 0 20px 60px;
+  }
+  .info-card {
+    background: var(--dark);
+    border: 1px solid rgba(255,255,255,0.06);
+    padding: 20px;
+    text-align: center;
+  }
+  .info-label {
+    font-size: 10px;
+    letter-spacing: 2px;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+  .info-value {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 24px;
+    letter-spacing: 2px;
+    color: var(--red-light);
+  }
+
+  /* FOOTER NAV */
+  .footer-nav {
+    background: var(--dark);
+    padding: 24px 20px;
+    text-align: center;
+    border-top: 2px solid var(--red);
+  }
+  .nav-links {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    flex-wrap: wrap;
+    margin-bottom: 16px;
+  }
+  .nav-link {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 12px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+  .nav-link:hover { color: var(--red-light); }
+  .footer-credit {
+    font-size: 10px;
+    color: var(--text-muted);
+    letter-spacing: 1px;
+  }
+
+  @media (max-width: 600px) {
+    .hero-title { font-size: 48px; }
+    .section-title { font-size: 32px; margin-bottom: 24px; }
+    .cat-grid { grid-template-columns: 1fr; }
+  }
 </style>
 </head>
 <body>
 
-<nav class="topnav">
-  <a href="../index.html">← Piala Merdeka 2026</a>
-  <span class="sep">/</span>
-  <span class="cur">UPPER BEGINNER</span>
-</nav>
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-label">Malbo Sportainment Organizer</div>
+  <h1 class="hero-title">PIALA<br>MERDEKA<br>2026</h1>
+  <p class="hero-sub">Doubles Tennis Championship — East Java</p>
+  <div class="hero-date">16–19 Juli 2026 · Malang</div>
+</section>
 
-<div id="sponsor-bar" class="sponsor-bar"><div class="s-smash">Memuat sponsor...</div></div>
+<!-- SPONSORS -->
+<section class="sponsor-section">
+  <div class="sponsor-title">Tournament Sponsors</div>
+  <div id="sponsors-container"><div style="text-align:center;color:var(--text-muted);font-size:12px;letter-spacing:2px;padding:20px;">Memuat data sponsor...</div></div>
+</section>
 
-<div class="page-header">
-  <div class="cat-badge">Max 1 Tahun Latihan · Doubles</div>
-  <div class="page-title">UPPER BEGINNER</div>
-  <div class="page-desc">30 pasang per gender · Hadiah Rp 4.000.000 – 6.000.000</div>
-  <div class="controls">
-    <div class="gender-tabs">
-      <button class="gender-tab active" onclick="setGender('men',this)">👨 Men's Doubles</button>
-      <button class="gender-tab" onclick="setGender('women',this)">👩 Women's Doubles</button>
-    </div>
-    <div class="phase-tabs">
-      <button class="phase-tab active" onclick="setPhase('grup',this)">Fase Grup</button>
-      <button class="phase-tab" onclick="setPhase('knockout',this)">Knockout</button>
-    </div>
+<!-- PRIZE POOL -->
+<div class="prize-section">
+  <div class="prize-label">Prize Pool</div>
+  <div class="prize-amount">Rp 80.000.000</div>
+  <div class="prize-sub">Distributed across 8 categories</div>
+</div>
+
+<!-- CATEGORIES -->
+<section class="categories-section">
+  <h2 class="section-title">Categories</h2>
+  <div class="cat-grid">
+    <a href="rookie/" class="cat-card">
+      <div class="cat-badge">Max 1 tahun latihan</div>
+      <div class="cat-name">Rookie</div>
+      <div class="cat-info">24 pasang per gender<br>8 grup × 3 pasang<br><strong>Hadiah: Rp 4–7 jt</strong></div>
+    </a>
+    <a href="beginner/" class="cat-card">
+      <div class="cat-badge">Max 3 tahun latihan</div>
+      <div class="cat-name">Beginner</div>
+      <div class="cat-info">30 pasang per gender<br>TBD format<br><strong>Hadiah: Rp 5–3 jt</strong></div>
+    </a>
+    <a href="upper-beginner/" class="cat-card">
+      <div class="cat-badge">Max 5 tahun latihan</div>
+      <div class="cat-name">Upper Beginner</div>
+      <div class="cat-info">30 pasang per gender<br>TBD format<br><strong>Hadiah: Rp 6–4 jt</strong></div>
+    </a>
+    <a href="intermediate/" class="cat-card">
+      <div class="cat-badge">Max 10 tahun latihan</div>
+      <div class="cat-name">Intermediate</div>
+      <div class="cat-info">24 pasang per gender<br>8 grup × 3 pasang<br><strong>Hadiah: Rp 7–5 jt</strong></div>
+    </a>
   </div>
-  <div class="mobile-phase">
-    <button class="active" onclick="setPhase('grup',this)">Fase Grup</button>
-    <button onclick="setPhase('knockout',this)">Knockout</button>
+</section>
+
+<!-- INFO GRID -->
+<div class="info-grid">
+  <div class="info-card">
+    <div class="info-label">Tanggal</div>
+    <div class="info-value">16–19 Juli</div>
+  </div>
+  <div class="info-card">
+    <div class="info-label">Total Peserta</div>
+    <div class="info-value">216 Pasang</div>
+  </div>
+  <div class="info-card">
+    <div class="info-label">Format</div>
+    <div class="info-value">Doubles</div>
+  </div>
+  <div class="info-card">
+    <div class="info-label">Venue</div>
+    <div class="info-value">2 Lokasi</div>
   </div>
 </div>
 
-<div class="main">
-  <div class="gender-panel active" id="panel-men">
-    <div class="phase-panel active" id="men-grup">
-      <div class="groups-grid" id="men-groups"><div class="loading">Memuat data<span class="ld">.</span><span class="ld">.</span><span class="ld">.</span></div></div>
-    </div>
-    <div class="phase-panel" id="men-knockout">
-      <div id="men-bracket"><div class="loading">Memuat data<span class="ld">.</span><span class="ld">.</span><span class="ld">.</span></div></div>
-    </div>
+<!-- FOOTER -->
+<footer class="footer-nav">
+  <div class="nav-links">
+    <a href="rookie/" class="nav-link">Rookie</a>
+    <a href="beginner/" class="nav-link">Beginner</a>
+    <a href="upper-beginner/" class="nav-link">Upper Beginner</a>
+    <a href="intermediate/" class="nav-link">Intermediate</a>
+    <a href="admin/" class="nav-link">Admin</a>
   </div>
-  <div class="gender-panel" id="panel-women">
-    <div class="phase-panel active" id="women-grup">
-      <div class="groups-grid" id="women-groups"><div class="loading">Memuat data<span class="ld">.</span><span class="ld">.</span><span class="ld">.</span></div></div>
+  <div class="footer-credit" style="margin-bottom:16px;">Piala Merdeka 2026 · Malbo Sportainment Organizer</div>
+  <a href="https://www.instagram.com/akar.community" target="_blank" style="display:inline-flex;align-items:center;gap:10px;text-decoration:none;background:rgba(232,176,75,0.08);border:1px solid rgba(232,176,75,0.2);padding:10px 20px;">
+    <svg width="28" height="28" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><circle cx="50" cy="50" r="47" fill="none" stroke="#E8B04B" stroke-width="2" opacity="0.5"/><circle cx="50" cy="50" r="28" fill="#E8B04B"/><g stroke="#111" stroke-width="3" stroke-linecap="round" fill="none"><path d="M50 50 L50 22"/><path d="M50 50 L70 36"/><path d="M50 50 L74 58"/><path d="M50 50 L58 78"/><path d="M50 50 L30 72"/><path d="M50 50 L26 44"/></g><g fill="#111"><circle cx="50" cy="22" r="3"/><circle cx="70" cy="36" r="3"/><circle cx="74" cy="58" r="3"/><circle cx="58" cy="78" r="3"/><circle cx="30" cy="72" r="3"/><circle cx="26" cy="44" r="3"/></g></svg>
+    <div style="text-align:left;">
+      <div style="font-family:Bebas Neue,sans-serif;font-size:16px;letter-spacing:3px;color:#E8B04B;">AKAR</div>
+      <div style="font-size:10px;letter-spacing:2px;color:#888;text-transform:uppercase;">Digital by AKAR · @akar.community</div>
     </div>
-    <div class="phase-panel" id="women-knockout">
-      <div id="women-bracket"><div class="loading">Memuat data<span class="ld">.</span><span class="ld">.</span><span class="ld">.</span></div></div>
-    </div>
-  </div>
-</div>
+  </a>
+</footer>
 
 <script>
   const SUPABASE_URL = 'https://hufwbvouwmdbjhawygxg.supabase.co';
   const SUPABASE_KEY = 'sb_publishable_ajdfMjHRQM4EeFVzYDmSZw_Ozxz5It6';
-  const CATEGORY = 'upper_beginner';
-  const GROUPS = ['A','B','C','D','E','F','G','H'];
+  const TIER_LABELS = { smash:'🏆 Title Sponsor', spin:'💫 Co-Sponsor', volley:'⭐ Volley', slice:'Slice', twist:'Twist' };
 
-  let currentGender = 'men';
-  let currentPhase = 'grup';
-  let allPairs = [];
-  let allMatches = [];
-
-  async function fetchData() {
-    try {
-      const headers = { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` };
-      const [pR, mR] = await Promise.all([
-        fetch(`${SUPABASE_URL}/rest/v1/pairs?category=eq.${CATEGORY}&select=*`, { headers }),
-        fetch(`${SUPABASE_URL}/rest/v1/matches?category=eq.${CATEGORY}&select=*`, { headers })
-      ]);
-      allPairs = await pR.json();
-      allMatches = await mR.json();
-      renderAll();
-    } catch(e) {
-      document.querySelectorAll('.loading').forEach(el => el.textContent = 'Gagal memuat data.');
-    }
-  }
-
-  function pairName(pair) { return pair ? `${pair.player1} / ${pair.player2}` : 'TBD'; }
-
-  function calcStandings(pairs, matches) {
-    const stats = {};
-    pairs.forEach(p => { stats[p.id] = { pair: p, w:0, l:0, played:0, pts:0, gf:0, ga:0 }; });
-    matches.forEach(m => {
-      if (m.score1 === null || m.score2 === null) return;
-      const wId = m.score1 > m.score2 ? m.pair1_id : m.pair2_id;
-      const lId = m.score1 > m.score2 ? m.pair2_id : m.pair1_id;
-      const wScore = m.score1 > m.score2 ? m.score1 : m.score2;
-      const lScore = m.score1 > m.score2 ? m.score2 : m.score1;
-      if (stats[wId]) { stats[wId].w++; stats[wId].played++; stats[wId].pts += 3; stats[wId].gf += wScore; stats[wId].ga += lScore; }
-      if (stats[lId]) { stats[lId].l++; stats[lId].played++; stats[lId].gf += lScore; stats[lId].ga += wScore; }
-    });
-    // Sort: pts desc → game diff desc → games for desc
-    return Object.values(stats).sort((a,b) =>
-      (b.pts - a.pts) ||
-      ((b.gf - b.ga) - (a.gf - a.ga)) ||
-      (b.gf - a.gf)
-    );
-  }
-
-  function renderGroups(gender) {
-    const container = document.getElementById(`${gender}-groups`);
-    const pairs = allPairs.filter(p => p.gender === gender);
-    if (!pairs.length) { container.innerHTML = `<div class="empty-state" style="grid-column:1/-1">Belum ada data peserta</div>`; return; }
-
-    let html = '';
-    GROUPS.forEach(g => {
-      const gPairs = pairs.filter(p => p.group_name === g);
-      if (!gPairs.length) return;
-      const gMatches = allMatches.filter(m => m.gender === gender && m.group_name === g && m.phase === 'grup');
-      const standings = calcStandings(gPairs, gMatches);
-      const rankClass = ['rank-1','rank-2','rank-3'];
-      const courtInfo = gMatches[0]?.court || '—';
-
-      html += `<div class="group-card">
-        <div class="group-header"><div class="group-name">GRUP ${g}</div><div class="group-meta">${courtInfo}</div></div>
-        <table class="standings-table">
-          <thead><tr><th>Pasangan</th><th>M</th><th>W</th><th>L</th><th>Pts</th></tr></thead>
-          <tbody>${standings.map((s,i) => `
-            <tr class="${rankClass[i]||''}">
-              <td><span class="rank-num">${i+1}</span><span class="pair-name">${pairName(s.pair)}</span>${i===0&&s.w>0?'<span class="lolos">LOLOS</span>':''}
-              <div class="pair-city" style="margin-left:28px">${s.pair.city||''}</div></td>
-              <td><span class="stat">${s.played}</span></td>
-              <td><span class="stat w">${s.w}</span></td>
-              <td><span class="stat l">${s.l}</span></td>
-              <td><span class="stat">${s.pts}</span></td>
-            </tr>`).join('')}
-          </tbody>
-        </table>
-        <div class="group-matches">
-          <div class="matches-header">Pertandingan</div>
-          ${gMatches.length ? gMatches.map(m => {
-            const p1 = allPairs.find(p => p.id === m.pair1_id);
-            const p2 = allPairs.find(p => p.id === m.pair2_id);
-            const has = m.score1 !== null && m.score2 !== null;
-            return `<div class="match-row">
-              <span class="match-time">${m.match_time||'—'}</span>
-              <span class="match-court">${m.court||'—'}</span>
-              <span class="match-pair">${pairName(p1)}</span>
-              <span class="match-vs">vs</span>
-              <span class="match-pair">${pairName(p2)}</span>
-              <span class="match-score ${has?'done':'tbd'}">${has?`${m.score1}–${m.score2}`:'— vs —'}</span>
-            </div>`;
-          }).join('') : '<div class="empty-state">Jadwal belum tersedia</div>'}
-        </div>
-      </div>`;
-    });
-
-    container.innerHTML = html || `<div class="empty-state" style="grid-column:1/-1">Belum ada data peserta</div>`;
-  }
-
-  function renderKnockout(gender) {
-    const container = document.getElementById(`${gender}-bracket`);
-    const phases = [
-      { key:'quarterfinal', label:'Perempat Final · 8 Besar' },
-      { key:'semifinal',    label:'Semi Final' },
-      { key:'final',        label:'🏆 Grand Final' }
-    ];
-    let html = '';
-    let hasAny = false;
-
-    phases.forEach(ph => {
-      const ms = allMatches.filter(m => m.gender === gender && m.phase === ph.key);
-      if (!ms.length) return;
-      hasAny = true;
-      const gridStyle = ph.key === 'final' ? 'style="grid-template-columns:1fr;max-width:360px"' : '';
-      html += `<div class="round-label">${ph.label}</div><div class="bracket-grid" ${gridStyle}>`;
-      ms.forEach((m,i) => {
-        const p1 = allPairs.find(p => p.id === m.pair1_id);
-        const p2 = allPairs.find(p => p.id === m.pair2_id);
-        const has = m.score1 !== null && m.score2 !== null;
-        const w1 = has && m.score1 > m.score2;
-        const w2 = has && m.score2 > m.score1;
-        html += `<div class="bracket-match">
-          <div class="bracket-match-head"><span class="bm-num">${m.match_code||`Match ${i+1}`}</span><span class="bm-time">${m.match_time||'TBD'}</span></div>
-          <div class="bm-pair ${w1?'winner':''}"><span class="bm-name">${pairName(p1)}</span><span class="bm-score ${!has?'tbd':''}">${has?m.score1:'-'}</span></div>
-          <div class="bm-pair ${w2?'winner':''}"><span class="bm-name">${pairName(p2)}</span><span class="bm-score ${!has?'tbd':''}">${has?m.score2:'-'}</span></div>
-        </div>`;
-      });
-      html += `</div>`;
-    });
-
-    const fin = allMatches.find(m => m.gender === gender && m.phase === 'final' && m.score1 !== null);
-    let champ = 'BELUM DITENTUKAN', champClass = 'champion-tbd';
-    if (fin) {
-      const wId = fin.score1 > fin.score2 ? fin.pair1_id : fin.pair2_id;
-      const wp = allPairs.find(p => p.id === wId);
-      if (wp) { champ = pairName(wp); champClass = 'champion-name'; }
-    }
-
-    if (!hasAny) html = `<div class="empty-state">Fase knockout belum dimulai</div>`;
-    html += `<div class="champion">
-      <div class="champion-label">🏆 Champion · Upper Beginner ${gender==='men'?"Men's":"Women's"} Doubles</div>
-      <div class="${champClass}">${champ}</div>
-    </div>`;
-
-    container.innerHTML = html;
-  }
-
-  function renderAll() {
-    ['men','women'].forEach(g => { renderGroups(g); renderKnockout(g); });
-  }
-
-  function setGender(gender, btn) {
-    currentGender = gender;
-    document.querySelectorAll('.gender-panel').forEach(p => p.classList.remove('active'));
-    document.querySelectorAll('.gender-tab').forEach(b => b.classList.remove('active'));
-    document.getElementById('panel-'+gender).classList.add('active');
-    btn.classList.add('active');
-    setPhasePanel(gender, currentPhase);
-  }
-
-  function setPhase(phase, btn) {
-    currentPhase = phase;
-    document.querySelectorAll('.phase-tab, .mobile-phase button').forEach(b => b.classList.remove('active'));
-    if (btn) btn.classList.add('active');
-    setPhasePanel(currentGender, phase);
-  }
-
-  function setPhasePanel(gender, phase) {
-    const panel = document.getElementById('panel-'+gender);
-    panel.querySelectorAll('.phase-panel').forEach(p => p.classList.remove('active'));
-    const t = document.getElementById(gender+'-'+phase);
-    if (t) t.classList.add('active');
-  }
-
-  // ---- SPONSORS ----
   async function loadSponsors() {
     try {
-      const h = { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` };
-      const res = await fetch(`${SUPABASE_URL}/rest/v1/sponsors?select=*&active=eq.true&order=tier_order,name_order`, { headers: h });
+      const res = await fetch(`${SUPABASE_URL}/rest/v1/sponsors?select=*&active=eq.true&order=tier_order,name_order`, {
+        headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` }
+      });
       const sponsors = await res.json();
-      renderSponsorBar(sponsors);
+      renderSponsors(sponsors);
     } catch(e) { console.log('Sponsor load failed'); }
   }
 
-  function renderSponsorBar(sponsors) {
-    const smash = sponsors.filter(s => s.tier === 'smash');
-    const spin = sponsors.filter(s => s.tier === 'spin');
-    const smashHtml = smash.length
-      ? smash.map(s => s.logo_url
-          ? `<img src="${s.logo_url}" style="height:36px;object-fit:contain;vertical-align:middle;max-width:180px;" title="${s.name}">`
-          : `<span style="font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:3px;color:#fff;">${s.name}</span>`
-        ).join('<span style="margin:0 12px;color:#555;">·</span>')
-      : '<span style="color:#555;font-size:12px;letter-spacing:2px;">SPONSOR UTAMA</span>';
-    const spinHtml = spin.length
-      ? spin.map(s => s.logo_url
-          ? `<img src="${s.logo_url}" style="height:24px;object-fit:contain;vertical-align:middle;max-width:120px;" title="${s.name}">`
-          : `<span style="font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:700;letter-spacing:1px;color:#f0f0f0;border:1px solid rgba(255,255,255,0.15);padding:4px 10px;">${s.name}</span>`
-        ).join('')
-      : '';
-    const bar = document.getElementById('sponsor-bar');
-    if (!bar) return;
-    bar.innerHTML = `
-      <div style="text-align:center;">${smashHtml}</div>
-      ${spinHtml ? `<div class="s-spin-row"><span class="s-spin-label">Co-Sponsor</span><div style="display:flex;gap:16px;align-items:center;flex-wrap:wrap;">${spinHtml}</div></div>` : ''}
-    `;
+  function renderSponsors(sponsors) {
+    const container = document.getElementById('sponsors-container');
+    if (!sponsors.length) {
+      container.innerHTML = '<div style="text-align:center;color:var(--text-muted);font-size:12px;letter-spacing:2px;padding:20px;">Sponsor coming soon</div>';
+      return;
+    }
+    const grouped = {};
+    sponsors.forEach(s => { if (!grouped[s.tier]) grouped[s.tier] = []; grouped[s.tier].push(s); });
+    container.innerHTML = Object.entries(grouped).map(([tier, spons]) => `
+      <div class="tier">
+        <div class="tier-name">${TIER_LABELS[tier]||tier}</div>
+        <div class="tier-sponsors">
+          ${spons.map(s => s.logo_url
+            ? `<img src="${s.logo_url}" style="height:40px;object-fit:contain;background:#fff;padding:6px;border-radius:2px;" title="${s.name}">`
+            : `<div class="sponsor-name">${s.name}</div>`
+          ).join('')}
+        </div>
+      </div>`).join('');
   }
 
-  fetchData();
   loadSponsors();
-  setInterval(fetchData, 60000);
-  setInterval(loadSponsors, 60000);
 </script>
-<div style="text-align:center;padding:20px;border-top:1px solid rgba(255,255,255,0.06);margin-top:40px;"><a href="https://www.instagram.com/akar.community" target="_blank" style="display:inline-flex;align-items:center;gap:8px;text-decoration:none;opacity:0.35;transition:opacity 0.2s;" onmouseover="this.style.opacity=0.7" onmouseout="this.style.opacity=0.35"><svg width="18" height="18" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><circle cx="50" cy="50" r="47" fill="none" stroke="#E8B04B" stroke-width="2" opacity="0.6"/><circle cx="50" cy="50" r="28" fill="#E8B04B"/><g stroke="#111" stroke-width="3" stroke-linecap="round" fill="none"><path d="M50 50 L50 22"/><path d="M50 50 L70 36"/><path d="M50 50 L74 58"/><path d="M50 50 L58 78"/><path d="M50 50 L30 72"/><path d="M50 50 L26 44"/></g><g fill="#111"><circle cx="50" cy="22" r="3"/><circle cx="70" cy="36" r="3"/><circle cx="74" cy="58" r="3"/><circle cx="58" cy="78" r="3"/><circle cx="30" cy="72" r="3"/><circle cx="26" cy="44" r="3"/></g></svg><span style="font-family:Barlow Condensed,sans-serif;font-size:11px;letter-spacing:2px;color:#888;text-transform:uppercase;">by AKAR</span></a></div>
 </body>
 </html>
