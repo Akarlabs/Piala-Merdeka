@@ -459,6 +459,7 @@
     if (id === 'tab-data') loadAllData();
     if (id === 'tab-matches') loadPairsForMatch();
     if (id === 'tab-scores') loadMatchesForScore();
+    if (id === 'tab-sponsors') loadSponsors();
   }
 
   // ---- HELPERS ----
@@ -798,12 +799,7 @@
       </div>`).join('');
   }
 
-  // Override showTab to load sponsors when tab opened
-  const _origShowTab = showTab;
-  function showTab(id, btn) {
-    _origShowTab(id, btn);
-    if (id === 'tab-sponsors') loadSponsors();
-  }
+
 </script>
 </body>
 </html>
