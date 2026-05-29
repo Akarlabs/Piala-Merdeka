@@ -369,7 +369,7 @@
         <div class="tier-name">${TIER_LABELS[tier]||tier}</div>
         <div class="tier-sponsors">
           ${spons.map(s => s.logo_url
-            ? `<img src="${s.logo_url}" style="height:80px;object-fit:contain;" title="${s.name}">`
+            ? `<img src="${s.logo_url}" style="height:${tier==='smash'?'80px':tier==='spin'?'50px':'36px'};object-fit:contain;" title="${s.name}">`
             : `<div class="sponsor-name">${s.name}</div>`
           ).join('')}
         </div>
