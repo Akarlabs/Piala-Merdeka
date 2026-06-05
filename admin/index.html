@@ -387,7 +387,7 @@
       <div class="form-card" style="overflow-x:auto;margin-top:16px;">
         <div class="form-title" id="matches-count">Semua Match</div>
         <table class="data-table">
-          <thead><tr><th>Kat</th><th>Gender</th><th>Fase</th><th>Grup</th><th>Pasangan 1</th><th>vs</th><th>Pasangan 2</th><th>Skor</th><th>Court</th><th>Aksi</th></tr></thead>
+          <thead><tr><th>Kat</th><th>Gender</th><th>Fase</th><th>Grup</th><th>Pasangan 1</th><th>vs</th><th>Pasangan 2</th><th>Skor</th><th>Court</th><th>Waktu</th><th>Aksi</th></tr></thead>
           <tbody id="matches-tbody"><tr><td colspan="10" style="text-align:center;color:var(--text-muted);padding:20px;">Loading...</td></tr></tbody>
         </table>
       </div>
@@ -813,7 +813,7 @@
       const p2 = allPairs.find(p => p.id === m.pair2_id);
       const hasScore = m.score1 !== null;
       return `
-      <tr>
+      <tr id="row-${m.id}">
         <td><span class="badge badge-cat">${m.category}</span></td>
         <td><span class="badge ${m.gender==='men'?'badge-men':'badge-women'}">${m.gender}</span></td>
         <td style="color:var(--text-muted);font-size:11px;text-transform:uppercase;letter-spacing:1px;">${m.phase}</td>
@@ -822,10 +822,61 @@
         <td style="color:var(--text-muted)">vs</td>
         <td style="font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:700;">${p2?`${p2.player1}/${p2.player2}`:'TBD'}</td>
         <td style="font-family:'Bebas Neue',sans-serif;font-size:18px;color:${hasScore?'var(--text)':'var(--text-muted)'}">${hasScore?`${m.score1}–${m.score2}`:'—'}</td>
-        <td style="font-size:11px;color:var(--text-muted)">${m.court||'—'}</td>
-        <td><button class="btn btn-danger" onclick="deleteMatch('${m.id}')">Hapus</button></td>
+        <td style="font-size:11px;color:var(--text-muted)" id="court-${m.id}">${m.court||'—'}</td>
+        <td style="font-size:11px;color:var(--text-muted)" id="time-${m.id}">${m.match_time||'—'}</td>
+        <td style="display:flex;gap:4px;">
+          <button class="btn btn-secondary btn-sm" onclick="toggleEditMatch('${m.id}','${(m.court||'').replace(/'/g,'')  }','${(m.match_time||'').replace(/'/g,'')}')">Edit</button>
+          <button class="btn btn-danger" onclick="deleteMatch('${m.id}')">Hapus</button>
+        </td>
+      </tr>
+      <tr id="edit-row-${m.id}" style="display:none;background:rgba(255,255,255,0.02);">
+        <td colspan="11" style="padding:12px 16px;">
+          <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;">
+            <div style="display:flex;flex-direction:column;gap:4px;">
+              <label style="font-size:9px;letter-spacing:2px;color:var(--text-muted);text-transform:uppercase;">Court</label>
+              <input type="text" id="edit-court-${m.id}" placeholder="Graha Cakrawala · Court 1" style="background:var(--gray);border:1px solid rgba(255,255,255,0.1);color:var(--text);padding:8px 12px;font-size:13px;font-family:'Barlow',sans-serif;width:220px;">
+            </div>
+            <div style="display:flex;flex-direction:column;gap:4px;">
+              <label style="font-size:9px;letter-spacing:2px;color:var(--text-muted);text-transform:uppercase;">Waktu</label>
+              <input type="text" id="edit-time-${m.id}" placeholder="08.00 / 15 Agt · 09.00" style="background:var(--gray);border:1px solid rgba(255,255,255,0.1);color:var(--text);padding:8px 12px;font-size:13px;font-family:'Barlow',sans-serif;width:180px;">
+            </div>
+            <div style="display:flex;flex-direction:column;gap:4px;">
+              <label style="font-size:9px;letter-spacing:2px;color:var(--text-muted);text-transform:uppercase;">Kode Match</label>
+              <input type="text" id="edit-code-${m.id}" value="${m.match_code||''}" placeholder="QF1 / SF1" style="background:var(--gray);border:1px solid rgba(255,255,255,0.1);color:var(--text);padding:8px 12px;font-size:13px;font-family:'Barlow',sans-serif;width:120px;">
+            </div>
+            <div style="display:flex;gap:6px;align-self:flex-end;">
+              <button class="btn btn-green btn-sm" onclick="saveMatchEdit('${m.id}')">✓ Simpan</button>
+              <button class="btn btn-secondary btn-sm" onclick="toggleEditMatch('${m.id}')">Batal</button>
+            </div>
+          </div>
+        </td>
       </tr>`;
     }).join('');
+  }
+
+  function toggleEditMatch(id, court, time) {
+    const editRow = document.getElementById('edit-row-' + id);
+    const isHidden = editRow.style.display === 'none';
+    editRow.style.display = isHidden ? 'table-row' : 'none';
+    if (isHidden && court !== undefined) {
+      document.getElementById('edit-court-' + id).value = court || '';
+      document.getElementById('edit-time-' + id).value = time || '';
+    }
+  }
+
+  async function saveMatchEdit(id) {
+    const court = document.getElementById('edit-court-' + id).value.trim();
+    const match_time = document.getElementById('edit-time-' + id).value.trim();
+    const match_code = document.getElementById('edit-code-' + id).value.trim();
+    try {
+      const res = await fetch(`${SUPABASE_URL}/rest/v1/matches?id=eq.${id}`, {
+        method: 'PATCH', headers: headers(),
+        body: JSON.stringify({ court: court||null, match_time: match_time||null, match_code: match_code||null })
+      });
+      if (!res.ok) throw new Error();
+      showToast('✓ Match diupdate');
+      await loadAllData();
+    } catch(e) { showToast('Gagal update', true); }
   }
 
   // ---- DELETE ----
