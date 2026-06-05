@@ -500,9 +500,11 @@
   async function loadPending() {
     const status = document.getElementById('v-status').value;
     const cat = document.getElementById('v-category').value;
+    const gender = document.getElementById('v-gender')?.value || '';
     let url = `${SUPABASE_URL}/rest/v1/pairs?select=*&order=created_at.desc`;
     if (status) url += `&status=eq.${status}`;
     if (cat) url += `&category=eq.${cat}`;
+    if (gender) url += `&gender=eq.${gender}`;
     try {
       const res = await fetch(url, { headers: headers() });
       const data = await res.json();
