@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Daftar — Piala Merdeka 2026</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow+Condensed:wght@400;600;700;900&family=Barlow:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --red: #C0392B; --red-dark: #96281B; --red-light: #E74C3C;
+    --dark: #1a1a1a; --darker: #111111; --gray: #2d2d2d;
+    --text: #f0f0f0; --text-muted: #888; --green: #27AE60;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { color-scheme: dark; }
+  body { font-family: 'Barlow', sans-serif; background: var(--darker); color: var(--text); min-height: 100vh; }
+
+  .topnav {
+    background: var(--dark); padding: 14px 20px;
+    border-bottom: 2px solid var(--red);
+    display: flex; align-items: center; gap: 12px;
+  }
+  .topnav a { font-size: 11px; letter-spacing: 2px; color: var(--text-muted); text-decoration: none; text-transform: uppercase; }
+  .topnav a:hover { color: var(--red-light); }
+  .topnav .sep { color: var(--text-muted); }
+  .topnav .current { font-size: 11px; letter-spacing: 2px; color: var(--text); text-transform: uppercase; font-weight: 700; }
+
+  .hero {
+    background: var(--dark); padding: 40px 20px; text-align: center;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+  }
+  .hero-label { font-size: 11px; letter-spacing: 3px; color: var(--text-muted); text-transform: uppercase; margin-bottom: 8px; }
+  .hero-title { font-family: 'Bebas Neue', sans-serif; font-size: clamp(36px,6vw,64px); letter-spacing: 3px; color: var(--text); margin-bottom: 8px; }
+  .hero-sub { font-size: 13px; color: var(--text-muted); letter-spacing: 1px; }
+
+  .form-wrap { max-width: 600px; margin: 40px auto; padding: 0 20px 80px; }
+
+  .form-card { background: var(--dark); border: 1px solid rgba(255,255,255,0.06); padding: 28px; margin-bottom: 16px; }
+  .form-card-title { font-family: 'Barlow Condensed', sans-serif; font-size: 13px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: var(--text-muted); margin-bottom: 20px; padding-bottom: 12px; border-bottom: 1px solid rgba(255,255,255,0.06); }
+
+  .form-group { display: flex; flex-direction: column; gap: 6px; margin-bottom: 14px; }
+  .form-group label { font-size: 10px; letter-spacing: 2px; color: var(--text-muted); text-transform: uppercase; font-weight: 700; }
+  .form-group input, .form-group select {
+    background: var(--gray); border: 1px solid rgba(255,255,255,0.08);
+    color: var(--text); padding: 12px 14px; font-size: 14px; font-family: 'Barlow', sans-serif;
+    width: 100%;
+  }
+  .form-group input:focus, .form-group select:focus { outline: none; border-color: var(--red); }
+  .form-group select option { background: var(--gray); }
+  .form-group .hint { font-size: 11px; color: var(--text-muted); }
+
+  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+
+  .btn-submit {
+    width: 100%; background: var(--red); color: white; border: none;
+    padding: 16px; font-family: 'Bebas Neue', sans-serif; font-size: 22px;
+    letter-spacing: 3px; cursor: pointer; transition: background 0.15s; margin-top: 8px;
+  }
+  .btn-submit:hover { background: var(--red-dark); }
+  .btn-submit:disabled { background: var(--gray); cursor: not-allowed; }
+
+  .success-screen { display: none; text-align: center; padding: 60px 20px; max-width: 500px; margin: 0 auto; }
+  .success-icon { font-size: 64px; margin-bottom: 16px; }
+  .success-title { font-family: 'Bebas Neue', sans-serif; font-size: 40px; letter-spacing: 3px; color: var(--green); margin-bottom: 8px; }
+  .success-sub { font-size: 14px; color: var(--text-muted); line-height: 1.6; margin-bottom: 24px; }
+  .success-detail { background: var(--dark); border: 1px solid rgba(255,255,255,0.06); padding: 20px; text-align: left; margin-bottom: 24px; }
+  .success-detail-row { display: flex; justify-content: space-between; padding: 6px 0; border-bottom: 1px solid rgba(255,255,255,0.04); font-size: 13px; }
+  .success-detail-row:last-child { border-bottom: none; }
+  .success-detail-label { color: var(--text-muted); }
+  .success-detail-value { font-weight: 600; }
+  .btn-back { display: inline-block; padding: 12px 28px; border: 1px solid rgba(255,255,255,0.15); color: var(--text-muted); text-decoration: none; font-family: 'Barlow Condensed', sans-serif; font-size: 14px; letter-spacing: 2px; text-transform: uppercase; }
+
+  .toast {
+    position: fixed; bottom: 24px; right: 24px; background: var(--red);
+    color: white; padding: 12px 20px; font-size: 13px; font-family: 'Barlow Condensed', sans-serif;
+    letter-spacing: 1px; z-index: 999; opacity: 0; transition: opacity 0.3s; pointer-events: none;
+  }
+  .toast.show { opacity: 1; }
+
+  .info-box {
+    background: rgba(192,57,43,0.1); border: 1px solid rgba(192,57,43,0.3);
+    padding: 14px 16px; margin-bottom: 20px; font-size: 12px; color: var(--text-muted); line-height: 1.6;
+  }
+
+  @media (max-width: 480px) { .form-row { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+
+<nav class="topnav">
+  <a href="../">← Piala Merdeka 2026</a>
+  <span class="sep">/</span>
+  <span class="current">Pendaftaran</span>
+</nav>
+
+<div class="hero">
+  <div class="hero-label">Piala Merdeka 2026 · Malbo Sportainment</div>
+  <h1 class="hero-title">FORM PENDAFTARAN</h1>
+  <p class="hero-sub">15–17 Agustus 2026 · Malang · Doubles Tennis</p>
+</div>
+
+<div class="form-wrap" id="form-wrap">
+  <div class="info-box">
+    ⚠️ Pendaftaran belum resmi sampai pembayaran dikonfirmasi oleh panitia. Tim kami akan menghubungi nomor WA yang didaftarkan untuk konfirmasi.
+  </div>
+
+  <div class="form-card">
+    <div class="form-card-title">Kategori & Kelas</div>
+    <div class="form-group">
+      <label>Kategori</label>
+      <select id="f-category">
+        <option value="">-- Pilih Kategori --</option>
+        <option value="rookie">Rookie — Max 1 tahun latihan</option>
+        <option value="beginner">Beginner — Max 3 tahun latihan</option>
+        <option value="lower_intermediate">Lower Intermediate — Max 5 tahun latihan</option>
+        <option value="intermediate">Intermediate — Max 10 tahun latihan</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label>Gender</label>
+      <select id="f-gender">
+        <option value="">-- Pilih Gender --</option>
+        <option value="men">Men's Doubles (Putra)</option>
+        <option value="women">Women's Doubles (Putri)</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="form-card">
+    <div class="form-card-title">Data Pemain</div>
+    <div class="form-group">
+      <label>Nama Pemain 1</label>
+      <input type="text" id="f-player1" placeholder="Nama lengkap">
+    </div>
+    <div class="form-group">
+      <label>Nama Pemain 2</label>
+      <input type="text" id="f-player2" placeholder="Nama lengkap">
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label>Kota Asal</label>
+        <input type="text" id="f-city" placeholder="Surabaya">
+      </div>
+      <div class="form-group">
+        <label>No. WhatsApp</label>
+        <input type="tel" id="f-wa" placeholder="08xxxxxxxxxx">
+        <span class="hint">Untuk konfirmasi panitia</span>
+      </div>
+    </div>
+  </div>
+
+  <button class="btn-submit" id="btn-submit" onclick="submitForm()">DAFTAR SEKARANG</button>
+</div>
+
+<div class="success-screen" id="success-screen">
+  <div class="success-icon">✅</div>
+  <div class="success-title">PENDAFTARAN DITERIMA!</div>
+  <p class="success-sub">Data kamu sudah masuk ke sistem. Tim panitia akan menghubungi nomor WhatsApp yang kamu daftarkan untuk konfirmasi pembayaran.</p>
+  <div class="success-detail" id="success-detail"></div>
+  <p style="font-size:12px;color:var(--text-muted);margin-bottom:16px;">Simpan screenshot halaman ini sebagai bukti pendaftaran.</p>
+  <a href="../" class="btn-back">← Kembali ke Beranda</a>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+  const SUPABASE_URL = 'https://hufwbvouwmdbjhawygxg.supabase.co';
+  const SUPABASE_KEY = 'sb_publishable_ajdfMjHRQM4EeFVzYDmSZw_Ozxz5It6';
+  const CAT_LABELS = { rookie:'Rookie', beginner:'Beginner', lower_intermediate:'Lower Intermediate', intermediate:'Intermediate' };
+
+  function showToast(msg) {
+    const t = document.getElementById('toast');
+    t.textContent = msg; t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 3000);
+  }
+
+  async function submitForm() {
+    const category = document.getElementById('f-category').value;
+    const gender = document.getElementById('f-gender').value;
+    const player1 = document.getElementById('f-player1').value.trim();
+    const player2 = document.getElementById('f-player2').value.trim();
+    const city = document.getElementById('f-city').value.trim();
+    const wa = document.getElementById('f-wa').value.trim();
+
+    if (!category) { showToast('Pilih kategori dulu'); return; }
+    if (!gender) { showToast('Pilih gender dulu'); return; }
+    if (!player1) { showToast('Nama pemain 1 wajib diisi'); return; }
+    if (!player2) { showToast('Nama pemain 2 wajib diisi'); return; }
+    if (!wa) { showToast('Nomor WhatsApp wajib diisi'); return; }
+
+    const btn = document.getElementById('btn-submit');
+    btn.disabled = true; btn.textContent = 'MENDAFTARKAN...';
+
+    try {
+      const res = await fetch(`${SUPABASE_URL}/rest/v1/pairs`, {
+        method: 'POST',
+        headers: {
+          'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}`,
+          'Content-Type': 'application/json', 'Prefer': 'return=representation'
+        },
+        body: JSON.stringify({ category, gender, group_name: 'TBD', player1, player2, city: city||null, status: 'pending', notes: `WA: ${wa}` })
+      });
+
+      if (!res.ok) throw new Error();
+
+      document.getElementById('form-wrap').style.display = 'none';
+      document.getElementById('success-screen').style.display = 'block';
+      document.getElementById('success-detail').innerHTML = `
+        <div class="success-detail-row"><span class="success-detail-label">Kategori</span><span class="success-detail-value">${CAT_LABELS[category]}</span></div>
+        <div class="success-detail-row"><span class="success-detail-label">Gender</span><span class="success-detail-value">${gender==='men'?"Men's Doubles":"Women's Doubles"}</span></div>
+        <div class="success-detail-row"><span class="success-detail-label">Pasangan</span><span class="success-detail-value">${player1} / ${player2}</span></div>
+        <div class="success-detail-row"><span class="success-detail-label">Kota</span><span class="success-detail-value">${city||'—'}</span></div>
+        <div class="success-detail-row"><span class="success-detail-label">WhatsApp</span><span class="success-detail-value">${wa}</span></div>
+        <div class="success-detail-row"><span class="success-detail-label">Status</span><span class="success-detail-value" style="color:#E8B04B;">⏳ Menunggu Konfirmasi</span></div>
+      `;
+    } catch(e) {
+      showToast('Gagal mendaftar, coba lagi');
+      btn.disabled = false; btn.textContent = 'DAFTAR SEKARANG';
+    }
+  }
+</script>
+</body>
+</html>

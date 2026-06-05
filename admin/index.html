@@ -173,6 +173,7 @@
       <button class="admin-tab" onclick="showTab('tab-scores',this)">Input Skor</button>
       <button class="admin-tab" onclick="showTab('tab-data',this)">Lihat Data</button>
       <button class="admin-tab" onclick="showTab('tab-sponsors',this)">Sponsor</button>
+      <button class="admin-tab" onclick="showTab('tab-verify',this)">Verifikasi</button>
     </div>
 
     <!-- TAB: INPUT PESERTA -->
@@ -185,7 +186,7 @@
             <select id="p-category">
               <option value="rookie">Rookie</option>
               <option value="beginner">Beginner</option>
-              <option value="upper_beginner">Lower Intermediate</option>
+              <option value="upper_beginner">Upper Beginner</option>
               <option value="intermediate">Intermediate</option>
             </select>
           </div>
@@ -220,6 +221,10 @@
             <label>Kota Asal</label>
             <input type="text" id="p-city" placeholder="Surabaya">
           </div>
+          <div class="form-group">
+            <label>No. WhatsApp</label>
+            <input type="text" id="p-phone" placeholder="08xxxxxxxxxx">
+          </div>
         </div>
         <button class="btn btn-primary" onclick="addPair()">+ Tambah Pasangan</button>
       </div>
@@ -240,7 +245,7 @@
             <select id="m-category" onchange="loadPairsForMatch()">
               <option value="rookie">Rookie</option>
               <option value="beginner">Beginner</option>
-              <option value="upper_beginner">Lower Intermediate</option>
+              <option value="upper_beginner">Upper Beginner</option>
               <option value="intermediate">Intermediate</option>
             </select>
           </div>
@@ -308,7 +313,7 @@
             <select id="sc-category" onchange="loadMatchesForScore()">
               <option value="rookie">Rookie</option>
               <option value="beginner">Beginner</option>
-              <option value="upper_beginner">Lower Intermediate</option>
+              <option value="upper_beginner">Upper Beginner</option>
               <option value="intermediate">Intermediate</option>
             </select>
           </div>
@@ -344,7 +349,7 @@
               <option value="">Semua</option>
               <option value="rookie">Rookie</option>
               <option value="beginner">Beginner</option>
-              <option value="upper_beginner">Lower Intermediate</option>
+              <option value="upper_beginner">Upper Beginner</option>
               <option value="intermediate">Intermediate</option>
             </select>
           </div>
@@ -377,6 +382,38 @@
           <tbody id="matches-tbody"><tr><td colspan="10" style="text-align:center;color:var(--text-muted);padding:20px;">Loading...</td></tr></tbody>
         </table>
       </div>
+    </div>
+
+    <!-- TAB: VERIFIKASI -->
+    <div class="tab-panel" id="tab-verify">
+      <div class="form-card" style="margin-bottom:16px;">
+        <div class="form-row">
+          <div class="form-group">
+            <label>Filter Kategori</label>
+            <select id="v-category" onchange="loadPending()">
+              <option value="">Semua</option>
+              <option value="rookie">Rookie</option>
+              <option value="beginner">Beginner</option>
+              <option value="lower_intermediate">Lower Intermediate</option>
+              <option value="intermediate">Intermediate</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Filter Status</label>
+            <select id="v-status" onchange="loadPending()">
+              <option value="pending">Pending</option>
+              <option value="approved">Approved</option>
+              <option value="rejected">Rejected</option>
+              <option value="">Semua</option>
+            </select>
+          </div>
+          <div class="form-group" style="justify-content:flex-end;">
+            <label>&nbsp;</label>
+            <button class="btn btn-secondary btn-sm" onclick="loadPending()">↻ Refresh</button>
+          </div>
+        </div>
+      </div>
+      <div id="verify-list"><div style="text-align:center;padding:40px;color:var(--text-muted);font-size:12px;letter-spacing:2px;text-transform:uppercase;">Pilih filter di atas</div></div>
     </div>
 
     <!-- TAB: SPONSOR -->
@@ -451,6 +488,64 @@
   }
 
   // ---- TABS ----
+  // ---- VERIFIKASI ----
+  async function loadPending() {
+    const status = document.getElementById('v-status').value;
+    const cat = document.getElementById('v-category').value;
+    let url = `${SUPABASE_URL}/rest/v1/pairs?select=*&order=created_at.desc`;
+    if (status) url += `&status=eq.${status}`;
+    if (cat) url += `&category=eq.${cat}`;
+    try {
+      const res = await fetch(url, { headers: headers() });
+      const data = await res.json();
+      renderVerifyList(data);
+    } catch(e) { showToast('Gagal load data', true); }
+  }
+
+  function renderVerifyList(pairs) {
+    const container = document.getElementById('verify-list');
+    if (!pairs.length) {
+      container.innerHTML = '<div style="text-align:center;padding:40px;color:var(--text-muted);font-size:12px;letter-spacing:2px;text-transform:uppercase;">Tidak ada data</div>';
+      return;
+    }
+    const CAT_LABELS = { rookie:'Rookie', beginner:'Beginner', lower_intermediate:'Lower Intermediate', intermediate:'Intermediate' };
+    container.innerHTML = pairs.map(p => {
+      const wa = p.notes ? p.notes.replace('WA: ','') : '—';
+      const statusColor = p.status==='approved'?'var(--green)':p.status==='rejected'?'var(--red-light)':'#E8B04B';
+      return `
+      <div class="form-card" style="margin-bottom:8px;">
+        <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:12px;flex-wrap:wrap;">
+          <div>
+            <div style="font-size:9px;letter-spacing:2px;color:var(--text-muted);text-transform:uppercase;margin-bottom:6px;">
+              ${CAT_LABELS[p.category]||p.category} · ${p.gender==='men'?"Men's":"Women's"}
+            </div>
+            <div style="font-family:'Barlow Condensed',sans-serif;font-size:18px;font-weight:700;margin-bottom:4px;">${p.player1} / ${p.player2}</div>
+            <div style="font-size:12px;color:var(--text-muted);">📍 ${p.city||'—'} &nbsp;·&nbsp; 📱 ${wa}</div>
+            <div style="margin-top:6px;font-size:11px;font-weight:700;color:${statusColor};text-transform:uppercase;letter-spacing:1px;">${p.status}</div>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:6px;min-width:100px;">
+            ${p.status!=='approved'?`<button class="btn btn-green btn-sm" onclick="updateStatus('${p.id}','approved')">✓ Approve</button>`:''}
+            ${p.status!=='rejected'?`<button class="btn btn-danger" onclick="updateStatus('${p.id}','rejected')">✗ Tolak</button>`:''}
+            ${p.status!=='pending'?`<button class="btn btn-secondary btn-sm" onclick="updateStatus('${p.id}','pending')">Reset</button>`:''}
+          </div>
+        </div>
+      </div>`;
+    }).join('');
+  }
+
+  async function updateStatus(id, status) {
+    const labels = { approved:'Diapprove', rejected:'Ditolak', pending:'Direset' };
+    try {
+      const res = await fetch(`${SUPABASE_URL}/rest/v1/pairs?id=eq.${id}`, {
+        method: 'PATCH', headers: headers(), body: JSON.stringify({ status })
+      });
+      if (!res.ok) throw new Error();
+      showToast(`✓ ${labels[status]}`);
+      loadPending();
+      loadAllData();
+    } catch(e) { showToast('Gagal update', true); }
+  }
+
   function showTab(id, btn) {
     document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
     document.querySelectorAll('.admin-tab').forEach(b => b.classList.remove('active'));
@@ -460,6 +555,7 @@
     if (id === 'tab-matches') loadPairsForMatch();
     if (id === 'tab-scores') loadMatchesForScore();
     if (id === 'tab-sponsors') loadSponsors();
+    if (id === 'tab-verify') loadPending();
   }
 
   // ---- HELPERS ----
@@ -509,7 +605,9 @@
       gender: document.getElementById('p-gender').value,
       group_name: document.getElementById('p-group').value,
       player1: p1, player2: p2,
-      city: document.getElementById('p-city').value.trim() || null
+      city: document.getElementById('p-city').value.trim() || null,
+      phone: document.getElementById('p-phone').value.trim() || null,
+      status: 'approved'
     };
 
     try {
@@ -800,6 +898,80 @@
   }
 
 
+
+  // ---- VERIFIKASI ----
+  async function loadPending() {
+    const cat = document.getElementById('v-category')?.value || '';
+    const status = document.getElementById('v-status')?.value || 'pending';
+    let url = `${SUPABASE_URL}/rest/v1/pairs?select=*&order=created_at.desc`;
+    if (cat) url += `&category=eq.${cat}`;
+    if (status) url += `&status=eq.${status}`;
+
+    try {
+      const res = await fetch(url, { headers: headers() });
+      const data = await res.json();
+      renderVerifyList(data);
+    } catch(e) { showToast('Gagal load data', true); }
+  }
+
+  function renderVerifyList(pairs) {
+    const container = document.getElementById('verify-list');
+    if (!pairs.length) {
+      container.innerHTML = '<div style="text-align:center;padding:40px;color:var(--text-muted);font-size:12px;letter-spacing:2px;text-transform:uppercase;">Tidak ada data</div>';
+      return;
+    }
+    container.innerHTML = pairs.map(p => {
+      const statusColor = p.status === 'approved' ? '#27AE60' : p.status === 'rejected' ? '#C0392B' : '#E8B04B';
+      return `
+      <div class="form-card" style="margin-bottom:8px;">
+        <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;">
+          <div>
+            <div style="font-size:9px;letter-spacing:2px;color:var(--text-muted);text-transform:uppercase;margin-bottom:4px;">
+              ${p.category} · ${p.gender} · ${p.city||'—'} · WA: ${p.phone||'—'}
+            </div>
+            <div style="font-family:'Barlow Condensed',sans-serif;font-size:18px;font-weight:700;">${p.player1} / ${p.player2}</div>
+            <div style="font-size:11px;color:${statusColor};letter-spacing:1px;text-transform:uppercase;margin-top:4px;">● ${p.status}</div>
+          </div>
+          <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
+            ${p.status !== 'approved' ? `
+            <div class="form-group" style="min-width:120px;">
+              <label>Set Grup</label>
+              <select id="grp-${p.id}">
+                ${['A','B','C','D','E','F','G','H','I','J'].map(g => `<option value="${g}">${g}</option>`).join('')}
+              </select>
+            </div>
+            <button class="btn btn-green btn-sm" onclick="approveVerify('${p.id}')">✓ Approve</button>` : ''}
+            ${p.status !== 'rejected' ? `<button class="btn btn-danger" onclick="rejectVerify('${p.id}')">Reject</button>` : ''}
+          </div>
+        </div>
+      </div>`;
+    }).join('');
+  }
+
+  async function approveVerify(id) {
+    const grp = document.getElementById(`grp-${id}`)?.value || 'A';
+    try {
+      await fetch(`${SUPABASE_URL}/rest/v1/pairs?id=eq.${id}`, {
+        method: 'PATCH', headers: headers(),
+        body: JSON.stringify({ status: 'approved', group_name: grp })
+      });
+      showToast('✓ Peserta diapprove · Grup ' + grp);
+      await loadPending();
+      await loadAllData();
+    } catch(e) { showToast('Gagal approve', true); }
+  }
+
+  async function rejectVerify(id) {
+    if (!confirm('Reject peserta ini?')) return;
+    try {
+      await fetch(`${SUPABASE_URL}/rest/v1/pairs?id=eq.${id}`, {
+        method: 'PATCH', headers: headers(),
+        body: JSON.stringify({ status: 'rejected' })
+      });
+      showToast('✓ Peserta direject');
+      await loadPending();
+    } catch(e) { showToast('Gagal reject', true); }
+  }
 </script>
 </body>
 </html>
