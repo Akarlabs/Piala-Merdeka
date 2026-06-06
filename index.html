@@ -261,7 +261,7 @@
   <p class="hero-sub">Doubles Tennis Championship — East Java</p>
   <div class="hero-date">15–17 Agustus 2026 · Malang</div>
   <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-top:24px;">
-    <a href="daftar/" style="display:inline-block;background:#C0392B;color:white;padding:14px 36px;font-family:'Bebas Neue',sans-serif;font-size:20px;letter-spacing:3px;text-decoration:none;">DAFTAR SEKARANG</a>
+    <a id="daftar-btn" href="daftar/" style="display:inline-block;background:#C0392B;color:white;padding:14px 36px;font-family:'Bebas Neue',sans-serif;font-size:20px;letter-spacing:3px;text-decoration:none;">DAFTAR SEKARANG</a>
     <a href="pengumuman/" style="display:inline-block;background:transparent;color:#f0f0f0;border:2px solid rgba(255,255,255,0.3);padding:14px 36px;font-family:'Bebas Neue',sans-serif;font-size:20px;letter-spacing:3px;text-decoration:none;">CEK STATUS</a>
   </div>
 </section>
@@ -383,6 +383,24 @@
   }
 
   loadSponsors();
+  // Check registration status
+  async function checkRegistration() {
+    try {
+      const res = await fetch(`${SUPABASE_URL}/rest/v1/settings?key=eq.registration_open`, {
+        headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` }
+      });
+      const data = await res.json();
+      const isOpen = !data || !data[0] || data[0].value === 'true';
+      const daftarBtn = document.getElementById('daftar-btn');
+      if (daftarBtn && !isOpen) {
+        daftarBtn.style.opacity = '0.4';
+        daftarBtn.style.pointerEvents = 'none';
+        daftarBtn.textContent = 'PENDAFTARAN DITUTUP';
+        daftarBtn.style.background = '#555';
+      }
+    } catch(e) { console.log('Settings check failed'); }
+  }
+  checkRegistration();
 </script>
 </body>
 </html>
