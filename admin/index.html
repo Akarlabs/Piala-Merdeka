@@ -380,7 +380,7 @@
       <div class="form-card" style="overflow-x:auto;">
         <div class="form-title" id="pairs-count">Semua Pasangan</div>
         <table class="data-table" id="pairs-table">
-          <thead><tr><th>Kategori</th><th>Gender</th><th>Grup</th><th>Pasangan</th><th>Kota</th><th>Status</th><th>Aksi</th></tr></thead>
+          <thead><tr><th>Kategori</th><th>Gender</th><th>Grup</th><th>Pasangan</th><th>Kota</th><th>WA</th><th>Status</th><th>Aksi</th></tr></thead>
           <tbody id="pairs-tbody"><tr><td colspan="6" style="text-align:center;color:var(--text-muted);padding:20px;">Loading...</td></tr></tbody>
         </table>
       </div>
@@ -459,12 +459,12 @@
         </div>
         <div class="form-row">
           <div class="form-group" style="grid-column:1/-1">
-            <label>Logo URL (opsional)</label>
-            <input type="text" id="sp-logo" placeholder="https://drive.google.com/... atau link gambar lainnya">
+            <label>Logo Sponsor (opsional)</label>
+            <input type="file" id="sp-logo-file" accept="image/*" style="background:var(--gray);border:1px solid rgba(255,255,255,0.08);color:var(--text);padding:10px 12px;font-size:13px;font-family:'Barlow',sans-serif;width:100%;">
           </div>
         </div>
-        <div style="font-size:11px;color:var(--text-muted);margin-bottom:12px;">
-          💡 Upload logo ke Google Drive → klik kanan → "Get link" → ubah jadi public → paste link di sini
+        <div style="font-size:11px;color:var(--text-muted);margin-bottom:12px;" id="sp-upload-status">
+          💡 Upload file PNG/JPG langsung dari perangkat kamu
         </div>
         <button class="btn btn-primary" onclick="addSponsor()">+ Tambah Sponsor</button>
       </div>
@@ -529,7 +529,7 @@
     }
     const CAT_LABELS = { rookie:'Rookie', beginner:'Beginner', lower_intermediate:'Lower Intermediate', intermediate:'Intermediate' };
     container.innerHTML = pairs.map(p => {
-      const wa = p.notes ? p.notes.replace('WA: ','') : '—';
+      const wa = p.whatsapp || '—';
       const statusColor = p.status==='approved'?'var(--green)':p.status==='rejected'?'var(--red-light)':'#E8B04B';
       return `
       <div class="form-card" style="margin-bottom:8px;">
@@ -788,7 +788,7 @@
     );
     document.getElementById('pairs-count').textContent = `Pasangan (${filtered.length})`;
     const tbody = document.getElementById('pairs-tbody');
-    if (!filtered.length) { tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;color:var(--text-muted);padding:20px;">Belum ada data</td></tr>'; return; }
+    if (!filtered.length) { tbody.innerHTML = '<tr><td colspan="8" style="text-align:center;color:var(--text-muted);padding:20px;">Belum ada data</td></tr>'; return; }
     tbody.innerHTML = filtered.map(p => `
       <tr>
         <td><span class="badge badge-cat">${p.category}</span></td>
@@ -796,6 +796,7 @@
         <td style="font-family:'Bebas Neue',sans-serif;font-size:18px;color:var(--red-light)">${p.group_name}</td>
         <td style="font-family:'Barlow Condensed',sans-serif;font-size:15px;font-weight:700;">${p.player1} / ${p.player2}</td>
         <td style="color:var(--text-muted)">${p.city||'—'}</td>
+        <td style="color:var(--text-muted);font-size:12px;">${p.whatsapp||'—'}</td>
         <td><span style="font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:${p.status==='approved'?'var(--green)':p.status==='rejected'?'var(--red-light)':'#E8B04B'}">${p.status||'—'}</span></td>
         <td><button class="btn btn-danger" onclick="deletePair('${p.id}')">Hapus</button></td>
       </tr>`).join('');
@@ -923,10 +924,34 @@
     const name = document.getElementById('sp-name').value.trim();
     if (!name) { showToast('Nama sponsor wajib diisi', true); return; }
     const tier = document.getElementById('sp-tier').value;
+    const fileInput = document.getElementById('sp-logo-file');
+    const file = fileInput.files[0];
+
+    let logo_url = null;
+
+    // Upload file to Supabase Storage if provided
+    if (file) {
+      document.getElementById('sp-upload-status').textContent = '⏳ Mengupload logo...';
+      const ext = file.name.split('.').pop();
+      const filename = `${Date.now()}-${name.replace(/\s+/g,'-').toLowerCase()}.${ext}`;
+      try {
+        const uploadRes = await fetch(`${SUPABASE_URL}/storage/v1/object/sponsors/${filename}`, {
+          method: 'POST',
+          headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}`, 'Content-Type': file.type },
+          body: file
+        });
+        if (!uploadRes.ok) throw new Error('Upload gagal');
+        logo_url = `${SUPABASE_URL}/storage/v1/object/public/sponsors/${filename}`;
+        document.getElementById('sp-upload-status').textContent = '✓ Logo berhasil diupload';
+      } catch(e) {
+        showToast('Gagal upload logo', true);
+        document.getElementById('sp-upload-status').textContent = '❌ Upload gagal, coba lagi';
+        return;
+      }
+    }
+
     const data = {
-      tier,
-      name,
-      logo_url: document.getElementById('sp-logo').value.trim() || null,
+      tier, name, logo_url,
       tier_order: TIER_ORDER[tier] || 9,
       name_order: parseInt(document.getElementById('sp-order').value) || 1,
       active: true
@@ -938,7 +963,8 @@
       if (!res.ok) throw new Error();
       showToast(`✓ ${name} ditambahkan`);
       document.getElementById('sp-name').value = '';
-      document.getElementById('sp-logo').value = '';
+      fileInput.value = '';
+      document.getElementById('sp-upload-status').textContent = '💡 Upload file PNG/JPG langsung dari perangkat kamu';
       await loadSponsors();
     } catch(e) { showToast('Gagal tambah sponsor', true); }
   }

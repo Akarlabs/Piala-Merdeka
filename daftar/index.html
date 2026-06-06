@@ -198,7 +198,7 @@
           'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}`,
           'Content-Type': 'application/json', 'Prefer': 'return=representation'
         },
-        body: JSON.stringify({ category, gender, group_name: 'TBD', player1, player2, city: city||null, status: 'pending', notes: `WA: ${wa}` })
+        body: JSON.stringify({ category, gender, group_name: 'TBD', player1, player2, city: city||null, whatsapp: wa, status: 'pending' })
       });
 
       if (!res.ok) throw new Error();
