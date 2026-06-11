@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Lower Intermediate — Piala Merdeka 2026</title>
+<title>Advance — Piala Merdeka 2026</title>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow+Condensed:wght@400;600;700;900&family=Barlow:wght@400;500&display=swap" rel="stylesheet">
 <style>
   :root {
@@ -118,15 +118,15 @@
 <nav class="topnav">
   <a href="../index.html">← Piala Merdeka 2026</a>
   <span class="sep">/</span>
-  <span class="cur">LOWER INTERMEDIATE</span>
+  <span class="cur">ADVANCE</span>
 </nav>
 
 <div id="sponsor-bar" class="sponsor-bar" style="display:none;"></div>
 
 <div class="page-header">
-  <div class="cat-badge">Max 5 Tahun Latihan · Doubles</div>
-  <div class="page-title">LOWER INTERMEDIATE</div>
-  <div class="page-desc">30 pasang per gender · Hadiah Rp 4.000.000 – 6.000.000</div>
+  <div class="cat-badge">Open Level · Doubles</div>
+  <div class="page-title">ADVANCE</div>
+  <div class="page-desc">24 pasang per gender · Hadiah TBD</div>
   <div class="controls">
     <div class="gender-tabs">
       <button class="gender-tab active" onclick="setGender('men',this)">👨 Men's Doubles</button>
@@ -165,7 +165,7 @@
 <script>
   const SUPABASE_URL = 'https://hufwbvouwmdbjhawygxg.supabase.co';
   const SUPABASE_KEY = 'sb_publishable_ajdfMjHRQM4EeFVzYDmSZw_Ozxz5It6';
-  const CATEGORY = 'lower_intermediate';
+  const CATEGORY = 'advance';
   const GROUPS = ['A','B','C','D','E','F','G','H'];
 
   let currentGender = 'men';
@@ -177,7 +177,7 @@
     try {
       const headers = { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` };
       const [pR, mR] = await Promise.all([
-        fetch(`${SUPABASE_URL}/rest/v1/pairs?category=eq.${CATEGORY}&select=*`, { headers }),
+        fetch(`${SUPABASE_URL}/rest/v1/pairs?category=eq.${CATEGORY}&status=eq.approved&select=*`, { headers }),
         fetch(`${SUPABASE_URL}/rest/v1/matches?category=eq.${CATEGORY}&select=*`, { headers })
       ]);
       allPairs = await pR.json();
@@ -302,7 +302,7 @@
 
     if (!hasAny) html = `<div class="empty-state">Fase knockout belum dimulai</div>`;
     html += `<div class="champion">
-      <div class="champion-label">🏆 Champion · Lower Intermediate ${gender==='men'?"Men's":"Women's"} Doubles</div>
+      <div class="champion-label">🏆 Champion · Advance ${gender==='men'?"Men's":"Women's"} Doubles</div>
       <div class="${champClass}">${champ}</div>
     </div>`;
 

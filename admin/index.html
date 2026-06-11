@@ -168,75 +168,47 @@
 
     <!-- TABS -->
     <div class="admin-tabs">
-      <button class="admin-tab active" onclick="showTab('tab-pairs',this)">Input Peserta</button>
+      <button class="admin-tab active" onclick="showTab('tab-verify',this)">Verifikasi</button>
+      <button class="admin-tab" onclick="showTab('tab-grup',this)">Atur Grup</button>
       <button class="admin-tab" onclick="showTab('tab-matches',this)">Input Jadwal</button>
       <button class="admin-tab" onclick="showTab('tab-scores',this)">Input Skor</button>
       <button class="admin-tab" onclick="showTab('tab-data',this)">Lihat Data</button>
       <button class="admin-tab" onclick="showTab('tab-sponsors',this)">Sponsor</button>
-      <button class="admin-tab" onclick="showTab('tab-verify',this)">Verifikasi</button>
       <button class="admin-tab" onclick="showTab('tab-settings',this)">⚙ Settings</button>
     </div>
 
-    <!-- TAB: INPUT PESERTA -->
-    <div class="tab-panel active" id="tab-pairs">
-      <div class="form-card">
-        <div class="form-title">Tambah Pasangan Peserta</div>
+    <!-- TAB: ATUR GRUP -->
+    <div class="tab-panel" id="tab-grup">
+      <div class="form-card" style="margin-bottom:16px;">
+        <div class="form-title">Filter Peserta</div>
         <div class="form-row">
           <div class="form-group">
             <label>Kategori</label>
-            <select id="p-category">
+            <select id="ag-category" onchange="loadGrupData()">
               <option value="rookie">Rookie</option>
               <option value="beginner">Beginner</option>
-              <option value="upper_beginner">Upper Beginner</option>
+              <option value="novice">Novice</option>
               <option value="intermediate">Intermediate</option>
+              <option value="advance">Advance</option>
             </select>
           </div>
           <div class="form-group">
             <label>Gender</label>
-            <select id="p-gender">
+            <select id="ag-gender" onchange="loadGrupData()">
               <option value="men">Men's</option>
               <option value="women">Women's</option>
             </select>
           </div>
-          <div class="form-group">
-            <label>Grup</label>
-            <select id="p-group">
-              <option value="A">A</option><option value="B">B</option>
-              <option value="C">C</option><option value="D">D</option>
-              <option value="E">E</option><option value="F">F</option>
-              <option value="G">G</option><option value="H">H</option>
-              <option value="I">I</option><option value="J">J</option>
-            </select>
+          <div class="form-group" style="justify-content:flex-end;">
+            <label>&nbsp;</label>
+            <button class="btn btn-secondary btn-sm" onclick="loadGrupData()">↻ Refresh</button>
           </div>
         </div>
-        <div class="form-row">
-          <div class="form-group">
-            <label>Nama Pemain 1</label>
-            <input type="text" id="p-player1" placeholder="Nama lengkap">
-          </div>
-          <div class="form-group">
-            <label>Nama Pemain 2</label>
-            <input type="text" id="p-player2" placeholder="Nama lengkap">
-          </div>
-          <div class="form-group">
-            <label>Kota Asal</label>
-            <input type="text" id="p-city" placeholder="Surabaya">
-          </div>
-          <div class="form-group">
-            <label>No. WhatsApp</label>
-            <input type="text" id="p-phone" placeholder="08xxxxxxxxxx">
-          </div>
-        </div>
-        <button class="btn btn-primary" onclick="addPair()">+ Tambah Pasangan</button>
       </div>
-
-      <!-- BULK HINT -->
-      <div style="background:var(--dark);border:1px solid rgba(255,255,255,0.06);padding:16px 20px;font-size:12px;color:var(--text-muted);">
-        💡 Input satu per satu. Setelah semua pasangan masuk, lanjut ke tab <strong>Input Jadwal</strong> untuk atur match per grup.
-      </div>
+      <div id="grup-list"><div style="text-align:center;padding:40px;color:var(--text-muted);font-size:12px;letter-spacing:2px;text-transform:uppercase;">Pilih kategori dan gender</div></div>
     </div>
 
-    <!-- TAB: INPUT JADWAL -->
+        <!-- TAB: INPUT JADWAL -->
     <div class="tab-panel" id="tab-matches">
       <div class="form-card">
         <div class="form-title">Tambah Jadwal Pertandingan</div>
@@ -246,8 +218,9 @@
             <select id="m-category" onchange="loadPairsForMatch()">
               <option value="rookie">Rookie</option>
               <option value="beginner">Beginner</option>
-              <option value="upper_beginner">Upper Beginner</option>
+              <option value="novice">Novice</option>
               <option value="intermediate">Intermediate</option>
+              <option value="advance">Advance</option>
             </select>
           </div>
           <div class="form-group">
@@ -314,8 +287,9 @@
             <select id="sc-category" onchange="loadMatchesForScore()">
               <option value="rookie">Rookie</option>
               <option value="beginner">Beginner</option>
-              <option value="upper_beginner">Upper Beginner</option>
+              <option value="novice">Novice</option>
               <option value="intermediate">Intermediate</option>
+              <option value="advance">Advance</option>
             </select>
           </div>
           <div class="form-group">
@@ -350,8 +324,9 @@
               <option value="">Semua</option>
               <option value="rookie">Rookie</option>
               <option value="beginner">Beginner</option>
-              <option value="upper_beginner">Upper Beginner</option>
+              <option value="novice">Novice</option>
               <option value="intermediate">Intermediate</option>
+              <option value="advance">Advance</option>
             </select>
           </div>
           <div class="form-group">
@@ -415,7 +390,7 @@
     </div>
 
     <!-- TAB: VERIFIKASI -->
-    <div class="tab-panel" id="tab-verify">
+    <div class="tab-panel" id="tab-verify" >
       <div class="form-card" style="margin-bottom:16px;">
         <div class="form-row">
           <div class="form-group">
@@ -424,8 +399,9 @@
               <option value="">Semua</option>
               <option value="rookie">Rookie</option>
               <option value="beginner">Beginner</option>
-              <option value="lower_intermediate">Lower Intermediate</option>
+              <option value="novice">Novice</option>
               <option value="intermediate">Intermediate</option>
+              <option value="advance">Advance</option>
             </select>
           </div>
           <div class="form-group">
@@ -514,6 +490,7 @@
       document.getElementById('login-screen').style.display = 'none';
       document.getElementById('admin-wrap').style.display = 'block';
       loadAllData();
+      loadPending();
     } else {
       document.getElementById('login-error').style.display = 'block';
     }
@@ -526,6 +503,73 @@
   }
 
   // ---- TABS ----
+  // ---- ATUR GRUP ----
+  async function loadGrupData() {
+    const cat = document.getElementById('ag-category').value;
+    const gender = document.getElementById('ag-gender').value;
+    const container = document.getElementById('grup-list');
+    container.innerHTML = '<div style="text-align:center;padding:20px;color:var(--text-muted);font-size:12px;letter-spacing:2px;">Loading...</div>';
+    try {
+      const res = await fetch(`${SUPABASE_URL}/rest/v1/pairs?select=*&category=eq.${cat}&gender=eq.${gender}&status=eq.approved&order=group_name`, { headers: headers() });
+      const pairs = await res.json();
+      renderGrupList(pairs);
+    } catch(e) { showToast('Gagal load data', true); }
+  }
+
+  function renderGrupList(pairs) {
+    const container = document.getElementById('grup-list');
+    if (!pairs.length) {
+      container.innerHTML = '<div style="text-align:center;padding:40px;color:var(--text-muted);font-size:12px;letter-spacing:2px;text-transform:uppercase;">Belum ada peserta verified</div>';
+      return;
+    }
+    container.innerHTML = `
+      <div class="form-card" style="overflow-x:auto;">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
+          <div class="form-title" style="margin-bottom:0;">Peserta Verified (${pairs.length})</div>
+          <button class="btn btn-green btn-sm" onclick="saveAllGrup()">✓ Simpan Semua</button>
+        </div>
+        <table class="data-table">
+          <thead><tr><th>Pasangan</th><th>Kota</th><th>WA</th><th>Grup Sekarang</th><th>Set Grup</th></tr></thead>
+          <tbody>
+            ${pairs.map(p => `
+            <tr>
+              <td style="font-family:'Barlow Condensed',sans-serif;font-size:15px;font-weight:700;">${p.player1} / ${p.player2}</td>
+              <td style="color:var(--text-muted);font-size:12px;">${p.city||'—'}</td>
+              <td style="color:var(--text-muted);font-size:12px;">${p.whatsapp||'—'}</td>
+              <td style="font-family:'Bebas Neue',sans-serif;font-size:20px;color:var(--red-light);">${p.group_name||'—'}</td>
+              <td>
+                <select id="newgrp-${p.id}" style="background:var(--gray);border:1px solid rgba(255,255,255,0.1);color:var(--text);padding:6px 10px;font-family:'Bebas Neue',sans-serif;font-size:16px;">
+                  ${['A','B','C','D','E','F','G','H','I','J'].map(g => `<option value="${g}" ${p.group_name===g?'selected':''}>${g}</option>`).join('')}
+                </select>
+              </td>
+            </tr>`).join('')}
+          </tbody>
+        </table>
+      </div>`;
+    // Store pairs for saveAll
+    window._grupPairs = pairs;
+  }
+
+  async function saveAllGrup() {
+    const pairs = window._grupPairs || [];
+    if (!pairs.length) return;
+    let updated = 0;
+    for (const p of pairs) {
+      const sel = document.getElementById('newgrp-' + p.id);
+      if (!sel) continue;
+      const newGrup = sel.value;
+      if (newGrup !== p.group_name) {
+        await fetch(`${SUPABASE_URL}/rest/v1/pairs?id=eq.${p.id}`, {
+          method: 'PATCH', headers: headers(), body: JSON.stringify({ group_name: newGrup })
+        });
+        updated++;
+      }
+    }
+    showToast(`✓ ${updated} peserta diupdate grupnya`);
+    loadGrupData();
+    loadAllData();
+  }
+
   // ---- VERIFIKASI ----
   async function loadPending() {
     const status = document.getElementById('v-status').value;
@@ -548,7 +592,7 @@
       container.innerHTML = '<div style="text-align:center;padding:40px;color:var(--text-muted);font-size:12px;letter-spacing:2px;text-transform:uppercase;">Tidak ada data</div>';
       return;
     }
-    const CAT_LABELS = { rookie:'Rookie', beginner:'Beginner', lower_intermediate:'Lower Intermediate', intermediate:'Intermediate' };
+    const CAT_LABELS = { rookie:'Rookie', beginner:'Beginner', novice:'Novice', intermediate:'Intermediate', advance:'Advance' };
     container.innerHTML = pairs.map(p => {
       const wa = p.whatsapp || '—';
       const statusColor = p.status==='approved'?'var(--green)':p.status==='rejected'?'var(--red-light)':'#E8B04B';
@@ -563,15 +607,9 @@
             <div style="font-size:12px;color:var(--text-muted);">📍 ${p.city||'—'} &nbsp;·&nbsp; 📱 ${wa}</div>
             <div style="margin-top:6px;font-size:11px;font-weight:700;color:${statusColor};text-transform:uppercase;letter-spacing:1px;">${p.status}</div>
           </div>
-          <div style="display:flex;flex-direction:column;gap:6px;min-width:130px;">
-            <div style="display:flex;align-items:center;gap:6px;">
-              <label style="font-size:9px;letter-spacing:1px;color:var(--text-muted);text-transform:uppercase;white-space:nowrap;">Grup</label>
-              <select id="grp-${p.id}" style="background:var(--gray);border:1px solid rgba(255,255,255,0.1);color:var(--text);padding:4px 8px;font-size:14px;font-family:'Bebas Neue',sans-serif;flex:1;">
-                ${['A','B','C','D','E','F','G','H','I','J'].map(g=>`<option value="${g}" ${p.group_name===g?'selected':''}>${g}</option>`).join('')}
-              </select>
-            </div>
-            ${p.status!=='approved'?`<button class="btn btn-green btn-sm" onclick="approveWithGroup('${p.id}')">✓ Approve</button>`:''}
-            ${p.status==='approved'?`<button class="btn btn-secondary btn-sm" onclick="approveWithGroup('${p.id}')">↻ Update Grup</button>`:''}
+          <div style="display:flex;flex-direction:column;gap:6px;min-width:100px;">
+            ${p.status!=='approved'?`<button class="btn btn-green btn-sm" onclick="updateStatus('${p.id}','approved')">✓ Approve</button>`:''}
+            ${p.status==='approved'?`<span style="font-size:10px;color:var(--green);font-weight:700;letter-spacing:1px;">✓ APPROVED</span>`:''}
             <button class="btn btn-danger" onclick="updateStatus('${p.id}','rejected')">✗ Tolak</button>
             ${p.status!=='pending'?`<button class="btn btn-secondary btn-sm" onclick="updateStatus('${p.id}','pending')">Reset</button>`:''}
           </div>
@@ -595,7 +633,7 @@
   }
 
   async function updateStatus(id, status) {
-    const labels = { rejected:'Ditolak', pending:'Direset' };
+    const labels = { approved:'Diapprove', rejected:'Ditolak', pending:'Direset' };
     try {
       const res = await fetch(`${SUPABASE_URL}/rest/v1/pairs?id=eq.${id}`, {
         method: 'PATCH', headers: headers(), body: JSON.stringify({ status })
@@ -658,6 +696,7 @@
     document.getElementById(id).classList.add('active');
     btn.classList.add('active');
     if (id === 'tab-data') loadAllData();
+    if (id === 'tab-grup') loadGrupData();
     if (id === 'tab-matches') loadPairsForMatch();
     if (id === 'tab-scores') loadMatchesForScore();
     if (id === 'tab-sponsors') loadSponsors();
@@ -734,7 +773,7 @@
   async function loadPairsForMatch() {
     const cat = document.getElementById('m-category').value;
     const gender = document.getElementById('m-gender').value;
-    const filtered = allPairs.filter(p => p.category === cat && p.gender === gender);
+    const filtered = allPairs.filter(p => p.category === cat && p.gender === gender && p.status === 'approved');
     const selects = ['m-pair1','m-pair2'];
     selects.forEach(id => {
       const sel = document.getElementById(id);
