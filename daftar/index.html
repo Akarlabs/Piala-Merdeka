@@ -95,61 +95,79 @@
 
 <div class="hero">
   <div class="hero-label">Piala Merdeka 2026 · Malbo Sportainment</div>
-  <h1 class="hero-title">FORM PENDAFTARAN</h1>
-  <p class="hero-sub">15–17 Agustus 2026 · Malang · Doubles Tennis</p>
+  <img src="../assets/logo.png"
+    onerror="this.style.display='none';document.getElementById('hero-logo-fallback').style.display='block'"
+    style="height:120px;object-fit:contain;display:block;margin:12px auto;">
+  <h1 class="hero-title" id="hero-logo-fallback" style="display:none;">PIALA MERDEKA 2026</h1>
+  <p class="hero-sub" id="hero-kelas-sub">Pilih kelas untuk memulai pendaftaran</p>
 </div>
 
 <div class="form-wrap" id="form-wrap">
-  <div class="info-box">
-    ⚠️ Pendaftaran belum resmi sampai pembayaran dikonfirmasi oleh panitia. Tim kami akan menghubungi nomor WA yang didaftarkan untuk konfirmasi.
+
+  <!-- STEP 1: PILIH KELAS -->
+  <div id="step-kelas">
+    <div style="font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--text-muted);margin-bottom:16px;">Pilih Kelas</div>
+    <div style="display:flex;flex-direction:column;gap:10px;" id="kelas-list"></div>
   </div>
 
-  <div class="form-card">
-    <div class="form-card-title">Kategori & Kelas</div>
-    <div class="form-group">
-      <label>Kategori</label>
-      <select id="f-category">
-        <option value="">-- Pilih Kategori --</option>
-        <option value="rookie">Rookie — Max 1 tahun latihan</option>
-        <option value="beginner">Beginner — Max 3 tahun latihan</option>
-        <option value="lower_intermediate">Lower Intermediate — Max 5 tahun latihan</option>
-        <option value="intermediate">Intermediate — Max 10 tahun latihan</option>
-      </select>
+  <!-- STEP 2: PERATURAN -->
+  <div id="step-peraturan" style="display:none;">
+    <div style="display:flex;align-items:center;gap:12px;margin-bottom:20px;">
+      <button onclick="backToKelas()" style="background:transparent;border:1px solid rgba(255,255,255,0.15);color:var(--text-muted);padding:8px 14px;font-family:'Barlow Condensed',sans-serif;font-size:12px;letter-spacing:1px;cursor:pointer;text-transform:uppercase;">← Kembali</button>
+      <div style="font-family:'Bebas Neue',sans-serif;font-size:20px;letter-spacing:2px;" id="peraturan-kelas-title"></div>
     </div>
-    <div class="form-group">
-      <label>Gender</label>
-      <select id="f-gender">
-        <option value="">-- Pilih Gender --</option>
-        <option value="men">Men's Doubles (Putra)</option>
-        <option value="women">Women's Doubles (Putri)</option>
-      </select>
+    <div class="form-card">
+      <div class="form-card-title">Peraturan Kelas</div>
+      <div id="peraturan-content" style="font-size:13px;color:var(--text-muted);line-height:1.8;"></div>
     </div>
+    <div class="info-box" style="margin-top:12px;">
+      ⚠️ Pendaftaran belum resmi sampai pembayaran dikonfirmasi oleh panitia. Tim kami akan menghubungi nomor WA yang didaftarkan untuk konfirmasi.
+    </div>
+    <button class="btn-submit" onclick="lanjutDaftar()">MENGERTI, LANJUT DAFTAR →</button>
   </div>
 
-  <div class="form-card">
-    <div class="form-card-title">Data Pemain</div>
-    <div class="form-group">
-      <label>Nama Pemain 1</label>
-      <input type="text" id="f-player1" placeholder="Nama lengkap">
+  <!-- STEP 3: FORM -->
+  <div id="step-form" style="display:none;">
+    <div style="display:flex;align-items:center;gap:12px;margin-bottom:20px;">
+      <button onclick="backToPeraturan()" style="background:transparent;border:1px solid rgba(255,255,255,0.15);color:var(--text-muted);padding:8px 14px;font-family:'Barlow Condensed',sans-serif;font-size:12px;letter-spacing:1px;cursor:pointer;text-transform:uppercase;">← Kembali</button>
+      <div style="font-family:'Bebas Neue',sans-serif;font-size:20px;letter-spacing:2px;color:var(--red-light);" id="form-kelas-title"></div>
     </div>
-    <div class="form-group">
-      <label>Nama Pemain 2</label>
-      <input type="text" id="f-player2" placeholder="Nama lengkap">
+    <div class="form-card">
+      <div class="form-card-title">Kelas Terpilih</div>
+      <div style="background:rgba(192,57,43,0.1);border:1px solid rgba(192,57,43,0.3);padding:12px 16px;font-family:'Barlow Condensed',sans-serif;font-size:16px;font-weight:700;letter-spacing:1px;" id="form-kelas-display"></div>
     </div>
-    <div class="form-row">
-      <div class="form-group">
-        <label>Kota Asal</label>
-        <input type="text" id="f-city" placeholder="Surabaya">
-      </div>
-      <div class="form-group">
-        <label>No. WhatsApp</label>
-        <input type="tel" id="f-wa" placeholder="08xxxxxxxxxx">
-        <span class="hint">Untuk konfirmasi panitia</span>
+    <div class="form-card">
+      <div class="form-card-title">Gender</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+        <button id="btn-men" onclick="selectGender('men')" style="padding:14px;font-family:'Bebas Neue',sans-serif;font-size:14px;letter-spacing:1px;cursor:pointer;border:2px solid rgba(255,255,255,0.15);background:transparent;color:var(--text-muted);transition:all 0.15s;">MEN'S</button>
+        <button id="btn-women" onclick="selectGender('women')" style="padding:14px;font-family:'Bebas Neue',sans-serif;font-size:14px;letter-spacing:1px;cursor:pointer;border:2px solid rgba(255,255,255,0.15);background:transparent;color:var(--text-muted);transition:all 0.15s;">WOMEN'S</button>
       </div>
     </div>
+    <div class="form-card">
+      <div class="form-card-title">Data Pemain</div>
+      <div class="form-group">
+        <label>Nama Pemain 1</label>
+        <input type="text" id="f-player1" placeholder="Nama lengkap">
+      </div>
+      <div class="form-group">
+        <label>Nama Pemain 2</label>
+        <input type="text" id="f-player2" placeholder="Nama lengkap">
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Kota Asal</label>
+          <input type="text" id="f-city" placeholder="Surabaya">
+        </div>
+        <div class="form-group">
+          <label>No. WhatsApp</label>
+          <input type="tel" id="f-wa" placeholder="08xxxxxxxxxx">
+          <span class="hint">Untuk konfirmasi panitia</span>
+        </div>
+      </div>
+    </div>
+    <button class="btn-submit" id="btn-submit" onclick="submitForm()">DAFTAR SEKARANG</button>
   </div>
 
-  <button class="btn-submit" id="btn-submit" onclick="submitForm()">DAFTAR SEKARANG</button>
 </div>
 
 <div class="success-screen" id="success-screen">
@@ -166,9 +184,102 @@
 <script>
   const SUPABASE_URL = 'https://hufwbvouwmdbjhawygxg.supabase.co';
   const SUPABASE_KEY = 'sb_publishable_ajdfMjHRQM4EeFVzYDmSZw_Ozxz5It6';
-  const CAT_LABELS = { rookie:'Rookie', beginner:'Beginner', lower_intermediate:'Lower Intermediate', intermediate:'Intermediate' };
 
-  // Check registration open on load
+  const KELAS_DATA = {
+    rookie: {
+      label: 'Rookie', badge: 'Max 1 tahun latihan',
+      info: '24 pasang per gender · 8 grup × 3 pasang · Hadiah Rp 4–7 jt',
+      peraturan: `• Format pertandingan: 1 set, first to 6 games<br>• Tie-break diberlakukan saat skor 5-5<br>• Fase Grup: round robin dalam grup<br>• Juara dan runner-up terbaik lolos ke Knockout<br>• Tiebreaker: selisih game<br>• Peserta wajib hadir 30 menit sebelum jadwal<br>• Keterlambatan lebih dari 15 menit dinyatakan WO<br>• Keputusan wasit bersifat final<br><br><em style="color:#E8B04B;">⚠️ Kelas ini diperuntukkan bagi pemain dengan pengalaman maksimal 1 tahun latihan</em>`
+    },
+    beginner: {
+      label: 'Beginner', badge: 'Max 3 tahun latihan',
+      info: '30 pasang per gender · Hadiah Rp 3–5 jt',
+      peraturan: `• Format pertandingan: 1 set, first to 6 games<br>• Tie-break diberlakukan saat skor 5-5<br>• Fase Grup: round robin dalam grup<br>• Juara grup lolos ke Knockout<br>• Tiebreaker: selisih game<br>• Peserta wajib hadir 30 menit sebelum jadwal<br>• Keterlambatan lebih dari 15 menit dinyatakan WO<br>• Keputusan wasit bersifat final<br><br><em style="color:#E8B04B;">⚠️ Kelas ini diperuntukkan bagi pemain dengan pengalaman maksimal 3 tahun latihan</em>`
+    },
+    novice: {
+      label: 'Novice', badge: 'Max 5 tahun latihan',
+      info: '30 pasang per gender · Hadiah Rp 4–6 jt',
+      peraturan: `• Format pertandingan: 1 set, first to 6 games<br>• Tie-break diberlakukan saat skor 5-5<br>• Fase Grup: round robin dalam grup<br>• Juara grup lolos ke Knockout<br>• Tiebreaker: selisih game<br>• Peserta wajib hadir 30 menit sebelum jadwal<br>• Keterlambatan lebih dari 15 menit dinyatakan WO<br>• Keputusan wasit bersifat final<br><br><em style="color:#E8B04B;">⚠️ Kelas ini diperuntukkan bagi pemain dengan pengalaman maksimal 5 tahun latihan</em>`
+    },
+    intermediate: {
+      label: 'Intermediate', badge: 'Max 10 tahun latihan',
+      info: '24 pasang per gender · 8 grup × 3 pasang · Hadiah Rp 5–7 jt',
+      peraturan: `• Format pertandingan: 1 set, first to 6 games<br>• Tie-break diberlakukan saat skor 5-5<br>• Fase Grup: round robin dalam grup<br>• Juara grup lolos ke Knockout<br>• Tiebreaker: selisih game<br>• Peserta wajib hadir 30 menit sebelum jadwal<br>• Keterlambatan lebih dari 15 menit dinyatakan WO<br>• Keputusan wasit bersifat final<br><br><em style="color:#E8B04B;">⚠️ Kelas ini diperuntukkan bagi pemain dengan pengalaman maksimal 10 tahun latihan</em>`
+    },
+    advance: {
+      label: 'Advance', badge: 'Open level',
+      info: '24 pasang per gender · Hadiah TBD',
+      peraturan: `• Format pertandingan: 1 set, first to 6 games<br>• Tie-break diberlakukan saat skor 5-5<br>• Fase Grup: round robin dalam grup<br>• Juara grup lolos ke Knockout<br>• Tiebreaker: selisih game<br>• Peserta wajib hadir 30 menit sebelum jadwal<br>• Keterlambatan lebih dari 15 menit dinyatakan WO<br>• Keputusan wasit bersifat final<br><br><em style="color:#E8B04B;">⚠️ Kelas terbuka untuk semua level advance</em>`
+    }
+  };
+
+  let selectedKelas = null;
+  let selectedGender = null;
+
+  function showToast(msg) {
+    const t = document.getElementById('toast');
+    t.textContent = msg; t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 3000);
+  }
+
+  function renderKelasList() {
+    const list = document.getElementById('kelas-list');
+    list.innerHTML = Object.entries(KELAS_DATA).map(([key, k]) => `
+      <div onclick="pilihKelas('${key}')" style="background:var(--dark);border:1px solid rgba(192,57,43,0.3);padding:16px;cursor:pointer;display:flex;justify-content:space-between;align-items:center;transition:all 0.15s;" 
+        onmouseover="this.style.borderColor='#C0392B';this.style.background='rgba(192,57,43,0.08)'" 
+        onmouseout="this.style.borderColor='rgba(192,57,43,0.3)';this.style.background='var(--dark)'">
+        <div>
+          <div style="font-size:9px;letter-spacing:2px;color:var(--text-muted);text-transform:uppercase;margin-bottom:4px;">${k.badge}</div>
+          <div style="font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:2px;">${k.label}</div>
+          <div style="font-size:11px;color:var(--text-muted);margin-top:2px;">${k.info}</div>
+        </div>
+        <div style="font-size:20px;color:var(--red-light);">›</div>
+      </div>`).join('');
+  }
+
+  function pilihKelas(kelas) {
+    selectedKelas = kelas;
+    const k = KELAS_DATA[kelas];
+    document.getElementById('peraturan-kelas-title').textContent = k.label;
+    document.getElementById('peraturan-content').innerHTML = k.peraturan;
+    document.getElementById('step-kelas').style.display = 'none';
+    document.getElementById('step-peraturan').style.display = 'block';
+    document.getElementById('hero-kelas-sub').textContent = k.label + ' · ' + k.badge;
+  }
+
+  function backToKelas() {
+    document.getElementById('step-peraturan').style.display = 'none';
+    document.getElementById('step-kelas').style.display = 'block';
+    document.getElementById('hero-kelas-sub').textContent = 'Pilih kelas untuk memulai pendaftaran';
+  }
+
+  function lanjutDaftar() {
+    const k = KELAS_DATA[selectedKelas];
+    document.getElementById('form-kelas-title').textContent = k.label;
+    document.getElementById('form-kelas-display').textContent = k.label + ' · ' + k.badge;
+    document.getElementById('step-peraturan').style.display = 'none';
+    document.getElementById('step-form').style.display = 'block';
+    selectedGender = null;
+  }
+
+  function backToPeraturan() {
+    document.getElementById('step-form').style.display = 'none';
+    document.getElementById('step-peraturan').style.display = 'block';
+  }
+
+  function selectGender(gender) {
+    selectedGender = gender;
+    const menBtn = document.getElementById('btn-men');
+    const womenBtn = document.getElementById('btn-women');
+    if (gender === 'men') {
+      menBtn.style.borderColor = '#C0392B'; menBtn.style.color = '#f0f0f0'; menBtn.style.background = 'rgba(192,57,43,0.2)';
+      womenBtn.style.borderColor = 'rgba(255,255,255,0.15)'; womenBtn.style.color = 'var(--text-muted)'; womenBtn.style.background = 'transparent';
+    } else {
+      womenBtn.style.borderColor = '#C0392B'; womenBtn.style.color = '#f0f0f0'; womenBtn.style.background = 'rgba(192,57,43,0.2)';
+      menBtn.style.borderColor = 'rgba(255,255,255,0.15)'; menBtn.style.color = 'var(--text-muted)'; menBtn.style.background = 'transparent';
+    }
+  }
+
   async function checkRegistrationOpen() {
     try {
       const res = await fetch(`${SUPABASE_URL}/rest/v1/settings?key=eq.registration_open`, {
@@ -187,24 +298,24 @@
       }
     } catch(e) { console.log('Settings check failed'); }
   }
-  checkRegistrationOpen();
 
-  function showToast(msg) {
-    const t = document.getElementById('toast');
-    t.textContent = msg; t.classList.add('show');
-    setTimeout(() => t.classList.remove('show'), 3000);
+  // Read kelas from URL param
+  function preSelectKelas() {
+    const params = new URLSearchParams(window.location.search);
+    const kelas = params.get('kelas');
+    if (kelas && KELAS_DATA[kelas]) {
+      setTimeout(() => pilihKelas(kelas), 100);
+    }
   }
 
   async function submitForm() {
-    const category = document.getElementById('f-category').value;
-    const gender = document.getElementById('f-gender').value;
     const player1 = document.getElementById('f-player1').value.trim();
     const player2 = document.getElementById('f-player2').value.trim();
     const city = document.getElementById('f-city').value.trim();
     const wa = document.getElementById('f-wa').value.trim();
 
-    if (!category) { showToast('Pilih kategori dulu'); return; }
-    if (!gender) { showToast('Pilih gender dulu'); return; }
+    if (!selectedKelas) { showToast('Pilih kelas dulu'); return; }
+    if (!selectedGender) { showToast('Pilih gender dulu'); return; }
     if (!player1) { showToast('Nama pemain 1 wajib diisi'); return; }
     if (!player2) { showToast('Nama pemain 2 wajib diisi'); return; }
     if (!wa) { showToast('Nomor WhatsApp wajib diisi'); return; }
@@ -215,11 +326,8 @@
     try {
       const res = await fetch(`${SUPABASE_URL}/rest/v1/pairs`, {
         method: 'POST',
-        headers: {
-          'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}`,
-          'Content-Type': 'application/json', 'Prefer': 'return=representation'
-        },
-        body: JSON.stringify({ category, gender, group_name: 'TBD', player1, player2, city: city||null, whatsapp: wa, status: 'pending' })
+        headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}`, 'Content-Type': 'application/json', 'Prefer': 'return=representation' },
+        body: JSON.stringify({ category: selectedKelas, gender: selectedGender, group_name: 'TBD', player1, player2, city: city||null, whatsapp: wa, status: 'pending' })
       });
 
       if (!res.ok) throw new Error();
@@ -227,8 +335,8 @@
       document.getElementById('form-wrap').style.display = 'none';
       document.getElementById('success-screen').style.display = 'block';
       document.getElementById('success-detail').innerHTML = `
-        <div class="success-detail-row"><span class="success-detail-label">Kategori</span><span class="success-detail-value">${CAT_LABELS[category]}</span></div>
-        <div class="success-detail-row"><span class="success-detail-label">Gender</span><span class="success-detail-value">${gender==='men'?"Men's Doubles":"Women's Doubles"}</span></div>
+        <div class="success-detail-row"><span class="success-detail-label">Kelas</span><span class="success-detail-value">${KELAS_DATA[selectedKelas].label}</span></div>
+        <div class="success-detail-row"><span class="success-detail-label">Gender</span><span class="success-detail-value">${selectedGender==='men'?"Men's Doubles":"Women's Doubles"}</span></div>
         <div class="success-detail-row"><span class="success-detail-label">Pasangan</span><span class="success-detail-value">${player1} / ${player2}</span></div>
         <div class="success-detail-row"><span class="success-detail-label">Kota</span><span class="success-detail-value">${city||'—'}</span></div>
         <div class="success-detail-row"><span class="success-detail-label">WhatsApp</span><span class="success-detail-value">${wa}</span></div>
@@ -239,6 +347,10 @@
       btn.disabled = false; btn.textContent = 'DAFTAR SEKARANG';
     }
   }
+
+  renderKelasList();
+  checkRegistrationOpen();
+  preSelectKelas();
 </script>
 </body>
 </html>

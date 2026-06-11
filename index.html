@@ -115,27 +115,27 @@
 
   .cat-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    grid-template-columns: repeat(3, 1fr);
     gap: 16px;
+  }
+  .cat-card:nth-child(4) { grid-column: 1; }
+  .cat-card:nth-child(5) { grid-column: 2; }
+  @media (max-width: 900px) {
+    .cat-grid { grid-template-columns: repeat(2, 1fr); }
+    .cat-card:nth-child(4), .cat-card:nth-child(5) { grid-column: auto; }
   }
 
   .cat-card {
     background: var(--dark);
     border: 1px solid rgba(192, 57, 43, 0.3);
     padding: 24px;
-    cursor: pointer;
     transition: all 0.2s;
-    text-decoration: none;
     color: inherit;
     display: flex;
     flex-direction: column;
-    gap: 12px;
+    gap: 8px;
   }
-  .cat-card:hover {
-    border-color: var(--red);
-    background: rgba(192, 57, 43, 0.08);
-    transform: translateY(-2px);
-  }
+  .cat-card:hover { border-color: var(--red); background: rgba(192,57,43,0.05); }
 
   .cat-badge {
     font-family: 'Barlow Condensed', sans-serif;
@@ -155,7 +155,29 @@
     font-size: 12px;
     color: var(--text-muted);
     line-height: 1.5;
+    flex: 1;
   }
+  .cat-actions {
+    display: flex; gap: 8px; margin-top: 12px; padding-top: 12px;
+    border-top: 1px solid rgba(255,255,255,0.06);
+  }
+  .cat-btn-lihat {
+    flex: 1; text-align: center; padding: 8px;
+    border: 1px solid rgba(255,255,255,0.15); color: var(--text-muted);
+    font-family: 'Barlow Condensed', sans-serif; font-size: 12px;
+    font-weight: 700; letter-spacing: 1px; text-transform: uppercase;
+    text-decoration: none; transition: all 0.15s;
+  }
+  .cat-btn-lihat:hover { border-color: var(--text); color: var(--text); }
+  .cat-btn-daftar {
+    flex: 1; text-align: center; padding: 8px;
+    background: var(--red); color: white; border: none;
+    font-family: 'Barlow Condensed', sans-serif; font-size: 12px;
+    font-weight: 700; letter-spacing: 1px; text-transform: uppercase;
+    text-decoration: none; transition: all 0.15s;
+  }
+  .cat-btn-daftar:hover { background: var(--red-dark); }
+  .cat-btn-daftar.disabled { background: var(--gray); pointer-events: none; opacity: 0.5; }
 
   /* PRIZE POOL */
   .prize-section {
@@ -257,7 +279,10 @@
 <!-- HERO -->
 <section class="hero">
   <div class="hero-label">Malbo Sportainment Organizer</div>
-  <h1 class="hero-title">PIALA<br>MERDEKA<br>2026</h1>
+  <img src="assets/logo.png"
+    onerror="this.style.display='none';document.getElementById('logo-fallback').style.display='block'"
+    style="height:160px;object-fit:contain;display:block;margin:12px auto;">
+  <h1 class="hero-title" id="logo-fallback" style="display:none;">PIALA<br>MERDEKA<br>2026</h1>
   <p class="hero-sub">Doubles Tennis Championship — East Java</p>
   <div class="hero-date">15–17 Agustus 2026 · Malang</div>
   <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-top:24px;">
@@ -283,26 +308,51 @@
 <section class="categories-section">
   <h2 class="section-title">Categories</h2>
   <div class="cat-grid">
-    <a href="rookie/" class="cat-card">
+    <div class="cat-card">
       <div class="cat-badge">Max 1 tahun latihan</div>
       <div class="cat-name">Rookie</div>
       <div class="cat-info">24 pasang per gender<br>8 grup × 3 pasang<br><strong>Hadiah: Rp 4–7 jt</strong></div>
-    </a>
-    <a href="beginner/" class="cat-card">
+      <div class="cat-actions">
+        <a href="rookie/" class="cat-btn-lihat">Lihat Bracket</a>
+        <a href="daftar/?kelas=rookie" class="cat-btn-daftar reg-btn">Daftar</a>
+      </div>
+    </div>
+    <div class="cat-card">
       <div class="cat-badge">Max 3 tahun latihan</div>
       <div class="cat-name">Beginner</div>
-      <div class="cat-info">30 pasang per gender<br>TBD format<br><strong>Hadiah: Rp 5–3 jt</strong></div>
-    </a>
-    <a href="lower-intermediate/" class="cat-card">
+      <div class="cat-info">30 pasang per gender<br>TBD format<br><strong>Hadiah: Rp 3–5 jt</strong></div>
+      <div class="cat-actions">
+        <a href="beginner/" class="cat-btn-lihat">Lihat Bracket</a>
+        <a href="daftar/?kelas=beginner" class="cat-btn-daftar reg-btn">Daftar</a>
+      </div>
+    </div>
+    <div class="cat-card">
       <div class="cat-badge">Max 5 tahun latihan</div>
-      <div class="cat-name">Lower Intermediate</div>
-      <div class="cat-info">30 pasang per gender<br>TBD format<br><strong>Hadiah: Rp 6–4 jt</strong></div>
-    </a>
-    <a href="intermediate/" class="cat-card">
+      <div class="cat-name">Novice</div>
+      <div class="cat-info">30 pasang per gender<br>TBD format<br><strong>Hadiah: Rp 4–6 jt</strong></div>
+      <div class="cat-actions">
+        <a href="novice/" class="cat-btn-lihat">Lihat Bracket</a>
+        <a href="daftar/?kelas=novice" class="cat-btn-daftar reg-btn">Daftar</a>
+      </div>
+    </div>
+    <div class="cat-card">
       <div class="cat-badge">Max 10 tahun latihan</div>
       <div class="cat-name">Intermediate</div>
-      <div class="cat-info">24 pasang per gender<br>8 grup × 3 pasang<br><strong>Hadiah: Rp 7–5 jt</strong></div>
-    </a>
+      <div class="cat-info">24 pasang per gender<br>8 grup × 3 pasang<br><strong>Hadiah: Rp 5–7 jt</strong></div>
+      <div class="cat-actions">
+        <a href="intermediate/" class="cat-btn-lihat">Lihat Bracket</a>
+        <a href="daftar/?kelas=intermediate" class="cat-btn-daftar reg-btn">Daftar</a>
+      </div>
+    </div>
+    <div class="cat-card">
+      <div class="cat-badge">Open level</div>
+      <div class="cat-name">Advance</div>
+      <div class="cat-info">24 pasang per gender<br>TBD format<br><strong>Hadiah: TBD</strong></div>
+      <div class="cat-actions">
+        <a href="advance/" class="cat-btn-lihat">Lihat Bracket</a>
+        <a href="daftar/?kelas=advance" class="cat-btn-daftar reg-btn">Daftar</a>
+      </div>
+    </div>
   </div>
 </section>
 
@@ -397,6 +447,13 @@
         daftarBtn.style.pointerEvents = 'none';
         daftarBtn.textContent = 'PENDAFTARAN DITUTUP';
         daftarBtn.style.background = '#555';
+      }
+      // Disable all daftar buttons if closed
+      if (!isOpen) {
+        document.querySelectorAll('.reg-btn').forEach(btn => {
+          btn.classList.add('disabled');
+          btn.textContent = 'Ditutup';
+        });
       }
     } catch(e) { console.log('Settings check failed'); }
   }
