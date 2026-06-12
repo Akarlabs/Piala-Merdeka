@@ -159,7 +159,7 @@
 <div class="toast" id="toast"></div>
 
 <!-- LIST PESERTA CONFIRMED -->
-<div class="main-wrap" style="max-width:560px;margin:0 auto;padding:0 20px 80px;">
+<div class="main-wrap" id="peserta-section" style="max-width:560px;margin:0 auto;padding:0 20px 80px;display:none;">
   <div style="border-top:1px solid rgba(255,255,255,0.06);padding-top:32px;margin-top:8px;">
     <div style="font-family:'Bebas Neue',sans-serif;font-size:28px;letter-spacing:2px;margin-bottom:4px;">Peserta Terkonfirmasi</div>
     <div style="font-size:12px;color:var(--text-muted);margin-bottom:20px;">Lihat siapa saja yang sudah dikonfirmasi di kelasmu</div>
@@ -297,6 +297,20 @@
       <div class="result-list">${listHtml}</div>
       <button class="btn-reset" onclick="resetSearch()" style="margin-top:16px;">← Cari Lagi</button>
     `;
+
+    // Show peserta section only if any approved result
+    const hasApproved = pairs.some(p => p.status === 'approved');
+    const pesertaSection = document.getElementById('peserta-section');
+    if (hasApproved && pesertaSection) {
+      pesertaSection.style.display = 'block';
+      // Auto-select category & gender from first approved pair
+      const firstApproved = pairs.find(p => p.status === 'approved');
+      if (firstApproved) {
+        document.getElementById('lp-category').value = firstApproved.category;
+        document.getElementById('lp-gender').value = firstApproved.gender;
+        loadListPeserta();
+      }
+    }
   }
 
   function resetSearch() {
@@ -305,6 +319,8 @@
     document.getElementById('search-card').style.display = 'block';
     document.getElementById('search-name').value = '';
     document.getElementById('search-wa').value = '';
+    document.getElementById('peserta-section').style.display = 'none';
+    document.getElementById('lp-result').innerHTML = '';
   }
 
   // ---- LIST PESERTA CONFIRMED ----
