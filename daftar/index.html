@@ -94,7 +94,7 @@
 </nav>
 
 <div class="hero">
-  <div class="hero-label">Piala Merdeka 2026 · Malbo Sportainment</div>
+  <div class="hero-label">Piala Merdeka 2026</div>
   <img src="../assets/logo.png"
     onerror="this.style.display='none';document.getElementById('hero-logo-fallback').style.display='block'"
     style="height:120px;object-fit:contain;display:block;margin:12px auto;mix-blend-mode:screen;">
@@ -188,28 +188,101 @@
   const KELAS_DATA = {
     rookie: {
       label: 'Rookie', badge: 'Max 1 tahun latihan',
-      info: '24 pasang per gender · 8 grup × 3 pasang · Hadiah Rp 4–7 jt',
-      peraturan: `• Format pertandingan: 1 set, first to 6 games<br>• Tie-break diberlakukan saat skor 5-5<br>• Fase Grup: round robin dalam grup<br>• Juara dan runner-up terbaik lolos ke Knockout<br>• Tiebreaker: selisih game<br>• Peserta wajib hadir 30 menit sebelum jadwal<br>• Keterlambatan lebih dari 15 menit dinyatakan WO<br>• Keputusan wasit bersifat final<br><br><em style="color:#E8B04B;">⚠️ Kelas ini diperuntukkan bagi pemain dengan pengalaman maksimal 1 tahun latihan</em>`
+      info: '24 pasang per gender · 8 grup × 3 pasang',
+      peraturan: `<strong style="color:#fff;">Kriteria Kemampuan Pemain</strong><br>
+• Tidak banyak memiliki pengalaman bertanding<br>
+• Hanya sering bermain dalam konteks fun game<br>
+• Groundstroke dan servis belum konsisten<br>
+• Footwork masih pada level dasar dan belum stabil<br><br>
+<strong style="color:#fff;">Syarat Peserta</strong><br>
+• TIDAK pernah mengikuti kelas Beginner, Novice, Intermediate atau Advance di turnamen Tenis manapun<br>
+• TIDAK pernah menjadi Finalis kelas ROOKIE di turnamen Tenis manapun (boleh berganti pasangan dengan syarat pasangan juga tidak pernah menjadi Finalis di kelas ROOKIE)<br>
+• TIDAK pernah mempunyai Track Record menjadi Atlet Tennis (PORPROV, PON, TIMNAS, turnamen TDP)<br>
+• TIDAK menjadi PELATIH, ASISTEN PELATIH dan HITTING PARTNER<br>
+• Minimal usia 18 tahun, maksimal 60 tahun<br>
+• Telah terverifikasi LOLOS SCREENING Panitia<br><br><strong style="color:#fff;">Pembayaran Pendaftaran</strong><br>
+Calon peserta diwajibkan melakukan pembayaran pendaftaran sebesar <strong>Rp 750.000</strong> melalui:<br><br>
+BCA 0190848507 a.n. Anisa Sativa Fillaili<br>
+Mandiri 144-00-1545610-3 a.n. Anisa Sativa Fillaili<br><br>
+<em style="color:#E8B04B;">⚠️ Pembayaran hanya melalui rekening di atas. Panitia TIDAK meminta pembayaran lain melalui WhatsApp atau media lainnya.</em>`
     },
     beginner: {
       label: 'Beginner', badge: 'Max 3 tahun latihan',
-      info: '30 pasang per gender · Hadiah Rp 3–5 jt',
-      peraturan: `• Format pertandingan: 1 set, first to 6 games<br>• Tie-break diberlakukan saat skor 5-5<br>• Fase Grup: round robin dalam grup<br>• Juara grup lolos ke Knockout<br>• Tiebreaker: selisih game<br>• Peserta wajib hadir 30 menit sebelum jadwal<br>• Keterlambatan lebih dari 15 menit dinyatakan WO<br>• Keputusan wasit bersifat final<br><br><em style="color:#E8B04B;">⚠️ Kelas ini diperuntukkan bagi pemain dengan pengalaman maksimal 3 tahun latihan</em>`
+      info: '30 pasang per gender',
+      peraturan: `<strong style="color:#fff;">Kriteria Kemampuan Pemain</strong><br>
+• Sudah mulai rutin bermain dan mengikuti pertandingan<br>
+• Groundstroke mulai stabil namun belum konsisten dalam tekanan<br>
+• Footwork sudah berkembang namun belum optimal dalam rally panjang<br>
+• Mulai memahami pola dasar dan strategi sederhana<br>
+• Mulai rutin mengikuti turnamen<br><br>
+<strong style="color:#fff;">Syarat Peserta</strong><br>
+• TIDAK pernah mengikuti kelas Novice, Intermediate atau Advance di turnamen Tenis manapun<br>
+• TIDAK pernah menjadi Finalis kelas BEGINNER di turnamen Tenis manapun (boleh berganti pasangan dengan syarat pasangan juga tidak pernah menjadi Finalis di kelas BEGINNER)<br>
+• TIDAK pernah mempunyai Track Record menjadi Atlet Tenis (PORPROV, PON, TIMNAS, turnamen TDP)<br>
+• TIDAK menjadi PELATIH, ASISTEN PELATIH dan HITTING PARTNER<br>
+• Minimal usia 18 tahun, maksimal 60 tahun<br>
+• Telah terverifikasi LOLOS SCREENING Panitia<br><br><strong style="color:#fff;">Pembayaran Pendaftaran</strong><br>
+Calon peserta diwajibkan melakukan pembayaran pendaftaran sebesar <strong>Rp 750.000</strong> melalui:<br><br>
+BCA 0190848507 a.n. Anisa Sativa Fillaili<br>
+Mandiri 144-00-1545610-3 a.n. Anisa Sativa Fillaili<br><br>
+<em style="color:#E8B04B;">⚠️ Pembayaran hanya melalui rekening di atas. Panitia TIDAK meminta pembayaran lain melalui WhatsApp atau media lainnya.</em>`
     },
     novice: {
       label: 'Novice', badge: 'Max 5 tahun latihan',
-      info: '30 pasang per gender · Hadiah Rp 4–6 jt',
-      peraturan: `• Format pertandingan: 1 set, first to 6 games<br>• Tie-break diberlakukan saat skor 5-5<br>• Fase Grup: round robin dalam grup<br>• Juara grup lolos ke Knockout<br>• Tiebreaker: selisih game<br>• Peserta wajib hadir 30 menit sebelum jadwal<br>• Keterlambatan lebih dari 15 menit dinyatakan WO<br>• Keputusan wasit bersifat final<br><br><em style="color:#E8B04B;">⚠️ Kelas ini diperuntukkan bagi pemain dengan pengalaman maksimal 5 tahun latihan</em>`
+      info: '30 pasang per gender',
+      peraturan: `<strong style="color:#fff;">Kriteria Kemampuan Pemain</strong><br>
+• Rutin mengikuti turnamen tenis<br>
+• Groundstroke konsisten dalam rally dan serve<br>
+• Footwork cukup baik<br>
+• Memahami sistem pertandingan dan scoring<br>
+• Sudah cukup baik dalam melakukan finishing dan pengambilan keputusan<br><br>
+<strong style="color:#fff;">Syarat Peserta</strong><br>
+• TIDAK pernah mengikuti kelas Intermediate atau Advance di turnamen Tenis manapun<br>
+• TIDAK pernah menjadi Finalis kelas NOVICE di turnamen Tenis manapun (boleh berganti pasangan dengan syarat pasangan juga tidak pernah menjadi Finalis di kelas NOVICE)<br>
+• TIDAK pernah mempunyai Track Record menjadi Atlet Tennis (PON dan TIMNAS)<br>
+• TIDAK menjadi PELATIH, ASISTEN PELATIH dan HITTING PARTNER<br>
+• Minimal usia 18 tahun, maksimal 60 tahun<br>
+• Telah terverifikasi LOLOS SCREENING Panitia<br><br><strong style="color:#fff;">Pembayaran Pendaftaran</strong><br>
+Calon peserta diwajibkan melakukan pembayaran pendaftaran sebesar <strong>Rp 750.000</strong> melalui:<br><br>
+BCA 0190848507 a.n. Anisa Sativa Fillaili<br>
+Mandiri 144-00-1545610-3 a.n. Anisa Sativa Fillaili<br><br>
+<em style="color:#E8B04B;">⚠️ Pembayaran hanya melalui rekening di atas. Panitia TIDAK meminta pembayaran lain melalui WhatsApp atau media lainnya.</em>`
     },
     intermediate: {
       label: 'Intermediate', badge: 'Max 10 tahun latihan',
-      info: '24 pasang per gender · 8 grup × 3 pasang · Hadiah Rp 5–7 jt',
-      peraturan: `• Format pertandingan: 1 set, first to 6 games<br>• Tie-break diberlakukan saat skor 5-5<br>• Fase Grup: round robin dalam grup<br>• Juara grup lolos ke Knockout<br>• Tiebreaker: selisih game<br>• Peserta wajib hadir 30 menit sebelum jadwal<br>• Keterlambatan lebih dari 15 menit dinyatakan WO<br>• Keputusan wasit bersifat final<br><br><em style="color:#E8B04B;">⚠️ Kelas ini diperuntukkan bagi pemain dengan pengalaman maksimal 10 tahun latihan</em>`
+      info: '24 pasang per gender · 8 grup × 3 pasang',
+      peraturan: `<strong style="color:#fff;">Kriteria Kemampuan Pemain</strong><br>
+• Rutin mengikuti turnamen tenis di kategori Intermediate<br>
+• Tergolong pemain pada tingkat menengah (mendekati Advance)<br>
+• Footwork sangat baik<br>
+• Sudah cukup baik dalam melakukan serve, baseline, volley, finishing dan pengambilan keputusan<br><br>
+<strong style="color:#fff;">Syarat Peserta</strong><br>
+• TIDAK pernah mengikuti kelas Advance di turnamen Tenis manapun<br>
+• TIDAK pernah menjadi Finalis kelas INTERMEDIATE di turnamen Tenis manapun (boleh berganti pasangan dengan syarat pasangan juga tidak pernah menjadi Finalis di kelas INTERMEDIATE)<br>
+• TIDAK pernah mempunyai Track Record menjadi Atlet Tenis (PON dan TIMNAS)<br>
+• Minimal usia 18 tahun, maksimal 60 tahun<br>
+• Telah terverifikasi LOLOS SCREENING Panitia<br><br><strong style="color:#fff;">Pembayaran Pendaftaran</strong><br>
+Calon peserta diwajibkan melakukan pembayaran pendaftaran sebesar <strong>Rp 750.000</strong> melalui:<br><br>
+BCA 0190848507 a.n. Anisa Sativa Fillaili<br>
+Mandiri 144-00-1545610-3 a.n. Anisa Sativa Fillaili<br><br>
+<em style="color:#E8B04B;">⚠️ Pembayaran hanya melalui rekening di atas. Panitia TIDAK meminta pembayaran lain melalui WhatsApp atau media lainnya.</em>`
     },
     advance: {
       label: 'Advance', badge: 'Open level',
-      info: '24 pasang per gender · Hadiah TBD',
-      peraturan: `• Format pertandingan: 1 set, first to 6 games<br>• Tie-break diberlakukan saat skor 5-5<br>• Fase Grup: round robin dalam grup<br>• Juara grup lolos ke Knockout<br>• Tiebreaker: selisih game<br>• Peserta wajib hadir 30 menit sebelum jadwal<br>• Keterlambatan lebih dari 15 menit dinyatakan WO<br>• Keputusan wasit bersifat final<br><br><em style="color:#E8B04B;">⚠️ Kelas terbuka untuk semua level advance</em>`
+      info: "24 pasang · Men's & Mixed Doubles",
+      peraturan: `<em style="color:#E8B04B;">Kategori ADVANCE OPEN dibuka untuk MEN'S DOUBLE dan MIXED DOUBLE dalam satu kategori.</em><br><br>
+<strong style="color:#fff;">Kriteria Kemampuan Pemain</strong><br>
+• Sudah teruji mengikuti banyak turnamen<br>
+• Tergolong pemain pada tingkat lanjutan (mendekati Master / pemain Pro)<br>
+• Sudah sangat baik dalam melakukan serve, baseline, volley, finishing dan pengambilan keputusan<br><br>
+<strong style="color:#fff;">Syarat Peserta</strong><br>
+• TIDAK pernah mempunyai Track Record menjadi Atlet Tennis yang mengikuti PON dan Tim Nasional Tennis<br>
+• Minimal usia 25 tahun, maksimal 60 tahun<br>
+• Telah terverifikasi LOLOS SCREENING Panitia<br><br><strong style="color:#fff;">Pembayaran Pendaftaran</strong><br>
+Calon peserta diwajibkan melakukan pembayaran pendaftaran sebesar <strong>Rp 750.000</strong> melalui:<br><br>
+BCA 0190848507 a.n. Anisa Sativa Fillaili<br>
+Mandiri 144-00-1545610-3 a.n. Anisa Sativa Fillaili<br><br>
+<em style="color:#E8B04B;">⚠️ Pembayaran hanya melalui rekening di atas. Panitia TIDAK meminta pembayaran lain melalui WhatsApp atau media lainnya.</em>`
     }
   };
 
@@ -260,6 +333,20 @@
     document.getElementById('step-peraturan').style.display = 'none';
     document.getElementById('step-form').style.display = 'block';
     selectedGender = null;
+
+    // Advance class: gender options are Men's & Mixed instead of Men's & Women's
+    const womenBtn = document.getElementById('btn-women');
+    if (selectedKelas === 'advance') {
+      womenBtn.textContent = "MIXED";
+      womenBtn.onclick = () => selectGender('mixed');
+    } else {
+      womenBtn.textContent = "WOMEN'S";
+      womenBtn.onclick = () => selectGender('women');
+    }
+    // reset button styles
+    const menBtn = document.getElementById('btn-men');
+    menBtn.style.borderColor = 'rgba(255,255,255,0.15)'; menBtn.style.color = 'var(--text-muted)'; menBtn.style.background = 'transparent';
+    womenBtn.style.borderColor = 'rgba(255,255,255,0.15)'; womenBtn.style.color = 'var(--text-muted)'; womenBtn.style.background = 'transparent';
   }
 
   function backToPeraturan() {
