@@ -126,13 +126,9 @@
 <div class="page-header">
   <div class="cat-badge">Open Level · Doubles</div>
   <div class="page-title">ADVANCE</div>
-  <div class="page-desc">24 pasang per gender · Hadiah TBD</div>
+  <div class="page-desc">24 pasang · Men's & Mixed Doubles</div>
   <div class="controls">
-    <div class="gender-tabs">
-      <button class="gender-tab active" onclick="setGender('men',this)">👨 Men's Doubles</button>
-      <button class="gender-tab" onclick="setGender('women',this)">👩 Women's Doubles</button>
-    </div>
-    <div class="phase-tabs">
+    <div class="phase-tabs" style="flex:1;">
       <button class="phase-tab active" onclick="setPhase('grup',this)">Fase Grup</button>
       <button class="phase-tab" onclick="setPhase('knockout',this)">Knockout</button>
     </div>
@@ -144,20 +140,12 @@
 </div>
 
 <div class="main">
-  <div class="gender-panel active" id="panel-men">
-    <div class="phase-panel active" id="men-grup">
-      <div class="groups-grid" id="men-groups"><div class="loading">Memuat data<span class="ld">.</span><span class="ld">.</span><span class="ld">.</span></div></div>
+  <div class="gender-panel active" id="panel-all">
+    <div class="phase-panel active" id="all-grup">
+      <div class="groups-grid" id="all-groups"><div class="loading">Memuat data<span class="ld">.</span><span class="ld">.</span><span class="ld">.</span></div></div>
     </div>
-    <div class="phase-panel" id="men-knockout">
-      <div id="men-bracket"><div class="loading">Memuat data<span class="ld">.</span><span class="ld">.</span><span class="ld">.</span></div></div>
-    </div>
-  </div>
-  <div class="gender-panel" id="panel-women">
-    <div class="phase-panel active" id="women-grup">
-      <div class="groups-grid" id="women-groups"><div class="loading">Memuat data<span class="ld">.</span><span class="ld">.</span><span class="ld">.</span></div></div>
-    </div>
-    <div class="phase-panel" id="women-knockout">
-      <div id="women-bracket"><div class="loading">Memuat data<span class="ld">.</span><span class="ld">.</span><span class="ld">.</span></div></div>
+    <div class="phase-panel" id="all-knockout">
+      <div id="all-bracket"><div class="loading">Memuat data<span class="ld">.</span><span class="ld">.</span><span class="ld">.</span></div></div>
     </div>
   </div>
 </div>
@@ -168,7 +156,6 @@
   const CATEGORY = 'advance';
   const GROUPS = ['A','B','C','D','E','F','G','H'];
 
-  let currentGender = 'men';
   let currentPhase = 'grup';
   let allPairs = [];
   let allMatches = [];
@@ -212,14 +199,14 @@
 
   function renderGroups(gender) {
     const container = document.getElementById(`${gender}-groups`);
-    const pairs = allPairs.filter(p => p.gender === gender);
+    const pairs = allPairs;
     if (!pairs.length) { container.innerHTML = `<div class="empty-state" style="grid-column:1/-1">Belum ada data peserta</div>`; return; }
 
     let html = '';
     GROUPS.forEach(g => {
       const gPairs = pairs.filter(p => p.group_name === g);
       if (!gPairs.length) return;
-      const gMatches = allMatches.filter(m => m.gender === gender && m.group_name === g && m.phase === 'grup');
+      const gMatches = allMatches.filter(m => m.group_name === g && m.phase === 'grup');
       const standings = calcStandings(gPairs, gMatches);
       const rankClass = ['rank-1','rank-2','rank-3'];
       const courtInfo = gMatches[0]?.court || '—';
@@ -272,7 +259,7 @@
     let hasAny = false;
 
     phases.forEach(ph => {
-      const ms = allMatches.filter(m => m.gender === gender && m.phase === ph.key);
+      const ms = allMatches.filter(m => m.phase === ph.key);
       if (!ms.length) return;
       hasAny = true;
       const gridStyle = ph.key === 'final' ? 'style="grid-template-columns:1fr;max-width:360px"' : '';
@@ -292,7 +279,7 @@
       html += `</div>`;
     });
 
-    const fin = allMatches.find(m => m.gender === gender && m.phase === 'final' && m.score1 !== null);
+    const fin = allMatches.find(m => m.phase === 'final' && m.score1 !== null);
     let champ = 'BELUM DITENTUKAN', champClass = 'champion-tbd';
     if (fin) {
       const wId = fin.score1 > fin.score2 ? fin.pair1_id : fin.pair2_id;
@@ -302,7 +289,7 @@
 
     if (!hasAny) html = `<div class="empty-state">Fase knockout belum dimulai</div>`;
     html += `<div class="champion">
-      <div class="champion-label">🏆 Champion · Advance ${gender==='men'?"Men's":"Women's"} Doubles</div>
+      <div class="champion-label">🏆 Champion · Advance Doubles</div>
       <div class="${champClass}">${champ}</div>
     </div>`;
 
@@ -310,29 +297,16 @@
   }
 
   function renderAll() {
-    ['men','women'].forEach(g => { renderGroups(g); renderKnockout(g); });
-  }
-
-  function setGender(gender, btn) {
-    currentGender = gender;
-    document.querySelectorAll('.gender-panel').forEach(p => p.classList.remove('active'));
-    document.querySelectorAll('.gender-tab').forEach(b => b.classList.remove('active'));
-    document.getElementById('panel-'+gender).classList.add('active');
-    btn.classList.add('active');
-    setPhasePanel(gender, currentPhase);
+    renderGroups('all');
+    renderKnockout('all');
   }
 
   function setPhase(phase, btn) {
-    currentPhase = phase;
     document.querySelectorAll('.phase-tab, .mobile-phase button').forEach(b => b.classList.remove('active'));
     if (btn) btn.classList.add('active');
-    setPhasePanel(currentGender, phase);
-  }
-
-  function setPhasePanel(gender, phase) {
-    const panel = document.getElementById('panel-'+gender);
+    const panel = document.getElementById('panel-all');
     panel.querySelectorAll('.phase-panel').forEach(p => p.classList.remove('active'));
-    const t = document.getElementById(gender+'-'+phase);
+    const t = document.getElementById('all-'+phase);
     if (t) t.classList.add('active');
   }
 

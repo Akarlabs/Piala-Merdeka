@@ -113,6 +113,7 @@
   .badge { display: inline-block; font-size: 9px; letter-spacing: 1px; padding: 2px 7px; font-weight: 700; text-transform: uppercase; }
   .badge-men { background: rgba(41,128,185,0.3); color: #74b9e8; }
   .badge-women { background: rgba(192,57,43,0.3); color: #e8a0a0; }
+  .badge-mixed { background: rgba(232,176,75,0.3); color: #f0d090; }
   .badge-cat { background: var(--gray); color: var(--text-muted); }
 
   /* SCORE INPUT */
@@ -139,7 +140,7 @@
 <div class="login-screen" id="login-screen">
   <div class="login-box">
     <div class="login-title">ADMIN PANEL</div>
-    <div class="login-sub">Piala Merdeka 2026 · Malbo Sportainment</div>
+    <div class="login-sub">Piala Merdeka 2026</div>
     <input type="password" id="pwd-input" placeholder="Password" onkeydown="if(event.key==='Enter')doLogin()">
     <button class="btn-login" onclick="doLogin()">MASUK</button>
     <div class="login-error" id="login-error">Password salah</div>
@@ -197,6 +198,7 @@
             <select id="ag-gender" onchange="loadGrupData()">
               <option value="men">Men's</option>
               <option value="women">Women's</option>
+              <option value="mixed">Mixed</option>
             </select>
           </div>
           <div class="form-group" style="justify-content:flex-end;">
@@ -228,6 +230,7 @@
             <select id="m-gender" onchange="loadPairsForMatch()">
               <option value="men">Men's</option>
               <option value="women">Women's</option>
+              <option value="mixed">Mixed</option>
             </select>
           </div>
           <div class="form-group">
@@ -297,6 +300,7 @@
             <select id="sc-gender" onchange="loadMatchesForScore()">
               <option value="men">Men's</option>
               <option value="women">Women's</option>
+              <option value="mixed">Mixed</option>
             </select>
           </div>
           <div class="form-group">
@@ -335,6 +339,7 @@
               <option value="">Semua</option>
               <option value="men">Men's</option>
               <option value="women">Women's</option>
+              <option value="mixed">Mixed</option>
             </select>
           </div>
           <div class="form-group">
@@ -419,6 +424,7 @@
               <option value="">Semua</option>
               <option value="men">Men's</option>
               <option value="women">Women's</option>
+              <option value="mixed">Mixed</option>
             </select>
           </div>
           <div class="form-group" style="justify-content:flex-end;">
@@ -601,7 +607,7 @@
         <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:12px;flex-wrap:wrap;">
           <div>
             <div style="font-size:9px;letter-spacing:2px;color:var(--text-muted);text-transform:uppercase;margin-bottom:6px;">
-              ${CAT_LABELS[p.category]||p.category} · ${p.gender==='men'?"Men's":"Women's"}
+              ${CAT_LABELS[p.category]||p.category} · ${p.gender==='men'?"Men's":p.gender==='mixed'?'Mixed':"Women's"}
             </div>
             <div style="font-family:'Barlow Condensed',sans-serif;font-size:18px;font-weight:700;margin-bottom:4px;">${p.player1} / ${p.player2}</div>
             <div style="font-size:12px;color:var(--text-muted);">📍 ${p.city||'—'} &nbsp;·&nbsp; 📱 ${wa}</div>
@@ -898,7 +904,7 @@
     tbody.innerHTML = filtered.map(p => `
       <tr>
         <td><span class="badge badge-cat">${p.category}</span></td>
-        <td><span class="badge ${p.gender==='men'?'badge-men':'badge-women'}">${p.gender}</span></td>
+        <td><span class="badge ${p.gender==='men'?'badge-men':p.gender==='mixed'?'badge-mixed':'badge-women'}">${p.gender}</span></td>
         <td style="font-family:'Bebas Neue',sans-serif;font-size:18px;color:var(--red-light)">${p.group_name}</td>
         <td style="font-family:'Barlow Condensed',sans-serif;font-size:15px;font-weight:700;">${p.player1} / ${p.player2}</td>
         <td style="color:var(--text-muted)">${p.city||'—'}</td>
@@ -923,7 +929,7 @@
       return `
       <tr id="row-${m.id}">
         <td><span class="badge badge-cat">${m.category}</span></td>
-        <td><span class="badge ${m.gender==='men'?'badge-men':'badge-women'}">${m.gender}</span></td>
+        <td><span class="badge ${m.gender==='men'?'badge-men':m.gender==='mixed'?'badge-mixed':'badge-women'}">${m.gender}</span></td>
         <td style="color:var(--text-muted);font-size:11px;text-transform:uppercase;letter-spacing:1px;">${m.phase}</td>
         <td style="font-family:'Bebas Neue',sans-serif;font-size:18px;color:var(--red-light)">${m.group_name||'—'}</td>
         <td style="font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:700;">${p1?`${p1.player1}/${p1.player2}`:'TBD'}</td>
