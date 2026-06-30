@@ -543,7 +543,7 @@
     if (cat === 'advance') {
       genderWrap.style.opacity = '0.4';
       genderWrap.style.pointerEvents = 'none';
-      genderWrap.querySelector('label').textContent = "Gender (gabung Men's + Mixed)";
+      genderWrap.querySelector('label').textContent = "Gender (Advance = Men's only)";
     } else {
       genderWrap.style.opacity = '1';
       genderWrap.style.pointerEvents = 'auto';
@@ -575,7 +575,7 @@
     container.innerHTML = `
       <div class="form-card" style="overflow-x:auto;">
         <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
-          <div class="form-title" style="margin-bottom:0;">Peserta Verified (${pairs.length})${showGender ? ' · Men\'s + Mixed gabung' : ''}</div>
+          <div class="form-title" style="margin-bottom:0;">Peserta Verified (${pairs.length})${showGender ? " · Men's only (badge nunjukin data lama jika ada)" : ''}</div>
           <button class="btn btn-green btn-sm" onclick="saveAllGrup()">✓ Simpan Semua</button>
         </div>
         <table class="data-table">

@@ -136,13 +136,18 @@
       <div class="form-card-title">Kelas Terpilih</div>
       <div style="background:rgba(192,57,43,0.1);border:1px solid rgba(192,57,43,0.3);padding:12px 16px;font-family:'Barlow Condensed',sans-serif;font-size:16px;font-weight:700;letter-spacing:1px;" id="form-kelas-display"></div>
     </div>
-    <div class="form-card">
+    <div class="form-card" id="gender-card">
       <div class="form-card-title">Gender</div>
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
         <button id="btn-men" onclick="selectGender('men')" style="padding:14px;font-family:'Bebas Neue',sans-serif;font-size:14px;letter-spacing:1px;cursor:pointer;border:2px solid rgba(255,255,255,0.15);background:transparent;color:var(--text-muted);transition:all 0.15s;">MEN'S</button>
         <button id="btn-women" onclick="selectGender('women')" style="padding:14px;font-family:'Bebas Neue',sans-serif;font-size:14px;letter-spacing:1px;cursor:pointer;border:2px solid rgba(255,255,255,0.15);background:transparent;color:var(--text-muted);transition:all 0.15s;">WOMEN'S</button>
       </div>
       <div style="font-size:11px;color:var(--red-light);margin-top:10px;font-weight:600;">⚠️ Wajib pilih salah satu sebelum mendaftar.</div>
+    </div>
+    <div class="form-card" id="advance-gender-note" style="display:none;">
+      <div class="form-card-title">Kategori</div>
+      <div style="background:rgba(192,57,43,0.1);border:1px solid rgba(192,57,43,0.3);padding:12px 16px;font-family:'Barlow Condensed',sans-serif;font-size:16px;font-weight:700;letter-spacing:1px;">MEN'S DOUBLES</div>
+      <div style="font-size:11px;color:var(--text-muted);margin-top:10px;">Kelas Advance khusus Men's Doubles, tidak ada pilihan gender lain.</div>
     </div>
     <div class="form-card">
       <div class="form-card-title">Data Pemain</div>
@@ -293,8 +298,8 @@ Mandiri 144-00-1545610-3 a.n. Anisa Sativa Fillaili<br><br>
     },
     advance: {
       label: 'Advance', badge: 'Open level',
-      info: "24 pasang · Men's & Mixed Doubles",
-      peraturan: `<em style="color:#E8B04B;">Kategori ADVANCE OPEN dibuka untuk MEN'S DOUBLE dan MIXED DOUBLE dalam satu kategori.</em><br><br>
+      info: "24 pasang · Men's Doubles",
+      peraturan: `<em style="color:#E8B04B;">Kategori ADVANCE OPEN dibuka khusus untuk MEN'S DOUBLE.</em><br><br>
 <strong style="color:#fff;">Kriteria Kemampuan Pemain</strong><br>
 • Sudah teruji mengikuti banyak turnamen<br>
 • Tergolong pemain pada tingkat lanjutan (mendekati Master / pemain Pro)<br>
@@ -358,19 +363,24 @@ Mandiri 144-00-1545610-3 a.n. Anisa Sativa Fillaili<br><br>
     document.getElementById('step-form').style.display = 'block';
     selectedGender = null;
 
-    // Advance class: gender options are Men's & Mixed instead of Men's & Women's
-    const womenBtn = document.getElementById('btn-women');
+    const genderCard = document.getElementById('gender-card');
+    const advanceNote = document.getElementById('advance-gender-note');
     if (selectedKelas === 'advance') {
-      womenBtn.textContent = "MIXED";
-      womenBtn.onclick = () => selectGender('mixed');
+      // Advance class: Men's Doubles only, no gender choice needed
+      genderCard.style.display = 'none';
+      advanceNote.style.display = 'block';
+      selectedGender = 'men';
     } else {
+      genderCard.style.display = 'block';
+      advanceNote.style.display = 'none';
+      // reset button styles
+      const menBtn = document.getElementById('btn-men');
+      const womenBtn = document.getElementById('btn-women');
       womenBtn.textContent = "WOMEN'S";
       womenBtn.onclick = () => selectGender('women');
+      menBtn.style.borderColor = 'rgba(255,255,255,0.15)'; menBtn.style.color = 'var(--text-muted)'; menBtn.style.background = 'transparent';
+      womenBtn.style.borderColor = 'rgba(255,255,255,0.15)'; womenBtn.style.color = 'var(--text-muted)'; womenBtn.style.background = 'transparent';
     }
-    // reset button styles
-    const menBtn = document.getElementById('btn-men');
-    menBtn.style.borderColor = 'rgba(255,255,255,0.15)'; menBtn.style.color = 'var(--text-muted)'; menBtn.style.background = 'transparent';
-    womenBtn.style.borderColor = 'rgba(255,255,255,0.15)'; womenBtn.style.color = 'var(--text-muted)'; womenBtn.style.background = 'transparent';
   }
 
   function backToPeraturan() {
