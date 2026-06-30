@@ -21,6 +21,21 @@
     padding: 60px 20px 80px;
     text-align: center;
     border-bottom: 2px solid var(--red);
+    position: relative;
+  }
+  .organizer-logo {
+    position: absolute;
+    top: 24px;
+    height: 64px;
+    width: auto;
+    object-fit: contain;
+  }
+  .organizer-logo-left { left: 24px; }
+  .organizer-logo-right { right: 24px; }
+  @media (max-width: 700px) {
+    .organizer-logo { height: 40px; top: 16px; }
+    .organizer-logo-left { left: 16px; }
+    .organizer-logo-right { right: 16px; }
   }
   .hero-label { font-size: 11px; letter-spacing: 3px; color: var(--text-muted); text-transform: uppercase; margin-bottom: 8px; }
   .hero-title {
@@ -280,6 +295,8 @@
 
 <!-- HERO -->
 <section class="hero">
+  <img src="assets/aso-logo.png" class="organizer-logo organizer-logo-left" alt="Aizon Sportainment Organizer" onerror="this.style.display='none'">
+  <img src="assets/aso-logo.png" class="organizer-logo organizer-logo-right" alt="Aizon Sportainment Organizer" onerror="this.style.display='none'">
   <img src="assets/logo.png"
     onerror="this.style.display='none';document.getElementById('logo-fallback').style.display='block'"
     style="height:380px;object-fit:contain;display:block;margin:0 auto;mix-blend-mode:screen;">
