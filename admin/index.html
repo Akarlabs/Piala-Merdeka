@@ -185,7 +185,7 @@
         <div class="form-row">
           <div class="form-group">
             <label>Kategori</label>
-            <select id="ag-category" onchange="loadGrupData()">
+            <select id="ag-category" onchange="onGrupCategoryChange()">
               <option value="rookie">Rookie</option>
               <option value="beginner">Beginner</option>
               <option value="novice">Novice</option>
@@ -193,7 +193,7 @@
               <option value="advance">Advance</option>
             </select>
           </div>
-          <div class="form-group">
+          <div class="form-group" id="ag-gender-wrap">
             <label>Gender</label>
             <select id="ag-gender" onchange="loadGrupData()">
               <option value="men">Men's</option>
@@ -217,7 +217,7 @@
         <div class="form-row">
           <div class="form-group">
             <label>Kategori</label>
-            <select id="m-category" onchange="loadPairsForMatch()">
+            <select id="m-category" onchange="onMatchCategoryChange()">
               <option value="rookie">Rookie</option>
               <option value="beginner">Beginner</option>
               <option value="novice">Novice</option>
@@ -225,7 +225,7 @@
               <option value="advance">Advance</option>
             </select>
           </div>
-          <div class="form-group">
+          <div class="form-group" id="m-gender-wrap">
             <label>Gender</label>
             <select id="m-gender" onchange="loadPairsForMatch()">
               <option value="men">Men's</option>
@@ -287,7 +287,7 @@
         <div class="form-row">
           <div class="form-group">
             <label>Kategori</label>
-            <select id="sc-category" onchange="loadMatchesForScore()">
+            <select id="sc-category" onchange="onScoreCategoryChange()">
               <option value="rookie">Rookie</option>
               <option value="beginner">Beginner</option>
               <option value="novice">Novice</option>
@@ -295,7 +295,7 @@
               <option value="advance">Advance</option>
             </select>
           </div>
-          <div class="form-group">
+          <div class="form-group" id="sc-gender-wrap">
             <label>Gender</label>
             <select id="sc-gender" onchange="loadMatchesForScore()">
               <option value="men">Men's</option>
@@ -361,8 +361,8 @@
       <div class="form-card" style="overflow-x:auto;">
         <div class="form-title" id="pairs-count">Semua Pasangan</div>
         <table class="data-table" id="pairs-table">
-          <thead><tr><th>Kategori</th><th>Gender</th><th>Grup</th><th>Pasangan</th><th>Kota</th><th>WA</th><th>Status</th><th>Aksi</th></tr></thead>
-          <tbody id="pairs-tbody"><tr><td colspan="6" style="text-align:center;color:var(--text-muted);padding:20px;">Loading...</td></tr></tbody>
+          <thead><tr><th>Kategori</th><th>Gender</th><th>Grup</th><th>Pasangan</th><th>Club</th><th>Kota</th><th>WA 1</th><th>WA 2</th><th>Bukti TF</th><th>Status</th><th>Aksi</th></tr></thead>
+          <tbody id="pairs-tbody"><tr><td colspan="11" style="text-align:center;color:var(--text-muted);padding:20px;">Loading...</td></tr></tbody>
         </table>
       </div>
       <div class="form-card" style="overflow-x:auto;margin-top:16px;">
@@ -481,7 +481,35 @@
 
 <div class="toast" id="toast"></div>
 
+<div id="bukti-modal" onclick="if(event.target===this)closeBuktiModal()" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.85);z-index:1000;align-items:center;justify-content:center;padding:24px;">
+  <div style="max-width:90vw;max-height:90vh;display:flex;flex-direction:column;align-items:center;gap:12px;">
+    <div id="bukti-modal-content" style="max-width:90vw;max-height:75vh;overflow:auto;background:var(--dark);"></div>
+    <div style="display:flex;gap:10px;">
+      <a id="bukti-modal-newtab" href="#" target="_blank" class="btn btn-secondary btn-sm">↗ Buka di Tab Baru</a>
+      <button class="btn btn-secondary btn-sm" onclick="closeBuktiModal()">✕ Tutup</button>
+    </div>
+  </div>
+</div>
+
 <script>
+  // ---- BUKTI TF LIGHTBOX ----
+  function openBuktiModal(url) {
+    const content = document.getElementById('bukti-modal-content');
+    const isPdf = /\.pdf($|\?)/i.test(url);
+    content.innerHTML = isPdf
+      ? `<iframe src="${url}" style="width:80vw;height:75vh;border:none;"></iframe>`
+      : `<img src="${url}" style="max-width:90vw;max-height:75vh;display:block;object-fit:contain;">`;
+    document.getElementById('bukti-modal-newtab').href = url;
+    document.getElementById('bukti-modal').style.display = 'flex';
+  }
+
+  function closeBuktiModal() {
+    document.getElementById('bukti-modal').style.display = 'none';
+    document.getElementById('bukti-modal-content').innerHTML = '';
+  }
+
+  document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeBuktiModal(); });
+
   const SUPABASE_URL = 'https://hufwbvouwmdbjhawygxg.supabase.co';
   const SUPABASE_KEY = 'sb_publishable_ajdfMjHRQM4EeFVzYDmSZw_Ozxz5It6';
   const ADMIN_PASSWORD = 'malbo2026';
@@ -508,21 +536,37 @@
     document.getElementById('pwd-input').value = '';
   }
 
-  // ---- TABS ----
   // ---- ATUR GRUP ----
+  function onGrupCategoryChange() {
+    const cat = document.getElementById('ag-category').value;
+    const genderWrap = document.getElementById('ag-gender-wrap');
+    if (cat === 'advance') {
+      genderWrap.style.opacity = '0.4';
+      genderWrap.style.pointerEvents = 'none';
+      genderWrap.querySelector('label').textContent = "Gender (gabung Men's + Mixed)";
+    } else {
+      genderWrap.style.opacity = '1';
+      genderWrap.style.pointerEvents = 'auto';
+      genderWrap.querySelector('label').textContent = 'Gender';
+    }
+    loadGrupData();
+  }
+
   async function loadGrupData() {
     const cat = document.getElementById('ag-category').value;
     const gender = document.getElementById('ag-gender').value;
     const container = document.getElementById('grup-list');
     container.innerHTML = '<div style="text-align:center;padding:20px;color:var(--text-muted);font-size:12px;letter-spacing:2px;">Loading...</div>';
     try {
-      const res = await fetch(`${SUPABASE_URL}/rest/v1/pairs?select=*&category=eq.${cat}&gender=eq.${gender}&status=eq.approved&order=group_name`, { headers: headers() });
+      // Advance: men's + mixed share one bracket, so groups must combine both genders.
+      const genderFilter = cat === 'advance' ? '' : `&gender=eq.${gender}`;
+      const res = await fetch(`${SUPABASE_URL}/rest/v1/pairs?select=*&category=eq.${cat}${genderFilter}&status=eq.approved&order=group_name`, { headers: headers() });
       const pairs = await res.json();
-      renderGrupList(pairs);
+      renderGrupList(pairs, cat === 'advance');
     } catch(e) { showToast('Gagal load data', true); }
   }
 
-  function renderGrupList(pairs) {
+  function renderGrupList(pairs, showGender) {
     const container = document.getElementById('grup-list');
     if (!pairs.length) {
       container.innerHTML = '<div style="text-align:center;padding:40px;color:var(--text-muted);font-size:12px;letter-spacing:2px;text-transform:uppercase;">Belum ada peserta verified</div>';
@@ -531,15 +575,16 @@
     container.innerHTML = `
       <div class="form-card" style="overflow-x:auto;">
         <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
-          <div class="form-title" style="margin-bottom:0;">Peserta Verified (${pairs.length})</div>
+          <div class="form-title" style="margin-bottom:0;">Peserta Verified (${pairs.length})${showGender ? ' · Men\'s + Mixed gabung' : ''}</div>
           <button class="btn btn-green btn-sm" onclick="saveAllGrup()">✓ Simpan Semua</button>
         </div>
         <table class="data-table">
-          <thead><tr><th>Pasangan</th><th>Kota</th><th>WA</th><th>Grup Sekarang</th><th>Set Grup</th></tr></thead>
+          <thead><tr><th>Pasangan</th>${showGender ? '<th>Gender</th>' : ''}<th>Kota</th><th>WA</th><th>Grup Sekarang</th><th>Set Grup</th></tr></thead>
           <tbody>
             ${pairs.map(p => `
             <tr>
               <td style="font-family:'Barlow Condensed',sans-serif;font-size:15px;font-weight:700;">${p.player1} / ${p.player2}</td>
+              ${showGender ? `<td><span class="badge ${p.gender==='men'?'badge-men':'badge-mixed'}">${p.gender==='men'?"Men's":'Mixed'}</span></td>` : ''}
               <td style="color:var(--text-muted);font-size:12px;">${p.city||'—'}</td>
               <td style="color:var(--text-muted);font-size:12px;">${p.whatsapp||'—'}</td>
               <td style="font-family:'Bebas Neue',sans-serif;font-size:20px;color:var(--red-light);">${p.group_name||'—'}</td>
@@ -600,7 +645,8 @@
     }
     const CAT_LABELS = { rookie:'Rookie', beginner:'Beginner', novice:'Novice', intermediate:'Intermediate', advance:'Advance' };
     container.innerHTML = pairs.map(p => {
-      const wa = p.whatsapp || '—';
+      const wa1 = p.whatsapp || '—';
+      const wa2 = p.whatsapp2 || '—';
       const statusColor = p.status==='approved'?'var(--green)':p.status==='rejected'?'var(--red-light)':'#E8B04B';
       return `
       <div class="form-card" style="margin-bottom:8px;">
@@ -610,7 +656,10 @@
               ${CAT_LABELS[p.category]||p.category} · ${p.gender==='men'?"Men's":p.gender==='mixed'?'Mixed':"Women's"}
             </div>
             <div style="font-family:'Barlow Condensed',sans-serif;font-size:18px;font-weight:700;margin-bottom:4px;">${p.player1} / ${p.player2}</div>
-            <div style="font-size:12px;color:var(--text-muted);">📍 ${p.city||'—'} &nbsp;·&nbsp; 📱 ${wa}</div>
+            <div style="font-size:12px;color:var(--text-muted);">📍 ${p.city||'—'} ${p.club?'· 🎾 '+p.club+' ':''}&nbsp;·&nbsp; 📱 ${wa1} / ${wa2}</div>
+            <div style="margin-top:6px;">
+              ${p.bukti_tf_url ? `<a href="javascript:void(0)" onclick="openBuktiModal('${p.bukti_tf_url}')" style="font-size:11px;color:var(--red-light);font-weight:700;text-decoration:underline;">📄 Lihat Bukti Transfer</a>` : '<span style="font-size:11px;color:var(--red-light);">⚠ Belum upload bukti transfer</span>'}
+            </div>
             <div style="margin-top:6px;font-size:11px;font-weight:700;color:${statusColor};text-transform:uppercase;letter-spacing:1px;">${p.status}</div>
           </div>
           <div style="display:flex;flex-direction:column;gap:6px;min-width:100px;">
@@ -702,9 +751,9 @@
     document.getElementById(id).classList.add('active');
     btn.classList.add('active');
     if (id === 'tab-data') loadAllData();
-    if (id === 'tab-grup') loadGrupData();
-    if (id === 'tab-matches') loadPairsForMatch();
-    if (id === 'tab-scores') loadMatchesForScore();
+    if (id === 'tab-grup') onGrupCategoryChange();
+    if (id === 'tab-matches') onMatchCategoryChange();
+    if (id === 'tab-scores') onScoreCategoryChange();
     if (id === 'tab-sponsors') loadSponsors();
     if (id === 'tab-settings') loadSettings();
     if (id === 'tab-verify') loadPending();
@@ -722,7 +771,11 @@
     setTimeout(() => t.classList.remove('show'), 3000);
   }
 
-  function pairLabel(pair) { return pair ? `${pair.player1} / ${pair.player2} (${pair.group_name})` : 'TBD'; }
+  function pairLabel(pair, showGender) {
+    if (!pair) return 'TBD';
+    const g = showGender ? ` [${pair.gender==='men'?"Men's":pair.gender==='mixed'?'Mixed':"Women's"}]` : '';
+    return `${pair.player1} / ${pair.player2} (${pair.group_name})${g}`;
+  }
 
   async function loadAllData() {
     try {
@@ -776,16 +829,31 @@
   }
 
   // ---- LOAD PAIRS FOR MATCH DROPDOWN ----
+  function onMatchCategoryChange() {
+    const cat = document.getElementById('m-category').value;
+    const genderWrap = document.getElementById('m-gender-wrap');
+    if (cat === 'advance') {
+      genderWrap.style.opacity = '0.4';
+      genderWrap.style.pointerEvents = 'none';
+    } else {
+      genderWrap.style.opacity = '1';
+      genderWrap.style.pointerEvents = 'auto';
+    }
+    loadPairsForMatch();
+  }
+
   async function loadPairsForMatch() {
     const cat = document.getElementById('m-category').value;
     const gender = document.getElementById('m-gender').value;
-    const filtered = allPairs.filter(p => p.category === cat && p.gender === gender && p.status === 'approved');
+    const filtered = cat === 'advance'
+      ? allPairs.filter(p => p.category === cat && p.status === 'approved')
+      : allPairs.filter(p => p.category === cat && p.gender === gender && p.status === 'approved');
     const selects = ['m-pair1','m-pair2'];
     selects.forEach(id => {
       const sel = document.getElementById(id);
       sel.innerHTML = '<option value="">-- Pilih Pasangan --</option>';
       filtered.forEach(p => {
-        sel.innerHTML += `<option value="${p.id}">${pairLabel(p)}</option>`;
+        sel.innerHTML += `<option value="${p.id}">${pairLabel(p, cat === 'advance')}</option>`;
       });
     });
   }
@@ -828,11 +896,27 @@
   }
 
   // ---- LOAD MATCHES FOR SCORE ----
+  function onScoreCategoryChange() {
+    const cat = document.getElementById('sc-category').value;
+    const genderWrap = document.getElementById('sc-gender-wrap');
+    if (cat === 'advance') {
+      genderWrap.style.opacity = '0.4';
+      genderWrap.style.pointerEvents = 'none';
+    } else {
+      genderWrap.style.opacity = '1';
+      genderWrap.style.pointerEvents = 'auto';
+    }
+    loadMatchesForScore();
+  }
+
   async function loadMatchesForScore() {
     const cat = document.getElementById('sc-category').value;
     const gender = document.getElementById('sc-gender').value;
     const phase = document.getElementById('sc-phase').value;
-    const ms = allMatches.filter(m => m.category === cat && m.gender === gender && m.phase === phase);
+    const showGender = cat === 'advance';
+    const ms = showGender
+      ? allMatches.filter(m => m.category === cat && m.phase === phase)
+      : allMatches.filter(m => m.category === cat && m.gender === gender && m.phase === phase);
     const container = document.getElementById('scores-list');
 
     if (!ms.length) {
@@ -850,7 +934,7 @@
           <div>
             <div style="font-size:9px;letter-spacing:2px;color:var(--text-muted);text-transform:uppercase;margin-bottom:4px;">${m.match_code||phase.toUpperCase()} · ${m.court||''} · ${m.match_time||''}</div>
             <div style="font-family:'Barlow Condensed',sans-serif;font-size:16px;font-weight:700;">
-              ${pairLabel(p1)} <span style="color:var(--text-muted);font-size:12px;margin:0 6px">vs</span> ${pairLabel(p2)}
+              ${pairLabel(p1, showGender)} <span style="color:var(--text-muted);font-size:12px;margin:0 6px">vs</span> ${pairLabel(p2, showGender)}
             </div>
           </div>
           <div class="score-input">
@@ -900,15 +984,18 @@
     );
     document.getElementById('pairs-count').textContent = `Pasangan (${filtered.length})`;
     const tbody = document.getElementById('pairs-tbody');
-    if (!filtered.length) { tbody.innerHTML = '<tr><td colspan="8" style="text-align:center;color:var(--text-muted);padding:20px;">Belum ada data</td></tr>'; return; }
+    if (!filtered.length) { tbody.innerHTML = '<tr><td colspan="11" style="text-align:center;color:var(--text-muted);padding:20px;">Belum ada data</td></tr>'; return; }
     tbody.innerHTML = filtered.map(p => `
       <tr>
         <td><span class="badge badge-cat">${p.category}</span></td>
         <td><span class="badge ${p.gender==='men'?'badge-men':p.gender==='mixed'?'badge-mixed':'badge-women'}">${p.gender}</span></td>
         <td style="font-family:'Bebas Neue',sans-serif;font-size:18px;color:var(--red-light)">${p.group_name}</td>
         <td style="font-family:'Barlow Condensed',sans-serif;font-size:15px;font-weight:700;">${p.player1} / ${p.player2}</td>
+        <td style="color:var(--text-muted)">${p.club||'—'}</td>
         <td style="color:var(--text-muted)">${p.city||'—'}</td>
         <td style="color:var(--text-muted);font-size:12px;">${p.whatsapp||'—'}</td>
+        <td style="color:var(--text-muted);font-size:12px;">${p.whatsapp2||'—'}</td>
+        <td>${p.bukti_tf_url ? `<a href="javascript:void(0)" onclick="openBuktiModal('${p.bukti_tf_url}')" style="color:var(--red-light);font-weight:700;">Lihat</a>` : '<span style="color:var(--text-muted);">—</span>'}</td>
         <td><span style="font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:${p.status==='approved'?'var(--green)':p.status==='rejected'?'var(--red-light)':'#E8B04B'}">${p.status||'—'}</span></td>
         <td><button class="btn btn-danger" onclick="deletePair('${p.id}')">Hapus</button></td>
       </tr>`).join('');

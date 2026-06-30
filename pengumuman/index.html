@@ -270,7 +270,7 @@
     const listHtml = pairs.map(p => {
       const info = statusInfo[p.status] || statusInfo.pending;
       const cat = CAT_LABELS[p.category] || p.category;
-      const gender = p.gender === 'men' ? "Men's Doubles" : "Women's Doubles";
+      const gender = p.gender === 'men' ? "Men's Doubles" : p.gender === 'mixed' ? 'Mixed Doubles' : "Women's Doubles";
       const grupInfo = p.status === 'approved' && p.group_name && p.group_name !== 'TBD'
         ? `<div class="detail-row"><span class="detail-label">Grup</span><span class="detail-value" style="font-family:'Bebas Neue',sans-serif;font-size:20px;color:var(--red-light)">${p.group_name}</span></div>`
         : '';
@@ -279,10 +279,11 @@
       <div class="pair-card">
         <div class="pair-meta">${cat} · ${gender}</div>
         <div class="pair-name">${p.player1} / ${p.player2}</div>
-        <div style="font-size:11px;color:var(--text-muted);margin-bottom:10px;">📍 ${p.city||'—'}</div>
+        <div style="font-size:11px;color:var(--text-muted);margin-bottom:10px;">📍 ${p.city||'—'}${p.club ? ' · 🎾 '+p.club : ''}</div>
         <div class="result-detail" style="margin-bottom:10px;">
           ${grupInfo}
           <div class="detail-row"><span class="detail-label">Kota</span><span class="detail-value">${p.city||'—'}</span></div>
+          <div class="detail-row"><span class="detail-label">Club</span><span class="detail-value">${p.club||'—'}</span></div>
         </div>
         <span class="pair-status ${p.status||'pending'}">${info.icon} ${info.label}</span>
         <p style="font-size:12px;color:var(--text-muted);margin-top:10px;line-height:1.5;">${info.desc}</p>
@@ -334,7 +335,7 @@
 
     try {
       const res = await fetch(
-        `${SUPABASE_URL}/rest/v1/pairs?select=player1,player2,city&category=eq.${cat}&gender=eq.${gender}&status=eq.approved&order=group_name,player1`,
+        `${SUPABASE_URL}/rest/v1/pairs?select=player1,player2,city,club&category=eq.${cat}&gender=eq.${gender}&status=eq.approved&order=group_name,player1`,
         { headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` } }
       );
       const pairs = await res.json();
@@ -353,7 +354,7 @@
             <div style="font-family:'Bebas Neue',sans-serif;font-size:18px;color:var(--red-light);min-width:28px;">${i+1}</div>
             <div style="flex:1;">
               <div style="font-family:'Barlow Condensed',sans-serif;font-size:15px;font-weight:700;">${p.player1} / ${p.player2}</div>
-              <div style="font-size:11px;color:var(--text-muted);">📍 ${p.city||'—'}</div>
+              <div style="font-size:11px;color:var(--text-muted);">📍 ${p.city||'—'}${p.club ? ' · 🎾 '+p.club : ''}</div>
             </div>
             <div style="font-size:10px;font-weight:700;letter-spacing:1px;color:var(--green);text-transform:uppercase;">✓ Confirmed</div>
           </div>`).join('')}
