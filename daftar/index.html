@@ -3,491 +3,517 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Piala Merdeka 2026 · Aizon Sportainment Organizer</title>
-<meta name="description" content="Turnamen tenis bergengsi se-Indonesia. 22–25 Agustus 2026 · Tennis Indoor Graha Cakrawala UM Malang. Prize Pool Rp 80.000.000.">
-
-<!-- Open Graph (WhatsApp, Facebook, dll) -->
-<meta property="og:title" content="Piala Merdeka 2026 · Aizon Sportainment Organizer">
-<meta property="og:description" content="Turnamen tenis bergengsi se-Indonesia. 22–25 Agustus 2026 · Tennis Indoor Graha Cakrawala UM Malang. Prize Pool Rp 80.000.000.">
-<meta property="og:image" content="https://akarlabs.github.io/Piala-Merdeka/assets/logo.png">
-<meta property="og:url" content="https://akarlabs.github.io/Piala-Merdeka/">
-<meta property="og:type" content="website">
-<meta property="og:site_name" content="Aizon Sportainment Organizer">
-
-<!-- Twitter Card -->
-<meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="Piala Merdeka 2026 · Aizon Sportainment Organizer">
-<meta name="twitter:description" content="Turnamen tenis bergengsi se-Indonesia. 22–25 Agustus 2026 · Prize Pool Rp 80.000.000.">
-<meta name="twitter:image" content="https://akarlabs.github.io/Piala-Merdeka/assets/logo.png">
+<title>Daftar — Piala Merdeka 2026</title>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow+Condensed:wght@400;600;700;900&family=Barlow:wght@400;500&display=swap" rel="stylesheet">
 <style>
   :root {
     --red: #C0392B; --red-dark: #96281B; --red-light: #E74C3C;
-    --dark: #1a1a1a; --darker: #111111; --gray: #2d2d2d; --gray-light: #3d3d3d;
+    --dark: #1a1a1a; --darker: #111111; --gray: #2d2d2d;
     --text: #f0f0f0; --text-muted: #888; --green: #27AE60;
   }
   * { margin: 0; padding: 0; box-sizing: border-box; }
   html { color-scheme: dark; }
-  body { font-family: 'Barlow', sans-serif; background: var(--darker); color: var(--text); line-height: 1.6; }
+  body { font-family: 'Barlow', sans-serif; background: var(--darker); color: var(--text); min-height: 100vh; }
 
-  /* HERO */
-  .hero {
-    background: linear-gradient(135deg, var(--dark) 0%, var(--darker) 100%);
-    padding: 60px 20px 80px;
-    text-align: center;
+  .topnav {
+    background: var(--dark); padding: 14px 20px;
     border-bottom: 2px solid var(--red);
-    position: relative;
+    display: flex; align-items: center; gap: 12px;
   }
-  .organizer-logo {
-    position: absolute;
-    top: 24px;
-    height: 64px;
-    width: auto;
-    object-fit: contain;
-  }
-  .organizer-logo-left { left: 24px; }
-  .organizer-logo-right { right: 24px; }
-  @media (max-width: 700px) {
-    .organizer-logo { height: 40px; top: 16px; }
-    .organizer-logo-left { left: 16px; }
-    .organizer-logo-right { right: 16px; }
-  }
-  .hero-label { font-size: 11px; letter-spacing: 3px; color: var(--text-muted); text-transform: uppercase; margin-bottom: 8px; }
-  .hero-title {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: clamp(48px, 8vw, 88px);
-    letter-spacing: 4px;
-    color: var(--text);
-    line-height: 0.9;
-    margin-bottom: 12px;
-  }
-  .hero-sub {
-    font-size: 16px;
-    color: var(--text-muted);
-    margin-bottom: 24px;
-    letter-spacing: 1px;
-  }
-  .hero-date {
-    font-family: 'Barlow Condensed', sans-serif;
-    font-size: 14px;
-    font-weight: 700;
-    letter-spacing: 2px;
-    color: var(--red-light);
-    text-transform: uppercase;
-  }
+  .topnav a { font-size: 11px; letter-spacing: 2px; color: var(--text-muted); text-decoration: none; text-transform: uppercase; }
+  .topnav a:hover { color: var(--red-light); }
+  .topnav .sep { color: var(--text-muted); }
+  .topnav .current { font-size: 11px; letter-spacing: 2px; color: var(--text); text-transform: uppercase; font-weight: 700; }
 
-  /* SPONSOR SECTION */
-  .sponsor-section {
-    background: var(--dark);
-    padding: 20px 20px 32px;
-    margin: 0;
+  .hero {
+    background: var(--dark); padding: 40px 20px; text-align: center;
     border-bottom: 1px solid rgba(255,255,255,0.06);
   }
-  .sponsor-title {
-    font-family: 'Barlow Condensed', sans-serif;
-    font-size: 12px;
-    letter-spacing: 3px;
-    color: var(--text-muted);
-    text-transform: uppercase;
-    margin-bottom: 20px;
-    text-align: center;
+  .hero-label { font-size: 11px; letter-spacing: 3px; color: var(--text-muted); text-transform: uppercase; margin-bottom: 8px; }
+  .hero-title { font-family: 'Bebas Neue', sans-serif; font-size: clamp(36px,6vw,64px); letter-spacing: 3px; color: var(--text); margin-bottom: 8px; }
+  .hero-sub { font-size: 13px; color: var(--text-muted); letter-spacing: 1px; }
+
+  .form-wrap { max-width: 600px; margin: 40px auto; padding: 0 20px 80px; }
+
+  .form-card { background: var(--dark); border: 1px solid rgba(255,255,255,0.06); padding: 28px; margin-bottom: 16px; }
+  .form-card-title { font-family: 'Barlow Condensed', sans-serif; font-size: 13px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: var(--text-muted); margin-bottom: 20px; padding-bottom: 12px; border-bottom: 1px solid rgba(255,255,255,0.06); }
+
+  .form-group { display: flex; flex-direction: column; gap: 6px; margin-bottom: 14px; }
+  .form-group label { font-size: 10px; letter-spacing: 2px; color: var(--text-muted); text-transform: uppercase; font-weight: 700; }
+  .form-group input, .form-group select {
+    background: var(--gray); border: 1px solid rgba(255,255,255,0.08);
+    color: var(--text); padding: 12px 14px; font-size: 14px; font-family: 'Barlow', sans-serif;
+    width: 100%;
+  }
+  .form-group input:focus, .form-group select:focus { outline: none; border-color: var(--red); }
+  .form-group select option { background: var(--gray); }
+  .form-group .hint { font-size: 11px; color: var(--text-muted); }
+
+  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+
+  .btn-submit {
+    width: 100%; background: var(--red); color: white; border: none;
+    padding: 16px; font-family: 'Bebas Neue', sans-serif; font-size: 22px;
+    letter-spacing: 3px; cursor: pointer; transition: background 0.15s; margin-top: 8px;
+  }
+  .btn-submit:hover { background: var(--red-dark); }
+  .btn-submit:disabled { background: var(--gray); cursor: not-allowed; }
+
+  .success-screen { display: none; text-align: center; padding: 60px 20px; max-width: 500px; margin: 0 auto; }
+  .success-icon { font-size: 64px; margin-bottom: 16px; }
+  .success-title { font-family: 'Bebas Neue', sans-serif; font-size: 40px; letter-spacing: 3px; color: var(--green); margin-bottom: 8px; }
+  .success-sub { font-size: 14px; color: var(--text-muted); line-height: 1.6; margin-bottom: 24px; }
+  .success-detail { background: var(--dark); border: 1px solid rgba(255,255,255,0.06); padding: 20px; text-align: left; margin-bottom: 24px; }
+  .success-detail-row { display: flex; justify-content: space-between; padding: 6px 0; border-bottom: 1px solid rgba(255,255,255,0.04); font-size: 13px; }
+  .success-detail-row:last-child { border-bottom: none; }
+  .success-detail-label { color: var(--text-muted); }
+  .success-detail-value { font-weight: 600; }
+  .btn-back { display: inline-block; padding: 12px 28px; border: 1px solid rgba(255,255,255,0.15); color: var(--text-muted); text-decoration: none; font-family: 'Barlow Condensed', sans-serif; font-size: 14px; letter-spacing: 2px; text-transform: uppercase; }
+
+  .toast {
+    position: fixed; bottom: 24px; right: 24px; background: var(--red);
+    color: white; padding: 12px 20px; font-size: 13px; font-family: 'Barlow Condensed', sans-serif;
+    letter-spacing: 1px; z-index: 999; opacity: 0; transition: opacity 0.3s; pointer-events: none;
+  }
+  .toast.show { opacity: 1; }
+
+  .info-box {
+    background: rgba(192,57,43,0.1); border: 1px solid rgba(192,57,43,0.3);
+    padding: 14px 16px; margin-bottom: 20px; font-size: 12px; color: var(--text-muted); line-height: 1.6;
   }
 
-  /* SPONSOR TIERS */
-  .sponsor-grid {
-    max-width: 1000px;
-    margin: 0 auto;
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 20px;
-  }
-
-  .tier {
-    background: var(--darker);
-    border: 1px solid rgba(255,255,255,0.06);
-    padding: 20px;
-  }
-  .tier-name {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 16px;
-    letter-spacing: 3px;
-    color: var(--red-light);
-    text-transform: uppercase;
-    margin-bottom: 12px;
-  }
-  .tier-sponsors {
-    font-size: 13px;
-    color: var(--text);
-    display: flex;
-    flex-wrap: wrap;
-    gap: 12px;
-  }
-  .sponsor-name {
-    background: rgba(192, 57, 43, 0.15);
-    padding: 6px 12px;
-    border-left: 2px solid var(--red);
-    font-weight: 600;
-  }
-
-  /* CATEGORIES GRID */
-  .categories-section {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 60px 20px;
-  }
-  .section-title {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 48px;
-    letter-spacing: 3px;
-    margin-bottom: 40px;
-    text-align: center;
-  }
-
-  .cat-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 16px;
-  }
-  .cat-card:nth-child(4) { grid-column: 1; }
-  .cat-card:nth-child(5) { grid-column: 2; }
-  @media (max-width: 900px) {
-    .cat-grid { grid-template-columns: repeat(2, 1fr); }
-    .cat-card:nth-child(4), .cat-card:nth-child(5) { grid-column: auto; }
-  }
-
-  .cat-card {
-    background: var(--dark);
-    border: 1px solid rgba(192, 57, 43, 0.3);
-    padding: 24px;
-    transition: all 0.2s;
-    color: inherit;
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-  }
-  .cat-card:hover { border-color: var(--red); background: rgba(192,57,43,0.05); }
-  .cat-card { cursor: pointer; }
-  .cat-btn-lihat, .cat-btn-daftar { cursor: pointer; }
-
-  .cat-badge {
-    font-family: 'Barlow Condensed', sans-serif;
-    font-size: 10px;
-    letter-spacing: 2px;
-    color: var(--text-muted);
-    text-transform: uppercase;
-  }
-  .cat-name {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 32px;
-    letter-spacing: 2px;
-    color: var(--red-light);
-    line-height: 1;
-  }
-  .cat-info {
-    font-size: 12px;
-    color: var(--text-muted);
-    line-height: 1.5;
-    flex: 1;
-  }
-  .cat-actions {
-    display: flex; gap: 8px; margin-top: 12px; padding-top: 12px;
-    border-top: 1px solid rgba(255,255,255,0.06);
-  }
-  .cat-btn-lihat {
-    flex: 1; text-align: center; padding: 8px;
-    border: 1px solid rgba(255,255,255,0.15); color: var(--text-muted);
-    font-family: 'Barlow Condensed', sans-serif; font-size: 12px;
-    font-weight: 700; letter-spacing: 1px; text-transform: uppercase;
-    text-decoration: none; transition: all 0.15s;
-  }
-  .cat-btn-lihat:hover { border-color: var(--text); color: var(--text); }
-  .cat-btn-daftar {
-    flex: 1; text-align: center; padding: 8px;
-    background: var(--red); color: white; border: none;
-    font-family: 'Barlow Condensed', sans-serif; font-size: 12px;
-    font-weight: 700; letter-spacing: 1px; text-transform: uppercase;
-    text-decoration: none; transition: all 0.15s;
-  }
-  .cat-btn-daftar:hover { background: var(--red-dark); }
-  .cat-btn-daftar.disabled { background: var(--gray); pointer-events: none; opacity: 0.5; }
-
-  /* PRIZE POOL */
-  .prize-section {
-    background: linear-gradient(135deg, rgba(192, 57, 43, 0.15) 0%, rgba(192, 57, 43, 0.08) 100%);
-    padding: 40px 20px;
-    text-align: center;
-    border: 1px solid rgba(192, 57, 43, 0.3);
-    margin: 60px 20px 0;
-  }
-  .prize-label {
-    font-size: 11px;
-    letter-spacing: 3px;
-    color: var(--text-muted);
-    text-transform: uppercase;
-    margin-bottom: 8px;
-  }
-  .prize-amount {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: clamp(36px, 6vw, 64px);
-    color: var(--red-light);
-    letter-spacing: 2px;
-    line-height: 1;
-    margin-bottom: 4px;
-  }
-  .prize-sub {
-    font-size: 13px;
-    color: var(--text-muted);
-    letter-spacing: 1px;
-  }
-
-  /* DATES & VENUE */
-  .info-grid {
-    max-width: 1200px;
-    margin: 60px auto 0;
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 16px;
-    padding: 0 20px 60px;
-  }
-  .info-card {
-    background: var(--dark);
-    border: 1px solid rgba(255,255,255,0.06);
-    padding: 20px;
-    text-align: center;
-  }
-  .info-label {
-    font-size: 10px;
-    letter-spacing: 2px;
-    color: var(--text-muted);
-    text-transform: uppercase;
-    margin-bottom: 8px;
-  }
-  .info-value {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 24px;
-    letter-spacing: 2px;
-    color: var(--red-light);
-  }
-
-  /* FOOTER NAV */
-  .footer-nav {
-    background: var(--dark);
-    padding: 24px 20px;
-    text-align: center;
-    border-top: 2px solid var(--red);
-  }
-  .nav-links {
-    display: flex;
-    justify-content: center;
-    gap: 20px;
-    flex-wrap: wrap;
-    margin-bottom: 16px;
-  }
-  .nav-link {
-    font-family: 'Barlow Condensed', sans-serif;
-    font-size: 12px;
-    letter-spacing: 2px;
-    text-transform: uppercase;
-    color: var(--text-muted);
-    text-decoration: none;
-    transition: color 0.2s;
-  }
-  .nav-link:hover { color: var(--red-light); }
-  .footer-credit {
-    font-size: 10px;
-    color: var(--text-muted);
-    letter-spacing: 1px;
-  }
-
-  @media (max-width: 600px) {
-    .hero-title { font-size: 48px; }
-    .section-title { font-size: 32px; margin-bottom: 24px; }
-    .cat-grid { grid-template-columns: 1fr; }
-  }
+  @media (max-width: 480px) { .form-row { grid-template-columns: 1fr; } }
 </style>
 </head>
 <body>
 
-<!-- HERO -->
-<section class="hero">
-  <img src="assets/aso-logo.png.png" class="organizer-logo organizer-logo-left" alt="Aizon Sportainment Organizer" onerror="this.style.display='none'">
-  <img src="assets/aso-logo.png.png" class="organizer-logo organizer-logo-right" alt="Aizon Sportainment Organizer" onerror="this.style.display='none'">
-  <a href="https://www.instagram.com/piala.merdeka" target="_blank" style="display:block;">
-    <img src="assets/logo.png"
-      onerror="this.style.display='none';document.getElementById('logo-fallback').style.display='block'"
-      style="height:380px;object-fit:contain;display:block;margin:0 auto;mix-blend-mode:screen;">
-  </a>
-  <h1 class="hero-title" id="logo-fallback" style="display:none;">PIALA<br>MERDEKA<br>2026</h1>
-  <p class="hero-sub">Doubles Tennis Championship — East Java</p>
-  <div class="hero-date">Malang, East Java</div>
-</section>
+<nav class="topnav">
+  <a href="../">← Piala Merdeka 2026</a>
+  <span class="sep">/</span>
+  <span class="current">Pendaftaran</span>
+</nav>
 
-<!-- INFO GRID -->
-<div class="info-grid">
-  <div class="info-card">
-    <div class="info-label">Tanggal</div>
-    <div class="info-value">22–25 Agustus</div>
-  </div>
-  <div class="info-card">
-    <div class="info-label">Participants</div>
-    <div class="info-value">240 Pair</div>
-  </div>
-  <div class="info-card">
-    <div class="info-label">Format</div>
-    <div class="info-value">Round Robin</div>
-  </div>
-  <div class="info-card">
-    <div class="info-label">Venue</div>
-    <div class="info-value" style="font-size:18px;">Lap. Tenis UM Malang</div>
-  </div>
+<div class="hero">
+  <div class="hero-label">Piala Merdeka 2026</div>
+  <img src="../assets/logo.png"
+    onerror="this.style.display='none';document.getElementById('hero-logo-fallback').style.display='block'"
+    style="height:280px;object-fit:contain;display:block;margin:12px auto;mix-blend-mode:screen;">
+  <h1 class="hero-title" id="hero-logo-fallback" style="display:none;">PIALA MERDEKA 2026</h1>
+  <p class="hero-sub" id="hero-kelas-sub">Pilih kelas untuk memulai pendaftaran</p>
 </div>
 
-<!-- PRIZE POOL -->
-<div class="prize-section">
-  <div class="prize-label">Prize Pool</div>
-  <div class="prize-amount">Rp 80.000.000</div>
-  <div class="prize-sub">Distributed across 5 categories</div>
-</div>
+<div class="form-wrap" id="form-wrap">
 
-<!-- SPONSORS -->
-<section class="sponsor-section">
-  <div class="sponsor-title">Tournament Sponsors</div>
-  <div id="sponsors-container"><div style="text-align:center;color:var(--text-muted);font-size:12px;letter-spacing:2px;padding:20px;">Memuat data sponsor...</div></div>
-</section>
+  <!-- STEP 1: PILIH KELAS -->
+  <div id="step-kelas">
+    <div style="font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--text-muted);margin-bottom:16px;">Pilih Kelas</div>
+    <div style="display:flex;flex-direction:column;gap:10px;" id="kelas-list"></div>
+  </div>
 
-<!-- CATEGORIES -->
-<section class="categories-section">
-  <h2 class="section-title">Category</h2>
-  <div class="cat-grid">
-    <a href="rookie/" class="cat-card" style="text-decoration:none;color:inherit;display:flex;flex-direction:column;">
-      <div class="cat-name">Rookie Double</div>
-      <div class="cat-info">Men Category<br>Women Category</div>
-      <div class="cat-actions">
-        <span onclick="event.preventDefault();window.location.href='pengumuman/'" class="cat-btn-lihat">Cek Status</span>
-        <span onclick="event.preventDefault();window.location.href='daftar/?kelas=rookie'" class="cat-btn-daftar reg-btn">Daftar</span>
-      </div>
-    </a>
-    <a href="beginner/" class="cat-card" style="text-decoration:none;color:inherit;display:flex;flex-direction:column;">
-      <div class="cat-name">Beginner Double</div>
-      <div class="cat-info">Men Category<br>Women Category</div>
-      <div class="cat-actions">
-        <span onclick="event.preventDefault();window.location.href='pengumuman/'" class="cat-btn-lihat">Cek Status</span>
-        <span onclick="event.preventDefault();window.location.href='daftar/?kelas=beginner'" class="cat-btn-daftar reg-btn">Daftar</span>
-      </div>
-    </a>
-    <a href="novice/" class="cat-card" style="text-decoration:none;color:inherit;display:flex;flex-direction:column;">
-      <div class="cat-name">Novice Double</div>
-      <div class="cat-info">Men Category<br>Women Category</div>
-      <div class="cat-actions">
-        <span onclick="event.preventDefault();window.location.href='pengumuman/'" class="cat-btn-lihat">Cek Status</span>
-        <span onclick="event.preventDefault();window.location.href='daftar/?kelas=novice'" class="cat-btn-daftar reg-btn">Daftar</span>
-      </div>
-    </a>
-    <a href="intermediate/" class="cat-card" style="text-decoration:none;color:inherit;display:flex;flex-direction:column;">
-      <div class="cat-name">Intermediate Double</div>
-      <div class="cat-info">Men Category<br>Women Category</div>
-      <div class="cat-actions">
-        <span onclick="event.preventDefault();window.location.href='pengumuman/'" class="cat-btn-lihat">Cek Status</span>
-        <span onclick="event.preventDefault();window.location.href='daftar/?kelas=intermediate'" class="cat-btn-daftar reg-btn">Daftar</span>
-      </div>
-    </a>
-    <a href="advance/" class="cat-card" style="text-decoration:none;color:inherit;display:flex;flex-direction:column;">
-      <div class="cat-name">Advance Double</div>
-      <div class="cat-info">Open Category<br>Men's Doubles</div>
-      <div class="cat-actions">
-        <span onclick="event.preventDefault();window.location.href='pengumuman/'" class="cat-btn-lihat">Cek Status</span>
-        <span onclick="event.preventDefault();window.location.href='daftar/?kelas=advance'" class="cat-btn-daftar reg-btn">Daftar</span>
-      </div>
-    </a>
-  </div>
-</section>
-
-<!-- FOOTER -->
-<footer class="footer-nav">
-  <div class="nav-links">
-    <a href="rookie/" class="nav-link">Rookie</a>
-    <a href="beginner/" class="nav-link">Beginner</a>
-    <a href="novice/" class="nav-link">Novice</a>
-    <a href="intermediate/" class="nav-link">Intermediate</a>
-    <a href="advance/" class="nav-link">Advance</a>
-    <a href="daftar/" class="nav-link">Daftar</a>
-    <a href="pengumuman/" class="nav-link">Pengumuman</a>
-    <a href="admin/" class="nav-link">Admin</a>
-  </div>
-  <div class="footer-credit" style="margin-bottom:16px;">
-    Piala Merdeka 2026
-    <a href="https://www.instagram.com/piala.merdeka" target="_blank" style="color:var(--red-light);text-decoration:none;margin-left:8px;">@piala.merdeka</a>
-  </div>
-  <a href="https://www.instagram.com/akar.community" target="_blank" style="display:inline-flex;align-items:center;gap:10px;text-decoration:none;background:rgba(232,176,75,0.08);border:1px solid rgba(232,176,75,0.2);padding:10px 20px;">
-    <svg width="28" height="28" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><circle cx="50" cy="50" r="47" fill="none" stroke="#E8B04B" stroke-width="2" opacity="0.5"/><circle cx="50" cy="50" r="28" fill="#E8B04B"/><g stroke="#111" stroke-width="3" stroke-linecap="round" fill="none"><path d="M50 50 L50 22"/><path d="M50 50 L70 36"/><path d="M50 50 L74 58"/><path d="M50 50 L58 78"/><path d="M50 50 L30 72"/><path d="M50 50 L26 44"/></g><g fill="#111"><circle cx="50" cy="22" r="3"/><circle cx="70" cy="36" r="3"/><circle cx="74" cy="58" r="3"/><circle cx="58" cy="78" r="3"/><circle cx="30" cy="72" r="3"/><circle cx="26" cy="44" r="3"/></g></svg>
-    <div style="text-align:left;">
-      <div style="font-family:Bebas Neue,sans-serif;font-size:16px;letter-spacing:3px;color:#E8B04B;">AKAR</div>
-      <div style="font-size:10px;letter-spacing:2px;color:#888;text-transform:uppercase;">Digital by AKAR · @akar.community</div>
+  <!-- STEP 2: PERATURAN -->
+  <div id="step-peraturan" style="display:none;">
+    <div style="display:flex;align-items:center;gap:12px;margin-bottom:20px;">
+      <button onclick="backToKelas()" style="background:transparent;border:1px solid rgba(255,255,255,0.15);color:var(--text-muted);padding:8px 14px;font-family:'Barlow Condensed',sans-serif;font-size:12px;letter-spacing:1px;cursor:pointer;text-transform:uppercase;">← Kembali</button>
+      <div style="font-family:'Bebas Neue',sans-serif;font-size:20px;letter-spacing:2px;" id="peraturan-kelas-title"></div>
     </div>
-  </a>
-</footer>
+    <div class="form-card">
+      <div class="form-card-title">Peraturan Kelas</div>
+      <div id="peraturan-content" style="font-size:13px;color:var(--text-muted);line-height:1.8;"></div>
+    </div>
+    <div class="info-box" style="margin-top:12px;">
+      ⚠️ Pendaftaran belum resmi sampai pembayaran dikonfirmasi oleh panitia. Tim kami akan menghubungi nomor WA yang didaftarkan untuk konfirmasi.
+    </div>
+    <button class="btn-submit" onclick="lanjutDaftar()">MENGERTI, LANJUT DAFTAR →</button>
+  </div>
+
+  <!-- STEP 3: FORM -->
+  <div id="step-form" style="display:none;">
+    <div style="display:flex;align-items:center;gap:12px;margin-bottom:20px;">
+      <button onclick="backToPeraturan()" style="background:transparent;border:1px solid rgba(255,255,255,0.15);color:var(--text-muted);padding:8px 14px;font-family:'Barlow Condensed',sans-serif;font-size:12px;letter-spacing:1px;cursor:pointer;text-transform:uppercase;">← Kembali</button>
+      <div style="font-family:'Bebas Neue',sans-serif;font-size:20px;letter-spacing:2px;color:var(--red-light);" id="form-kelas-title"></div>
+    </div>
+    <div class="form-card">
+      <div class="form-card-title">Kelas Terpilih</div>
+      <div style="background:rgba(192,57,43,0.1);border:1px solid rgba(192,57,43,0.3);padding:12px 16px;font-family:'Barlow Condensed',sans-serif;font-size:16px;font-weight:700;letter-spacing:1px;" id="form-kelas-display"></div>
+    </div>
+    <div class="form-card" id="gender-card">
+      <div class="form-card-title">Gender</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+        <button id="btn-men" onclick="selectGender('men')" style="padding:14px;font-family:'Bebas Neue',sans-serif;font-size:14px;letter-spacing:1px;cursor:pointer;border:2px solid rgba(255,255,255,0.15);background:transparent;color:var(--text-muted);transition:all 0.15s;">MEN'S</button>
+        <button id="btn-women" onclick="selectGender('women')" style="padding:14px;font-family:'Bebas Neue',sans-serif;font-size:14px;letter-spacing:1px;cursor:pointer;border:2px solid rgba(255,255,255,0.15);background:transparent;color:var(--text-muted);transition:all 0.15s;">WOMEN'S</button>
+      </div>
+      <div style="font-size:11px;color:var(--red-light);margin-top:10px;font-weight:600;">⚠️ Wajib pilih salah satu sebelum mendaftar.</div>
+    </div>
+    <div class="form-card" id="advance-gender-note" style="display:none;">
+      <div class="form-card-title">Kategori</div>
+      <div style="background:rgba(192,57,43,0.1);border:1px solid rgba(192,57,43,0.3);padding:12px 16px;font-family:'Barlow Condensed',sans-serif;font-size:16px;font-weight:700;letter-spacing:1px;">MEN'S DOUBLES</div>
+      <div style="font-size:11px;color:var(--text-muted);margin-top:10px;">Kelas Advance khusus Men's Doubles, tidak ada pilihan gender lain.</div>
+    </div>
+    <div class="form-card">
+      <div class="form-card-title">Data Pemain</div>
+      <div class="form-group">
+        <label>Nama Pemain 1</label>
+        <input type="text" id="f-player1" placeholder="Nama lengkap">
+      </div>
+      <div class="form-group">
+        <label>Nama Pemain 2</label>
+        <input type="text" id="f-player2" placeholder="Nama lengkap">
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>No. WhatsApp Peserta 1</label>
+          <input type="tel" id="f-wa1" placeholder="08xxxxxxxxxx">
+        </div>
+        <div class="form-group">
+          <label>No. WhatsApp Peserta 2</label>
+          <input type="tel" id="f-wa2" placeholder="08xxxxxxxxxx">
+        </div>
+      </div>
+      <span class="hint" style="display:block;margin:-8px 0 14px;">Untuk konfirmasi panitia</span>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Club Asal</label>
+          <input type="text" id="f-club" placeholder="Nama club (jika ada)">
+        </div>
+        <div class="form-group">
+          <label>Kota Asal <span style="color:var(--red-light);">*</span></label>
+          <input type="text" id="f-city" placeholder="Surabaya">
+        </div>
+      </div>
+    </div>
+    <div class="form-card">
+      <div class="form-card-title">Bukti Transfer</div>
+      <div class="info-box" style="margin-bottom:14px;">
+        Transfer biaya pendaftaran <strong>Rp 750.000</strong> ke salah satu rekening berikut, lalu upload bukti transfernya:<br>
+        BCA 0190848507 a.n. Anisa Sativa Fillaili<br>
+        Mandiri 144-00-1545610-3 a.n. Anisa Sativa Fillaili
+      </div>
+      <div class="form-group">
+        <label>Upload Bukti Transfer</label>
+        <input type="file" id="f-bukti-tf" accept="image/*,.pdf">
+        <span class="hint" id="bukti-tf-status">Format JPG/PNG/PDF, maks 5MB</span>
+      </div>
+    </div>
+    <button class="btn-submit" id="btn-submit" onclick="submitForm()">DAFTAR SEKARANG</button>
+  </div>
+
+</div>
+
+<div class="success-screen" id="success-screen">
+  <div class="success-icon">✅</div>
+  <div class="success-title">PENDAFTARAN DITERIMA!</div>
+  <p class="success-sub">Data kamu sudah masuk ke sistem. Tim panitia akan menghubungi nomor WhatsApp yang kamu daftarkan untuk konfirmasi pembayaran.</p>
+  <div class="success-detail" id="success-detail"></div>
+  <p style="font-size:12px;color:var(--text-muted);margin-bottom:16px;">Simpan screenshot halaman ini sebagai bukti pendaftaran.</p>
+  <a href="../" class="btn-back">← Kembali ke Beranda</a>
+</div>
+
+<div class="toast" id="toast"></div>
 
 <script>
   const SUPABASE_URL = 'https://hufwbvouwmdbjhawygxg.supabase.co';
   const SUPABASE_KEY = 'sb_publishable_ajdfMjHRQM4EeFVzYDmSZw_Ozxz5It6';
-  const TIER_LABELS = { smash:'🏆 Title Sponsor', spin:'💫 Co-Sponsor', volley:'⭐ Volley', slice:'Slice', twist:'Twist' };
 
-  async function loadSponsors() {
-    try {
-      const res = await fetch(`${SUPABASE_URL}/rest/v1/sponsors?select=*&active=eq.true&order=tier_order,name_order`, {
-        headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` }
-      });
-      const sponsors = await res.json();
-      renderSponsors(sponsors);
-    } catch(e) { console.log('Sponsor load failed'); }
+  const KELAS_DATA = {
+    rookie: {
+      label: 'Rookie', badge: 'Doubles',
+      info: '24 pasang per gender · 8 grup × 3 pasang',
+      peraturan: `<strong style="color:#fff;">Kriteria Kemampuan Pemain</strong><br>
+• Tidak banyak memiliki pengalaman bertanding<br>
+• Hanya sering bermain dalam konteks fun game<br>
+• Groundstroke dan servis belum konsisten<br>
+• Footwork masih pada level dasar dan belum stabil<br><br>
+<strong style="color:#fff;">Syarat Peserta</strong><br>
+• TIDAK pernah mengikuti kelas Beginner, Novice, Intermediate atau Advance di turnamen Tenis manapun<br>
+• TIDAK pernah menjadi Finalis kelas ROOKIE di turnamen Tenis manapun (boleh berganti pasangan dengan syarat pasangan juga tidak pernah menjadi Finalis di kelas ROOKIE)<br>
+• TIDAK pernah mempunyai Track Record menjadi Atlet Tennis (PORPROV, PON, TIMNAS, turnamen TDP)<br>
+• TIDAK menjadi PELATIH, ASISTEN PELATIH dan HITTING PARTNER<br>
+• Minimal usia 18 tahun, maksimal 60 tahun<br>
+• Telah terverifikasi LOLOS SCREENING Panitia<br><br><strong style="color:#fff;">Pembayaran Pendaftaran</strong><br>
+Calon peserta diwajibkan melakukan pembayaran pendaftaran sebesar <strong>Rp 750.000</strong> melalui:<br><br>
+BCA 0190848507 a.n. Anisa Sativa Fillaili<br>
+Mandiri 144-00-1545610-3 a.n. Anisa Sativa Fillaili<br><br>
+<em style="color:#E8B04B;">⚠️ Pembayaran hanya melalui rekening di atas. Panitia TIDAK meminta pembayaran lain melalui WhatsApp atau media lainnya.</em><br><br>
+<strong style="color:#fff;">Contact Person</strong><br>
+0895-6351-22754 (Annisa)`
+    },
+    beginner: {
+      label: 'Beginner', badge: 'Doubles',
+      info: '30 pasang per gender',
+      peraturan: `<strong style="color:#fff;">Kriteria Kemampuan Pemain</strong><br>
+• Sudah mulai rutin bermain dan mengikuti pertandingan<br>
+• Groundstroke mulai stabil namun belum konsisten dalam tekanan<br>
+• Footwork sudah berkembang namun belum optimal dalam rally panjang<br>
+• Mulai memahami pola dasar dan strategi sederhana<br>
+• Mulai rutin mengikuti turnamen<br><br>
+<strong style="color:#fff;">Syarat Peserta</strong><br>
+• TIDAK pernah mengikuti kelas Novice, Intermediate atau Advance di turnamen Tenis manapun<br>
+• TIDAK pernah menjadi Finalis kelas BEGINNER di turnamen Tenis manapun (boleh berganti pasangan dengan syarat pasangan juga tidak pernah menjadi Finalis di kelas BEGINNER)<br>
+• TIDAK pernah mempunyai Track Record menjadi Atlet Tenis (PORPROV, PON, TIMNAS, turnamen TDP)<br>
+• TIDAK menjadi PELATIH, ASISTEN PELATIH dan HITTING PARTNER<br>
+• Minimal usia 18 tahun, maksimal 60 tahun<br>
+• Telah terverifikasi LOLOS SCREENING Panitia<br><br><strong style="color:#fff;">Pembayaran Pendaftaran</strong><br>
+Calon peserta diwajibkan melakukan pembayaran pendaftaran sebesar <strong>Rp 750.000</strong> melalui:<br><br>
+BCA 0190848507 a.n. Anisa Sativa Fillaili<br>
+Mandiri 144-00-1545610-3 a.n. Anisa Sativa Fillaili<br><br>
+<em style="color:#E8B04B;">⚠️ Pembayaran hanya melalui rekening di atas. Panitia TIDAK meminta pembayaran lain melalui WhatsApp atau media lainnya.</em><br><br>
+<strong style="color:#fff;">Contact Person</strong><br>
+0895-6351-22754 (Annisa)`
+    },
+    novice: {
+      label: 'Novice', badge: 'Doubles',
+      info: '30 pasang per gender',
+      peraturan: `<strong style="color:#fff;">Kriteria Kemampuan Pemain</strong><br>
+• Rutin mengikuti turnamen tenis<br>
+• Groundstroke konsisten dalam rally dan serve<br>
+• Footwork cukup baik<br>
+• Memahami sistem pertandingan dan scoring<br>
+• Sudah cukup baik dalam melakukan finishing dan pengambilan keputusan<br><br>
+<strong style="color:#fff;">Syarat Peserta</strong><br>
+• TIDAK pernah mengikuti kelas Intermediate atau Advance di turnamen Tenis manapun<br>
+• TIDAK pernah menjadi Finalis kelas NOVICE di turnamen Tenis manapun (boleh berganti pasangan dengan syarat pasangan juga tidak pernah menjadi Finalis di kelas NOVICE)<br>
+• TIDAK pernah mempunyai Track Record menjadi Atlet Tennis (PON dan TIMNAS)<br>
+• TIDAK menjadi PELATIH, ASISTEN PELATIH dan HITTING PARTNER<br>
+• Minimal usia 18 tahun, maksimal 60 tahun<br>
+• Telah terverifikasi LOLOS SCREENING Panitia<br><br><strong style="color:#fff;">Pembayaran Pendaftaran</strong><br>
+Calon peserta diwajibkan melakukan pembayaran pendaftaran sebesar <strong>Rp 750.000</strong> melalui:<br><br>
+BCA 0190848507 a.n. Anisa Sativa Fillaili<br>
+Mandiri 144-00-1545610-3 a.n. Anisa Sativa Fillaili<br><br>
+<em style="color:#E8B04B;">⚠️ Pembayaran hanya melalui rekening di atas. Panitia TIDAK meminta pembayaran lain melalui WhatsApp atau media lainnya.</em><br><br>
+<strong style="color:#fff;">Contact Person</strong><br>
+0895-6351-22754 (Annisa)`
+    },
+    intermediate: {
+      label: 'Intermediate', badge: 'Doubles',
+      info: '24 pasang per gender · 8 grup × 3 pasang',
+      peraturan: `<strong style="color:#fff;">Kriteria Kemampuan Pemain</strong><br>
+• Rutin mengikuti turnamen tenis di kategori Intermediate<br>
+• Tergolong pemain pada tingkat menengah (mendekati Advance)<br>
+• Footwork sangat baik<br>
+• Sudah cukup baik dalam melakukan serve, baseline, volley, finishing dan pengambilan keputusan<br><br>
+<strong style="color:#fff;">Syarat Peserta</strong><br>
+• TIDAK pernah mengikuti kelas Advance di turnamen Tenis manapun<br>
+• TIDAK pernah menjadi Finalis kelas INTERMEDIATE di turnamen Tenis manapun (boleh berganti pasangan dengan syarat pasangan juga tidak pernah menjadi Finalis di kelas INTERMEDIATE)<br>
+• TIDAK pernah mempunyai Track Record menjadi Atlet Tenis (PON dan TIMNAS)<br>
+• Minimal usia 18 tahun, maksimal 60 tahun<br>
+• Telah terverifikasi LOLOS SCREENING Panitia<br><br><strong style="color:#fff;">Pembayaran Pendaftaran</strong><br>
+Calon peserta diwajibkan melakukan pembayaran pendaftaran sebesar <strong>Rp 750.000</strong> melalui:<br><br>
+BCA 0190848507 a.n. Anisa Sativa Fillaili<br>
+Mandiri 144-00-1545610-3 a.n. Anisa Sativa Fillaili<br><br>
+<em style="color:#E8B04B;">⚠️ Pembayaran hanya melalui rekening di atas. Panitia TIDAK meminta pembayaran lain melalui WhatsApp atau media lainnya.</em><br><br>
+<strong style="color:#fff;">Contact Person</strong><br>
+0895-6351-22754 (Annisa)`
+    },
+    advance: {
+      label: 'Advance', badge: 'Open level',
+      info: "24 pasang · Men's Doubles",
+      peraturan: `<em style="color:#E8B04B;">Kategori ADVANCE OPEN dibuka khusus untuk MEN'S DOUBLE.</em><br><br>
+<strong style="color:#fff;">Kriteria Kemampuan Pemain</strong><br>
+• Sudah teruji mengikuti banyak turnamen<br>
+• Tergolong pemain pada tingkat lanjutan (mendekati Master / pemain Pro)<br>
+• Sudah sangat baik dalam melakukan serve, baseline, volley, finishing dan pengambilan keputusan<br><br>
+<strong style="color:#fff;">Syarat Peserta</strong><br>
+• TIDAK pernah mempunyai Track Record menjadi Atlet Tennis yang mengikuti PON dan Tim Nasional Tennis<br>
+• Minimal usia 25 tahun, maksimal 60 tahun<br>
+• Telah terverifikasi LOLOS SCREENING Panitia<br><br><strong style="color:#fff;">Pembayaran Pendaftaran</strong><br>
+Calon peserta diwajibkan melakukan pembayaran pendaftaran sebesar <strong>Rp 750.000</strong> melalui:<br><br>
+BCA 0190848507 a.n. Anisa Sativa Fillaili<br>
+Mandiri 144-00-1545610-3 a.n. Anisa Sativa Fillaili<br><br>
+<em style="color:#E8B04B;">⚠️ Pembayaran hanya melalui rekening di atas. Panitia TIDAK meminta pembayaran lain melalui WhatsApp atau media lainnya.</em><br><br>
+<strong style="color:#fff;">Contact Person</strong><br>
+0895-6351-22754 (Annisa)`
+    }
+  };
+
+  let selectedKelas = null;
+  let selectedGender = null;
+
+  function showToast(msg) {
+    const t = document.getElementById('toast');
+    t.textContent = msg; t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 3000);
   }
 
-  function renderSponsors(sponsors) {
-    const container = document.getElementById('sponsors-container');
-    if (!sponsors.length) {
-      container.innerHTML = '<div style="text-align:center;color:var(--text-muted);font-size:12px;letter-spacing:2px;padding:20px;">Sponsor coming soon</div>';
-      return;
-    }
-    const grouped = {};
-    sponsors.forEach(s => { if (!grouped[s.tier]) grouped[s.tier] = []; grouped[s.tier].push(s); });
-    container.innerHTML = Object.entries(grouped).map(([tier, spons]) => `
-      <div class="tier">
-        <div class="tier-name">${TIER_LABELS[tier]||tier}</div>
-        <div class="tier-sponsors">
-          ${spons.map(s => s.logo_url
-            ? `<img src="${s.logo_url}" style="height:${tier==='smash'?'80px':tier==='spin'?'50px':'36px'};object-fit:contain;" title="${s.name}">`
-            : `<div class="sponsor-name">${s.name}</div>`
-          ).join('')}
+  function renderKelasList() {
+    const list = document.getElementById('kelas-list');
+    list.innerHTML = Object.entries(KELAS_DATA).map(([key, k]) => `
+      <div onclick="pilihKelas('${key}')" style="background:var(--dark);border:1px solid rgba(192,57,43,0.3);padding:16px;cursor:pointer;display:flex;justify-content:space-between;align-items:center;transition:all 0.15s;" 
+        onmouseover="this.style.borderColor='#C0392B';this.style.background='rgba(192,57,43,0.08)'" 
+        onmouseout="this.style.borderColor='rgba(192,57,43,0.3)';this.style.background='var(--dark)'">
+        <div>
+          <div style="font-size:9px;letter-spacing:2px;color:var(--text-muted);text-transform:uppercase;margin-bottom:4px;">${k.badge}</div>
+          <div style="font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:2px;">${k.label}</div>
+          <div style="font-size:11px;color:var(--text-muted);margin-top:2px;">${k.info}</div>
         </div>
+        <div style="font-size:20px;color:var(--red-light);">›</div>
       </div>`).join('');
   }
 
-  loadSponsors();
-  // Check registration status
-  async function checkRegistration() {
+  function pilihKelas(kelas) {
+    selectedKelas = kelas;
+    const k = KELAS_DATA[kelas];
+    document.getElementById('peraturan-kelas-title').textContent = k.label;
+    document.getElementById('peraturan-content').innerHTML = k.peraturan;
+    document.getElementById('step-kelas').style.display = 'none';
+    document.getElementById('step-peraturan').style.display = 'block';
+    document.getElementById('hero-kelas-sub').textContent = k.label + ' · ' + k.badge;
+  }
+
+  function backToKelas() {
+    document.getElementById('step-peraturan').style.display = 'none';
+    document.getElementById('step-kelas').style.display = 'block';
+    document.getElementById('hero-kelas-sub').textContent = 'Pilih kelas untuk memulai pendaftaran';
+  }
+
+  function lanjutDaftar() {
+    const k = KELAS_DATA[selectedKelas];
+    document.getElementById('form-kelas-title').textContent = k.label;
+    document.getElementById('form-kelas-display').textContent = k.label + ' · ' + k.badge;
+    document.getElementById('step-peraturan').style.display = 'none';
+    document.getElementById('step-form').style.display = 'block';
+    selectedGender = null;
+
+    const genderCard = document.getElementById('gender-card');
+    const advanceNote = document.getElementById('advance-gender-note');
+    if (selectedKelas === 'advance') {
+      // Advance class: Men's Doubles only, no gender choice needed
+      genderCard.style.display = 'none';
+      advanceNote.style.display = 'block';
+      selectedGender = 'men';
+    } else {
+      genderCard.style.display = 'block';
+      advanceNote.style.display = 'none';
+      // reset button styles
+      const menBtn = document.getElementById('btn-men');
+      const womenBtn = document.getElementById('btn-women');
+      womenBtn.textContent = "WOMEN'S";
+      womenBtn.onclick = () => selectGender('women');
+      menBtn.style.borderColor = 'rgba(255,255,255,0.15)'; menBtn.style.color = 'var(--text-muted)'; menBtn.style.background = 'transparent';
+      womenBtn.style.borderColor = 'rgba(255,255,255,0.15)'; womenBtn.style.color = 'var(--text-muted)'; womenBtn.style.background = 'transparent';
+    }
+  }
+
+  function backToPeraturan() {
+    document.getElementById('step-form').style.display = 'none';
+    document.getElementById('step-peraturan').style.display = 'block';
+  }
+
+  function selectGender(gender) {
+    selectedGender = gender;
+    const menBtn = document.getElementById('btn-men');
+    const womenBtn = document.getElementById('btn-women');
+    if (gender === 'men') {
+      menBtn.style.borderColor = '#C0392B'; menBtn.style.color = '#f0f0f0'; menBtn.style.background = 'rgba(192,57,43,0.2)';
+      womenBtn.style.borderColor = 'rgba(255,255,255,0.15)'; womenBtn.style.color = 'var(--text-muted)'; womenBtn.style.background = 'transparent';
+    } else {
+      womenBtn.style.borderColor = '#C0392B'; womenBtn.style.color = '#f0f0f0'; womenBtn.style.background = 'rgba(192,57,43,0.2)';
+      menBtn.style.borderColor = 'rgba(255,255,255,0.15)'; menBtn.style.color = 'var(--text-muted)'; menBtn.style.background = 'transparent';
+    }
+  }
+
+  async function checkRegistrationOpen() {
     try {
       const res = await fetch(`${SUPABASE_URL}/rest/v1/settings?key=eq.registration_open`, {
         headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` }
       });
       const data = await res.json();
       const isOpen = !data || !data[0] || data[0].value === 'true';
-      const daftarBtn = document.getElementById('daftar-btn');
-      if (daftarBtn && !isOpen) {
-        daftarBtn.style.opacity = '0.4';
-        daftarBtn.style.pointerEvents = 'none';
-        daftarBtn.textContent = 'PENDAFTARAN DITUTUP';
-        daftarBtn.style.background = '#555';
-      }
-      // Disable all daftar buttons if closed
       if (!isOpen) {
-        document.querySelectorAll('.reg-btn').forEach(btn => {
-          btn.classList.add('disabled');
-          btn.textContent = 'Ditutup';
-        });
+        document.getElementById('form-wrap').innerHTML = `
+          <div style="text-align:center;padding:60px 20px;">
+            <div style="font-size:48px;margin-bottom:16px;">🔒</div>
+            <div style="font-family:'Bebas Neue',sans-serif;font-size:36px;letter-spacing:3px;color:var(--red-light);margin-bottom:12px;">PENDAFTARAN DITUTUP</div>
+            <p style="font-size:14px;color:var(--text-muted);line-height:1.6;margin-bottom:24px;">Masa pendaftaran Piala Merdeka 2026 sudah berakhir.<br>Silakan cek status pendaftaran kamu.</p>
+            <a href="../pengumuman/" style="display:inline-block;background:var(--red);color:white;padding:12px 28px;font-family:'Bebas Neue',sans-serif;font-size:18px;letter-spacing:3px;text-decoration:none;">CEK STATUS PENDAFTARAN</a>
+          </div>`;
       }
     } catch(e) { console.log('Settings check failed'); }
   }
-  checkRegistration();
+
+  // Read kelas from URL param
+  function preSelectKelas() {
+    const params = new URLSearchParams(window.location.search);
+    const kelas = params.get('kelas');
+    if (kelas && KELAS_DATA[kelas]) {
+      setTimeout(() => pilihKelas(kelas), 100);
+    }
+  }
+
+  async function submitForm() {
+    const player1 = document.getElementById('f-player1').value.trim();
+    const player2 = document.getElementById('f-player2').value.trim();
+    const wa1 = document.getElementById('f-wa1').value.trim();
+    const wa2 = document.getElementById('f-wa2').value.trim();
+    const club = document.getElementById('f-club').value.trim();
+    const city = document.getElementById('f-city').value.trim();
+    const buktiInput = document.getElementById('f-bukti-tf');
+    const buktiFile = buktiInput.files[0];
+
+    if (!selectedKelas) { showToast('Pilih kelas dulu'); return; }
+    if (!selectedGender) { showToast('Pilih gender dulu'); return; }
+    if (!player1) { showToast('Nama pemain 1 wajib diisi'); return; }
+    if (!player2) { showToast('Nama pemain 2 wajib diisi'); return; }
+    if (!wa1) { showToast('Nomor WhatsApp peserta 1 wajib diisi'); return; }
+    if (!wa2) { showToast('Nomor WhatsApp peserta 2 wajib diisi'); return; }
+    if (!city) { showToast('Kota asal wajib diisi'); return; }
+    if (!buktiFile) { showToast('Bukti transfer wajib diupload'); return; }
+    if (buktiFile.size > 5 * 1024 * 1024) { showToast('Ukuran file maksimal 5MB'); return; }
+
+    const btn = document.getElementById('btn-submit');
+    btn.disabled = true; btn.textContent = 'MENDAFTARKAN...';
+
+    let bukti_tf_url = null;
+    try {
+      document.getElementById('bukti-tf-status').textContent = '⏳ Mengupload bukti transfer...';
+      const ext = buktiFile.name.split('.').pop();
+      const filename = `${Date.now()}-${player1.replace(/\s+/g,'-').toLowerCase()}.${ext}`;
+      const uploadRes = await fetch(`${SUPABASE_URL}/storage/v1/object/bukti-tf/${filename}`, {
+        method: 'POST',
+        headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}`, 'Content-Type': buktiFile.type },
+        body: buktiFile
+      });
+      if (!uploadRes.ok) throw new Error('upload-failed');
+      bukti_tf_url = `${SUPABASE_URL}/storage/v1/object/public/bukti-tf/${filename}`;
+      document.getElementById('bukti-tf-status').textContent = '✓ Bukti transfer berhasil diupload';
+    } catch(e) {
+      showToast('Gagal upload bukti transfer, coba lagi');
+      document.getElementById('bukti-tf-status').textContent = '❌ Upload gagal, coba lagi';
+      btn.disabled = false; btn.textContent = 'DAFTAR SEKARANG';
+      return;
+    }
+
+    try {
+      const res = await fetch(`${SUPABASE_URL}/rest/v1/pairs`, {
+        method: 'POST',
+        headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}`, 'Content-Type': 'application/json', 'Prefer': 'return=representation' },
+        body: JSON.stringify({ category: selectedKelas, gender: selectedGender, group_name: 'TBD', player1, player2, city: city||null, whatsapp: wa1, whatsapp2: wa2, club: club||null, bukti_tf_url, status: 'pending' })
+      });
+
+      if (!res.ok) throw new Error();
+
+      const genderLabel = selectedGender === 'men' ? "Men's Doubles" : selectedGender === 'mixed' ? 'Mixed Doubles' : "Women's Doubles";
+
+      document.getElementById('form-wrap').style.display = 'none';
+      document.getElementById('success-screen').style.display = 'block';
+      document.getElementById('success-detail').innerHTML = `
+        <div class="success-detail-row"><span class="success-detail-label">Kelas</span><span class="success-detail-value">${KELAS_DATA[selectedKelas].label}</span></div>
+        <div class="success-detail-row"><span class="success-detail-label">Gender</span><span class="success-detail-value">${genderLabel}</span></div>
+        <div class="success-detail-row"><span class="success-detail-label">Pasangan</span><span class="success-detail-value">${player1} / ${player2}</span></div>
+        <div class="success-detail-row"><span class="success-detail-label">Club</span><span class="success-detail-value">${club||'—'}</span></div>
+        <div class="success-detail-row"><span class="success-detail-label">Kota</span><span class="success-detail-value">${city||'—'}</span></div>
+        <div class="success-detail-row"><span class="success-detail-label">WhatsApp 1</span><span class="success-detail-value">${wa1}</span></div>
+        <div class="success-detail-row"><span class="success-detail-label">WhatsApp 2</span><span class="success-detail-value">${wa2}</span></div>
+        <div class="success-detail-row"><span class="success-detail-label">Status</span><span class="success-detail-value" style="color:#E8B04B;">⏳ Menunggu Konfirmasi</span></div>
+      `;
+    } catch(e) {
+      showToast('Gagal mendaftar, coba lagi');
+      btn.disabled = false; btn.textContent = 'DAFTAR SEKARANG';
+    }
+  }
+
+  renderKelasList();
+  checkRegistrationOpen();
+  preSelectKelas();
 </script>
 </body>
 </html>
