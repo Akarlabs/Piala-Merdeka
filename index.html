@@ -448,18 +448,22 @@
       container.innerHTML = '<div style="text-align:center;color:var(--text-muted);font-size:12px;letter-spacing:2px;padding:20px;">Sponsor coming soon</div>';
       return;
     }
+    // Size per tier — no labels, just visual hierarchy
+    const SIZE = { smash: '90px', spin: '56px', slice: '36px' };
     const grouped = {};
     sponsors.forEach(s => { if (!grouped[s.tier]) grouped[s.tier] = []; grouped[s.tier].push(s); });
-    container.innerHTML = Object.entries(grouped).map(([tier, spons]) => `
-      <div class="tier">
-        <div class="tier-name">${TIER_LABELS[tier]||tier}</div>
-        <div class="tier-sponsors">
+
+    // Render tier by tier but without labels — biggest logos first, smaller below
+    container.innerHTML = `<div style="max-width:900px;margin:0 auto;">` +
+      Object.entries(grouped).map(([tier, spons]) => `
+        <div style="display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:${tier==='smash'?'32px':tier==='spin'?'24px':'20px'};margin-bottom:${tier==='smash'?'28px':'20px'};">
           ${spons.map(s => s.logo_url
-            ? `<img src="${s.logo_url}" style="height:${tier==='smash'?'80px':tier==='spin'?'50px':'36px'};object-fit:contain;" title="${s.name}">`
-            : `<div class="sponsor-name">${s.name}</div>`
+            ? `<img src="${s.logo_url}" style="height:${SIZE[tier]||'40px'};width:auto;object-fit:contain;opacity:0.9;filter:brightness(1.05);" title="${s.name}">`
+            : `<span style="font-family:'Barlow Condensed',sans-serif;font-size:${tier==='smash'?'22px':tier==='spin'?'16px':'13px'};font-weight:700;letter-spacing:2px;color:var(--text-muted);text-transform:uppercase;">${s.name}</span>`
           ).join('')}
-        </div>
-      </div>`).join('');
+        </div>`
+      ).join('') +
+    `</div>`;
   }
 
   loadSponsors();
