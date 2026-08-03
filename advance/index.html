@@ -80,6 +80,7 @@
   .match-vs { font-size: 9px; color: var(--text-muted); font-weight: 700; padding: 0 2px; flex-shrink: 0; }
   .match-score { font-family: 'Bebas Neue',sans-serif; font-size: 17px; letter-spacing: 1px; min-width: 48px; text-align: center; flex-shrink: 0; }
   .match-score.done { color: var(--text); } .match-score.tbd { color: rgba(255,255,255,0.18); font-size: 13px; }
+  .wo-badge { display:inline-block; font-family:'Barlow Condensed',sans-serif; font-size:9px; font-weight:700; letter-spacing:1px; color:#E8B04B; border:1px solid rgba(232,176,75,0.5); border-radius:2px; padding:1px 4px; margin-left:5px; vertical-align:middle; }
 
   .empty-state { padding: 20px; text-align: center; font-size: 11px; color: var(--text-muted); letter-spacing: 2px; text-transform: uppercase; }
 
@@ -177,6 +178,12 @@
 
   function pairName(pair) { return pair ? `${pair.player1} / ${pair.player2}` : 'TBD'; }
 
+  // Walkover dicatat sebagai 1-0 / 0-1 oleh panitia.
+  function isWO(m) {
+    if (m.score1 === null || m.score2 === null) return false;
+    return (m.score1 === 1 && m.score2 === 0) || (m.score1 === 0 && m.score2 === 1);
+  }
+
   function calcStandings(pairs, matches) {
     const stats = {};
     pairs.forEach(p => { stats[p.id] = { pair: p, w:0, l:0, played:0, pts:0, gf:0, ga:0 }; });
@@ -238,7 +245,7 @@
               <span class="match-pair">${pairName(p1)}</span>
               <span class="match-vs">vs</span>
               <span class="match-pair">${pairName(p2)}</span>
-              <span class="match-score ${has?'done':'tbd'}">${has?`${m.score1}–${m.score2}`:'— vs —'}</span>
+              <span class="match-score ${has?'done':'tbd'}">${has?`${m.score1}–${m.score2}`:'— vs —'}${has&&isWO(m)?'<span class="wo-badge">WO</span>':''}</span>
             </div>`;
           }).join('') : '<div class="empty-state">Jadwal belum tersedia</div>'}
         </div>
@@ -271,7 +278,7 @@
         const w1 = has && m.score1 > m.score2;
         const w2 = has && m.score2 > m.score1;
         html += `<div class="bracket-match">
-          <div class="bracket-match-head"><span class="bm-num">${m.match_code||`Match ${i+1}`}</span><span class="bm-time">${m.match_time||'TBD'}</span></div>
+          <div class="bracket-match-head"><span class="bm-num">${m.match_code||`Match ${i+1}`}</span><span class="bm-time">${m.match_time||'TBD'}${has&&isWO(m)?'<span class="wo-badge">WO</span>':''}</span></div>
           <div class="bm-pair ${w1?'winner':''}"><span class="bm-name">${pairName(p1)}</span><span class="bm-score ${!has?'tbd':''}">${has?m.score1:'-'}</span></div>
           <div class="bm-pair ${w2?'winner':''}"><span class="bm-name">${pairName(p2)}</span><span class="bm-score ${!has?'tbd':''}">${has?m.score2:'-'}</span></div>
         </div>`;
