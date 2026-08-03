@@ -153,7 +153,7 @@
   <nav class="topnav">
     <div class="title">⚙ ADMIN · PIALA MERDEKA 2026</div>
     <div class="spacer"></div>
-    <a href="../rookie/index.html" style="font-size:11px;color:var(--text-muted);text-decoration:none;letter-spacing:1px;margin-right:8px;">Lihat Web →</a>
+    <a href="../index.html" style="font-size:11px;color:var(--text-muted);text-decoration:none;letter-spacing:1px;margin-right:8px;">Lihat Web →</a>
     <button class="btn-logout" onclick="doLogout()">Logout</button>
   </nav>
 
@@ -658,7 +658,7 @@
             <div style="font-family:'Barlow Condensed',sans-serif;font-size:18px;font-weight:700;margin-bottom:4px;">${p.player1} / ${p.player2}</div>
             <div style="font-size:12px;color:var(--text-muted);">📍 ${p.city||'—'} ${p.club?'· 🎾 '+p.club+' ':''}&nbsp;·&nbsp; 📱 ${wa1} / ${wa2}</div>
             <div style="margin-top:6px;">
-              ${p.bukti_tf_url ? `<a href="javascript:void(0)" onclick="openBuktiModal('${p.bukti_tf_url}')" style="font-size:11px;color:var(--red-light);font-weight:700;text-decoration:underline;">📄 Lihat Bukti Transfer</a>` : '<span style="font-size:11px;color:var(--red-light);">⚠ Belum upload bukti transfer</span>'}
+              ${p.bukti_tf_url ? `<a href="javascript:void(0)" data-bukti-url="${escAttr(p.bukti_tf_url)}" onclick="openBuktiModal(this.getAttribute('data-bukti-url'))" style="font-size:11px;color:var(--red-light);font-weight:700;text-decoration:underline;">📄 Lihat Bukti Transfer</a>` : '<span style="font-size:11px;color:var(--red-light);">⚠ Belum upload bukti transfer</span>'}
             </div>
             <div style="margin-top:6px;font-size:11px;font-weight:700;color:${statusColor};text-transform:uppercase;letter-spacing:1px;">${p.status}</div>
           </div>
@@ -943,6 +943,11 @@
             <input type="number" min="0" max="7" id="s2-${m.id}" value="${m.score2 !== null ? m.score2 : ''}" placeholder="0">
             <button class="btn btn-green btn-sm" onclick="saveScore('${m.id}')">Simpan</button>
             ${hasScore ? '<span style="font-size:11px;color:var(--green);margin-left:4px;">✓</span>' : ''}
+            <span style="margin-left:10px;padding-left:10px;border-left:1px solid rgba(255,255,255,0.12);display:inline-flex;align-items:center;gap:5px;">
+              <span style="font-size:9px;letter-spacing:1px;color:var(--text-muted);text-transform:uppercase;">WO</span>
+              <button class="btn btn-secondary btn-sm" title="Menang WO: pasangan 1" onclick="setWO('${m.id}', 1)">◀ P1</button>
+              <button class="btn btn-secondary btn-sm" title="Menang WO: pasangan 2" onclick="setWO('${m.id}', 2)">P2 ▶</button>
+            </span>
           </div>
         </div>
       </div>`;
@@ -950,6 +955,32 @@
   }
 
   // ---- SAVE SCORE ----
+  // ---- WALKOVER ----
+  // WO dicatat 1–0: pemenang tetap dapat 3 poin penuh, tapi selisih game
+  // nyaris tidak terdistorsi dibanding pasangan yang menang beneran di lapangan.
+  async function setWO(matchId, winner) {
+    const m = allMatches.find(x => x.id === matchId);
+    const p1 = m ? allPairs.find(p => p.id === m.pair1_id) : null;
+    const p2 = m ? allPairs.find(p => p.id === m.pair2_id) : null;
+    const winName = winner === 1
+      ? (p1 ? `${p1.player1} / ${p1.player2}` : 'Pasangan 1')
+      : (p2 ? `${p2.player1} / ${p2.player2}` : 'Pasangan 2');
+
+    if (!confirm(`Tandai menang WO untuk:\n${winName}\n\nSkor dicatat 1–0 (poin menang penuh, selisih game minimal).`)) return;
+
+    const s1 = winner === 1 ? 1 : 0;
+    const s2 = winner === 1 ? 0 : 1;
+    try {
+      const res = await fetch(`${SUPABASE_URL}/rest/v1/matches?id=eq.${matchId}`, {
+        method: 'PATCH', headers: headers(), body: JSON.stringify({ score1: s1, score2: s2 })
+      });
+      if (!res.ok) throw new Error();
+      showToast(`✓ WO — ${winName} menang`);
+      await loadAllData();
+      loadMatchesForScore();
+    } catch(e) { showToast('Gagal simpan WO', true); }
+  }
+
   async function saveScore(matchId) {
     const s1 = parseInt(document.getElementById(`s1-${matchId}`).value);
     const s2 = parseInt(document.getElementById(`s2-${matchId}`).value);
@@ -977,6 +1008,19 @@
   }
 
   // ---- TABLES ----
+  // Escape untuk nilai yang ditaruh di dalam atribut HTML (cegah atribut pecah
+  // kalau ada tanda kutip / karakter khusus di nama pemain atau URL).
+  function escAttr(v) {
+    return String(v == null ? '' : v)
+      .replace(/&/g, '&amp;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#39;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;');
+  }
+
+  const CATEGORY_OPTIONS = ['rookie','beginner','novice','intermediate','advance'];
+
   function renderPairsTable() {
     const { cat, gender, status } = getDataFilters();
     const filtered = allPairs.filter(p =>
@@ -995,10 +1039,39 @@
         <td style="color:var(--text-muted)">${p.city||'—'}</td>
         <td style="color:var(--text-muted);font-size:12px;">${p.whatsapp||'—'}</td>
         <td style="color:var(--text-muted);font-size:12px;">${p.whatsapp2||'—'}</td>
-        <td>${p.bukti_tf_url ? `<a href="javascript:void(0)" onclick="openBuktiModal('${p.bukti_tf_url}')" style="color:var(--red-light);font-weight:700;">Lihat</a>` : '<span style="color:var(--text-muted);">—</span>'}</td>
+        <td>${p.bukti_tf_url ? `<a href="javascript:void(0)" data-bukti-url="${escAttr(p.bukti_tf_url)}" onclick="openBuktiModal(this.getAttribute('data-bukti-url'))" style="color:var(--red-light);font-weight:700;">Lihat</a>` : '<span style="color:var(--text-muted);">—</span>'}</td>
         <td><span style="font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:${p.status==='approved'?'var(--green)':p.status==='rejected'?'var(--red-light)':'#E8B04B'}">${p.status||'—'}</span></td>
-        <td><button class="btn btn-danger" onclick="deletePair('${p.id}')">Hapus</button></td>
+        <td style="display:flex;gap:6px;align-items:center;">
+          <select data-pair-id="${p.id}" data-pair-name="${escAttr(p.player1 + ' / ' + p.player2)}" data-current-cat="${p.category}" onchange="handleCategoryChange(this)" style="background:var(--gray);border:1px solid rgba(255,255,255,0.1);color:var(--text);padding:5px 6px;font-size:11px;">
+            <option value="">Pindah Kelas...</option>
+            ${CATEGORY_OPTIONS.filter(c => c !== p.category).map(c => `<option value="${c}">${c}</option>`).join('')}
+          </select>
+          <button class="btn btn-danger" onclick="deletePair('${p.id}')">Hapus</button>
+        </td>
       </tr>`).join('');
+  }
+
+  function handleCategoryChange(sel) {
+    const newCat = sel.value;
+    const id = sel.getAttribute('data-pair-id');
+    const name = sel.getAttribute('data-pair-name');
+    const currentCat = sel.getAttribute('data-current-cat');
+    sel.value = '';
+    if (!newCat || newCat === currentCat) return;
+    changeCategory(id, newCat, name);
+  }
+
+  async function changeCategory(id, newCategory, pairName) {
+    if (!confirm(`Pindahkan "${pairName}" ke kelas ${newCategory.toUpperCase()}?\n\nGrup akan direset ke TBD, dan pasangan ini perlu di-assign ulang lewat Atur Grup.`)) return;
+    try {
+      await fetch(`${SUPABASE_URL}/rest/v1/pairs?id=eq.${id}`, {
+        method: 'PATCH',
+        headers: { ...headers(), 'Content-Type': 'application/json', 'Prefer': 'return=minimal' },
+        body: JSON.stringify({ category: newCategory, group_name: 'TBD' })
+      });
+      showToast(`✓ Dipindah ke ${newCategory}`);
+      await loadAllData();
+    } catch(e) { showToast('Gagal pindah kelas', true); }
   }
 
   function renderMatchesTable() {
