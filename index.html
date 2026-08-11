@@ -372,7 +372,7 @@
       <div class="cat-info">Men Category<br>Women Category</div>
       <div class="cat-actions">
         <span onclick="event.preventDefault();window.location.href='pengumuman/'" class="cat-btn-lihat">Cek Status</span>
-        <span onclick="event.preventDefault();window.location.href='daftar/?kelas=rookie'" class="cat-btn-daftar reg-btn">Daftar</span>
+        <span onclick="event.preventDefault();window.location.href='daftar/?kelas=rookie'" class="cat-btn-daftar reg-btn" data-kelas="rookie">Daftar</span>
       </div>
     </a>
     <a href="beginner/" class="cat-card" style="text-decoration:none;color:inherit;display:flex;flex-direction:column;">
@@ -380,7 +380,7 @@
       <div class="cat-info">Men Category<br>Women Category</div>
       <div class="cat-actions">
         <span onclick="event.preventDefault();window.location.href='pengumuman/'" class="cat-btn-lihat">Cek Status</span>
-        <span onclick="event.preventDefault();window.location.href='daftar/?kelas=beginner'" class="cat-btn-daftar reg-btn">Daftar</span>
+        <span onclick="event.preventDefault();window.location.href='daftar/?kelas=beginner'" class="cat-btn-daftar reg-btn" data-kelas="beginner">Daftar</span>
       </div>
     </a>
     <a href="novice/" class="cat-card" style="text-decoration:none;color:inherit;display:flex;flex-direction:column;">
@@ -388,7 +388,7 @@
       <div class="cat-info">Men Category<br>Women Category</div>
       <div class="cat-actions">
         <span onclick="event.preventDefault();window.location.href='pengumuman/'" class="cat-btn-lihat">Cek Status</span>
-        <span onclick="event.preventDefault();window.location.href='daftar/?kelas=novice'" class="cat-btn-daftar reg-btn">Daftar</span>
+        <span onclick="event.preventDefault();window.location.href='daftar/?kelas=novice'" class="cat-btn-daftar reg-btn" data-kelas="novice">Daftar</span>
       </div>
     </a>
     <a href="intermediate/" class="cat-card" style="text-decoration:none;color:inherit;display:flex;flex-direction:column;">
@@ -396,7 +396,7 @@
       <div class="cat-info">Men Category<br>Women Category</div>
       <div class="cat-actions">
         <span onclick="event.preventDefault();window.location.href='pengumuman/'" class="cat-btn-lihat">Cek Status</span>
-        <span onclick="event.preventDefault();window.location.href='daftar/?kelas=intermediate'" class="cat-btn-daftar reg-btn">Daftar</span>
+        <span onclick="event.preventDefault();window.location.href='daftar/?kelas=intermediate'" class="cat-btn-daftar reg-btn" data-kelas="intermediate">Daftar</span>
       </div>
     </a>
     <a href="advance/" class="cat-card" style="text-decoration:none;color:inherit;display:flex;flex-direction:column;">
@@ -404,7 +404,7 @@
       <div class="cat-info">Open Category<br>Men's Doubles</div>
       <div class="cat-actions">
         <span onclick="event.preventDefault();window.location.href='pengumuman/'" class="cat-btn-lihat">Cek Status</span>
-        <span onclick="event.preventDefault();window.location.href='daftar/?kelas=advance'" class="cat-btn-daftar reg-btn">Daftar</span>
+        <span onclick="event.preventDefault();window.location.href='daftar/?kelas=advance'" class="cat-btn-daftar reg-btn" data-kelas="advance">Daftar</span>
       </div>
     </a>
   </div>
@@ -475,28 +475,31 @@
   }
 
   loadSponsors();
-  // Check registration status
+  // Check registration status per kelas
   async function checkRegistration() {
     try {
-      const res = await fetch(`${SUPABASE_URL}/rest/v1/settings?key=eq.registration_open`, {
+      const res = await fetch(`${SUPABASE_URL}/rest/v1/settings?select=key,value&key=like.registration_open*`, {
         headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` }
       });
-      const data = await res.json();
-      const isOpen = !data || !data[0] || data[0].value === 'true';
-      const daftarBtn = document.getElementById('daftar-btn');
-      if (daftarBtn && !isOpen) {
-        daftarBtn.style.opacity = '0.4';
-        daftarBtn.style.pointerEvents = 'none';
-        daftarBtn.textContent = 'PENDAFTARAN DITUTUP';
-        daftarBtn.style.background = '#555';
-      }
-      // Disable all daftar buttons if closed
-      if (!isOpen) {
-        document.querySelectorAll('.reg-btn').forEach(btn => {
+      const rows = await res.json();
+      const byKey = {};
+      (rows || []).forEach(r => byKey[r.key] = r.value);
+      const legacy = byKey['registration_open'];
+
+      document.querySelectorAll('.reg-btn[data-kelas]').forEach(btn => {
+        const kelas = btn.getAttribute('data-kelas');
+        const perClassKey = `registration_open:${kelas}`;
+        let isOpen;
+        if (byKey[perClassKey] !== undefined) isOpen = byKey[perClassKey] === 'true';
+        else if (legacy !== undefined) isOpen = legacy === 'true';
+        else isOpen = true;
+
+        if (!isOpen) {
           btn.classList.add('disabled');
           btn.textContent = 'Ditutup';
-        });
-      }
+          btn.onclick = (e) => e.preventDefault();
+        }
+      });
     } catch(e) { console.log('Settings check failed'); }
   }
   checkRegistration();

@@ -422,17 +422,42 @@ Mandiri 144-00-1545610-3 a.n. Anisa Sativa Fillaili<br><br>
 
   async function checkRegistrationOpen() {
     try {
-      const res = await fetch(`${SUPABASE_URL}/rest/v1/settings?key=eq.registration_open`, {
+      const res = await fetch(`${SUPABASE_URL}/rest/v1/settings?select=key,value&key=like.registration_open*`, {
         headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` }
       });
-      const data = await res.json();
-      const isOpen = !data || !data[0] || data[0].value === 'true';
-      if (!isOpen) {
+      const rows = await res.json();
+      const byKey = {};
+      (rows || []).forEach(r => byKey[r.key] = r.value);
+      const legacy = byKey['registration_open'];
+
+      const isKelasOpen = (kelas) => {
+        const perClassKey = `registration_open:${kelas}`;
+        if (byKey[perClassKey] !== undefined) return byKey[perClassKey] === 'true';
+        if (legacy !== undefined) return legacy === 'true';
+        return true;
+      };
+
+      const params = new URLSearchParams(window.location.search);
+      const kelasParam = params.get('kelas');
+      const ALL_KELAS = ['rookie','beginner','novice','intermediate','advance'];
+
+      let closed, message;
+      if (kelasParam && ALL_KELAS.includes(kelasParam)) {
+        // Kelas spesifik dipilih dari landing page — cek status kelas itu saja
+        closed = !isKelasOpen(kelasParam);
+        message = `Pendaftaran kelas ${KELAS_DATA[kelasParam] ? KELAS_DATA[kelasParam].label : kelasParam} sudah ditutup.<br>Silakan cek kelas lain atau status pendaftaran kamu.`;
+      } else {
+        // Belum ada kelas dipilih — hanya blokir kalau SEMUA kelas ditutup
+        closed = ALL_KELAS.every(k => !isKelasOpen(k));
+        message = 'Masa pendaftaran Piala Merdeka 2026 sudah berakhir.<br>Silakan cek status pendaftaran kamu.';
+      }
+
+      if (closed) {
         document.getElementById('form-wrap').innerHTML = `
           <div style="text-align:center;padding:60px 20px;">
             <div style="font-size:48px;margin-bottom:16px;">🔒</div>
             <div style="font-family:'Bebas Neue',sans-serif;font-size:36px;letter-spacing:3px;color:var(--red-light);margin-bottom:12px;">PENDAFTARAN DITUTUP</div>
-            <p style="font-size:14px;color:var(--text-muted);line-height:1.6;margin-bottom:24px;">Masa pendaftaran Piala Merdeka 2026 sudah berakhir.<br>Silakan cek status pendaftaran kamu.</p>
+            <p style="font-size:14px;color:var(--text-muted);line-height:1.6;margin-bottom:24px;">${message}</p>
             <a href="../pengumuman/" style="display:inline-block;background:var(--red);color:white;padding:12px 28px;font-family:'Bebas Neue',sans-serif;font-size:18px;letter-spacing:3px;text-decoration:none;">CEK STATUS PENDAFTARAN</a>
           </div>`;
       }

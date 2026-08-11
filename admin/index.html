@@ -378,18 +378,10 @@
     <div class="tab-panel" id="tab-settings">
       <div class="form-card">
         <div class="form-title">Pengaturan Pendaftaran</div>
-        <div style="display:flex;align-items:center;justify-content:space-between;padding:16px 0;border-bottom:1px solid rgba(255,255,255,0.06);">
-          <div>
-            <div style="font-family:'Barlow Condensed',sans-serif;font-size:18px;font-weight:700;">Status Pendaftaran</div>
-            <div style="font-size:12px;color:var(--text-muted);margin-top:4px;">Buka atau tutup pendaftaran peserta baru</div>
-          </div>
-          <div style="display:flex;align-items:center;gap:12px;">
-            <span id="reg-status-label" style="font-family:'Bebas Neue',sans-serif;font-size:16px;letter-spacing:2px;color:var(--green);">BUKA</span>
-            <button id="reg-toggle-btn" class="btn btn-primary" onclick="toggleRegistration()" style="min-width:120px;">Loading...</button>
-          </div>
-        </div>
-        <div style="padding-top:16px;font-size:12px;color:var(--text-muted);line-height:1.6;">
-          ⚠️ Saat ditutup: tombol "Daftar Sekarang" akan hilang dari landing page dan halaman pendaftaran akan menampilkan pesan ditutup.
+        <div style="font-size:12px;color:var(--text-muted);margin-bottom:8px;">Buka atau tutup pendaftaran per kelas secara terpisah</div>
+        <div id="reg-toggle-list"></div>
+        <div style="padding-top:16px;font-size:12px;color:var(--text-muted);line-height:1.6;border-top:1px solid rgba(255,255,255,0.06);margin-top:8px;">
+          ⚠️ Saat sebuah kelas ditutup: tombol "Daftar" kelas itu akan hilang/nonaktif di landing page, dan halaman pendaftaran untuk kelas itu akan menampilkan pesan ditutup. Kelas lain tidak terpengaruh.
         </div>
       </div>
     </div>
@@ -700,48 +692,75 @@
     } catch(e) { showToast('Gagal update', true); }
   }
 
-  // ---- SETTINGS ----
-  let registrationOpen = true;
+  // ---- SETTINGS (per kelas) ----
+  const REG_CLASSES = [
+    { key: 'rookie', label: 'Rookie' },
+    { key: 'beginner', label: 'Beginner' },
+    { key: 'novice', label: 'Novice' },
+    { key: 'intermediate', label: 'Intermediate' },
+    { key: 'advance', label: 'Advance' }
+  ];
+  let regStatus = {}; // { rookie: true, beginner: true, ... }
 
   async function loadSettings() {
     try {
-      const res = await fetch(`${SUPABASE_URL}/rest/v1/settings?key=eq.registration_open`, { headers: headers() });
-      const data = await res.json();
-      if (data && data[0]) {
-        registrationOpen = data[0].value === 'true';
-        updateToggleUI();
-      }
+      const res = await fetch(`${SUPABASE_URL}/rest/v1/settings?select=key,value&key=like.registration_open*`, { headers: headers() });
+      const rows = await res.json();
+      const byKey = {};
+      (rows || []).forEach(r => byKey[r.key] = r.value);
+
+      // Fallback: kalau belum ada key per-kelas sama sekali tapi ada key lama
+      // "registration_open" (global), pakai nilainya sebagai default semua kelas.
+      const legacy = byKey['registration_open'];
+      REG_CLASSES.forEach(c => {
+        const perClassKey = `registration_open:${c.key}`;
+        if (byKey[perClassKey] !== undefined) {
+          regStatus[c.key] = byKey[perClassKey] === 'true';
+        } else if (legacy !== undefined) {
+          regStatus[c.key] = legacy === 'true';
+        } else {
+          regStatus[c.key] = true;
+        }
+      });
+      renderRegToggles();
     } catch(e) { console.log('Settings load failed'); }
   }
 
-  function updateToggleUI() {
-    const label = document.getElementById('reg-status-label');
-    const btn = document.getElementById('reg-toggle-btn');
-    if (!label || !btn) return;
-    if (registrationOpen) {
-      label.textContent = 'BUKA';
-      label.style.color = 'var(--green)';
-      btn.textContent = 'TUTUP PENDAFTARAN';
-      btn.className = 'btn btn-danger';
-    } else {
-      label.textContent = 'TUTUP';
-      label.style.color = 'var(--red-light)';
-      btn.textContent = 'BUKA PENDAFTARAN';
-      btn.className = 'btn btn-green';
-    }
+  function renderRegToggles() {
+    const container = document.getElementById('reg-toggle-list');
+    if (!container) return;
+    container.innerHTML = REG_CLASSES.map(c => {
+      const open = regStatus[c.key];
+      return `
+      <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 0;border-bottom:1px solid rgba(255,255,255,0.06);">
+        <div style="font-family:'Barlow Condensed',sans-serif;font-size:16px;font-weight:700;">${c.label}</div>
+        <div style="display:flex;align-items:center;gap:12px;">
+          <span style="font-family:'Bebas Neue',sans-serif;font-size:14px;letter-spacing:2px;color:${open?'var(--green)':'var(--red-light)'};">${open?'BUKA':'TUTUP'}</span>
+          <button class="btn ${open?'btn-danger':'btn-green'} btn-sm" style="min-width:110px;" onclick="toggleRegistration('${c.key}')">${open?'Tutup Kelas':'Buka Kelas'}</button>
+        </div>
+      </div>`;
+    }).join('');
   }
 
-  async function toggleRegistration() {
-    const newValue = !registrationOpen;
+  async function toggleRegistration(classKey) {
+    const newValue = !regStatus[classKey];
     try {
-      const res = await fetch(`${SUPABASE_URL}/rest/v1/settings?key=eq.registration_open`, {
-        method: 'PATCH', headers: headers(),
+      const key = `registration_open:${classKey}`;
+      // Upsert: coba update dulu, kalau row belum ada (belum pernah di-set), insert baru.
+      const patchRes = await fetch(`${SUPABASE_URL}/rest/v1/settings?key=eq.${key}`, {
+        method: 'PATCH', headers: { ...headers(), 'Prefer': 'return=representation' },
         body: JSON.stringify({ value: newValue.toString() })
       });
-      if (!res.ok) throw new Error();
-      registrationOpen = newValue;
-      updateToggleUI();
-      showToast(newValue ? '✓ Pendaftaran dibuka' : '✓ Pendaftaran ditutup');
+      const patched = await patchRes.json();
+      if (!patched || !patched.length) {
+        await fetch(`${SUPABASE_URL}/rest/v1/settings`, {
+          method: 'POST', headers: headers(),
+          body: JSON.stringify({ key, value: newValue.toString() })
+        });
+      }
+      regStatus[classKey] = newValue;
+      renderRegToggles();
+      showToast(newValue ? `✓ Pendaftaran ${classKey} dibuka` : `✓ Pendaftaran ${classKey} ditutup`);
     } catch(e) { showToast('Gagal update settings', true); }
   }
 
