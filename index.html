@@ -475,7 +475,7 @@
   }
 
   loadSponsors();
-  // Check registration status per kelas
+  // Check registration status per kelas (mempertimbangkan gender)
   async function checkRegistration() {
     try {
       const res = await fetch(`${SUPABASE_URL}/rest/v1/settings?select=key,value&key=like.registration_open*`, {
@@ -486,15 +486,24 @@
       (rows || []).forEach(r => byKey[r.key] = r.value);
       const legacy = byKey['registration_open'];
 
+      const isGenderOpen = (kelas, gender) => {
+        const genderKey = gender ? `registration_open:${kelas}:${gender}` : `registration_open:${kelas}`;
+        if (byKey[genderKey] !== undefined) return byKey[genderKey] === 'true';
+        const classKey = `registration_open:${kelas}`;
+        if (gender && byKey[classKey] !== undefined) return byKey[classKey] === 'true';
+        if (legacy !== undefined) return legacy === 'true';
+        return true;
+      };
+
       document.querySelectorAll('.reg-btn[data-kelas]').forEach(btn => {
         const kelas = btn.getAttribute('data-kelas');
-        const perClassKey = `registration_open:${kelas}`;
-        let isOpen;
-        if (byKey[perClassKey] !== undefined) isOpen = byKey[perClassKey] === 'true';
-        else if (legacy !== undefined) isOpen = legacy === 'true';
-        else isOpen = true;
+        // Kelas dianggap tertutup total hanya kalau SEMUA gender-nya tertutup
+        // (Advance cuma punya Men's, jadi cukup satu cek).
+        const fullyClosed = kelas === 'advance'
+          ? !isGenderOpen('advance', null)
+          : !isGenderOpen(kelas, 'men') && !isGenderOpen(kelas, 'women');
 
-        if (!isOpen) {
+        if (fullyClosed) {
           btn.classList.add('disabled');
           btn.textContent = 'Ditutup';
           btn.onclick = (e) => e.preventDefault();

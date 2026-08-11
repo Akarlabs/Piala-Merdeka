@@ -378,10 +378,10 @@
     <div class="tab-panel" id="tab-settings">
       <div class="form-card">
         <div class="form-title">Pengaturan Pendaftaran</div>
-        <div style="font-size:12px;color:var(--text-muted);margin-bottom:8px;">Buka atau tutup pendaftaran per kelas secara terpisah</div>
+        <div style="font-size:12px;color:var(--text-muted);margin-bottom:8px;">Buka atau tutup pendaftaran per kelas dan gender secara terpisah (mis. Women's Intermediate bisa ditutup tanpa mempengaruhi Men's Intermediate)</div>
         <div id="reg-toggle-list"></div>
         <div style="padding-top:16px;font-size:12px;color:var(--text-muted);line-height:1.6;border-top:1px solid rgba(255,255,255,0.06);margin-top:8px;">
-          ⚠️ Saat sebuah kelas ditutup: tombol "Daftar" kelas itu akan hilang/nonaktif di landing page, dan halaman pendaftaran untuk kelas itu akan menampilkan pesan ditutup. Kelas lain tidak terpengaruh.
+          ⚠️ Saat sebuah baris ditutup: tombol gender itu di halaman pendaftaran akan nonaktif ("Ditutup"). Kalau kedua gender di satu kelas tertutup, seluruh kelas itu akan menampilkan pesan ditutup. Tombol "Daftar" di landing page tetap aktif selama minimal salah satu gender masih buka.
         </div>
       </div>
     </div>
@@ -692,36 +692,46 @@
     } catch(e) { showToast('Gagal update', true); }
   }
 
-  // ---- SETTINGS (per kelas) ----
-  const REG_CLASSES = [
-    { key: 'rookie', label: 'Rookie' },
-    { key: 'beginner', label: 'Beginner' },
-    { key: 'novice', label: 'Novice' },
-    { key: 'intermediate', label: 'Intermediate' },
-    { key: 'advance', label: 'Advance' }
+  // ---- SETTINGS (per kelas + gender) ----
+  // Rookie/Beginner/Novice/Intermediate punya Men's & Women's terpisah.
+  // Advance cuma Men's Doubles, jadi 1 baris saja tanpa gender.
+  const REG_ROWS = [
+    { rowKey: 'rookie:men', label: "Rookie · Men's" },
+    { rowKey: 'rookie:women', label: "Rookie · Women's" },
+    { rowKey: 'beginner:men', label: "Beginner · Men's" },
+    { rowKey: 'beginner:women', label: "Beginner · Women's" },
+    { rowKey: 'novice:men', label: "Novice · Men's" },
+    { rowKey: 'novice:women', label: "Novice · Women's" },
+    { rowKey: 'intermediate:men', label: "Intermediate · Men's" },
+    { rowKey: 'intermediate:women', label: "Intermediate · Women's" },
+    { rowKey: 'advance', label: "Advance (Men's Doubles)" }
   ];
-  let regStatus = {}; // { rookie: true, beginner: true, ... }
+  let regByKey = {};
+  let regLegacy;
+  let regStatus = {}; // { 'rookie:men': true, 'advance': true, ... }
+
+  function resolveRegOpen(rowKey) {
+    const fullKey = `registration_open:${rowKey}`;
+    if (regByKey[fullKey] !== undefined) return regByKey[fullKey] === 'true';
+    // Fallback ke key level-kelas lama (tanpa gender), kalau pernah di-set sebelumnya
+    if (rowKey.includes(':')) {
+      const kelas = rowKey.split(':')[0];
+      const classKey = `registration_open:${kelas}`;
+      if (regByKey[classKey] !== undefined) return regByKey[classKey] === 'true';
+    }
+    if (regLegacy !== undefined) return regLegacy === 'true';
+    return true;
+  }
 
   async function loadSettings() {
     try {
       const res = await fetch(`${SUPABASE_URL}/rest/v1/settings?select=key,value&key=like.registration_open*`, { headers: headers() });
       const rows = await res.json();
-      const byKey = {};
-      (rows || []).forEach(r => byKey[r.key] = r.value);
+      regByKey = {};
+      (rows || []).forEach(r => regByKey[r.key] = r.value);
+      regLegacy = regByKey['registration_open'];
 
-      // Fallback: kalau belum ada key per-kelas sama sekali tapi ada key lama
-      // "registration_open" (global), pakai nilainya sebagai default semua kelas.
-      const legacy = byKey['registration_open'];
-      REG_CLASSES.forEach(c => {
-        const perClassKey = `registration_open:${c.key}`;
-        if (byKey[perClassKey] !== undefined) {
-          regStatus[c.key] = byKey[perClassKey] === 'true';
-        } else if (legacy !== undefined) {
-          regStatus[c.key] = legacy === 'true';
-        } else {
-          regStatus[c.key] = true;
-        }
-      });
+      REG_ROWS.forEach(r => { regStatus[r.rowKey] = resolveRegOpen(r.rowKey); });
       renderRegToggles();
     } catch(e) { console.log('Settings load failed'); }
   }
@@ -729,24 +739,23 @@
   function renderRegToggles() {
     const container = document.getElementById('reg-toggle-list');
     if (!container) return;
-    container.innerHTML = REG_CLASSES.map(c => {
-      const open = regStatus[c.key];
+    container.innerHTML = REG_ROWS.map(r => {
+      const open = regStatus[r.rowKey];
       return `
       <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 0;border-bottom:1px solid rgba(255,255,255,0.06);">
-        <div style="font-family:'Barlow Condensed',sans-serif;font-size:16px;font-weight:700;">${c.label}</div>
+        <div style="font-family:'Barlow Condensed',sans-serif;font-size:16px;font-weight:700;">${r.label}</div>
         <div style="display:flex;align-items:center;gap:12px;">
           <span style="font-family:'Bebas Neue',sans-serif;font-size:14px;letter-spacing:2px;color:${open?'var(--green)':'var(--red-light)'};">${open?'BUKA':'TUTUP'}</span>
-          <button class="btn ${open?'btn-danger':'btn-green'} btn-sm" style="min-width:110px;" onclick="toggleRegistration('${c.key}')">${open?'Tutup Kelas':'Buka Kelas'}</button>
+          <button class="btn ${open?'btn-danger':'btn-green'} btn-sm" style="min-width:110px;" onclick="toggleRegistration('${r.rowKey}')">${open?'Tutup':'Buka'}</button>
         </div>
       </div>`;
     }).join('');
   }
 
-  async function toggleRegistration(classKey) {
-    const newValue = !regStatus[classKey];
+  async function toggleRegistration(rowKey) {
+    const newValue = !regStatus[rowKey];
     try {
-      const key = `registration_open:${classKey}`;
-      // Upsert: coba update dulu, kalau row belum ada (belum pernah di-set), insert baru.
+      const key = `registration_open:${rowKey}`;
       const patchRes = await fetch(`${SUPABASE_URL}/rest/v1/settings?key=eq.${key}`, {
         method: 'PATCH', headers: { ...headers(), 'Prefer': 'return=representation' },
         body: JSON.stringify({ value: newValue.toString() })
@@ -758,9 +767,9 @@
           body: JSON.stringify({ key, value: newValue.toString() })
         });
       }
-      regStatus[classKey] = newValue;
+      regStatus[rowKey] = newValue;
       renderRegToggles();
-      showToast(newValue ? `✓ Pendaftaran ${classKey} dibuka` : `✓ Pendaftaran ${classKey} ditutup`);
+      showToast(newValue ? `✓ Pendaftaran ${rowKey} dibuka` : `✓ Pendaftaran ${rowKey} ditutup`);
     } catch(e) { showToast('Gagal update settings', true); }
   }
 

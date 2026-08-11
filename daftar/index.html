@@ -151,6 +151,7 @@
         <button id="btn-women" onclick="selectGender('women')" style="padding:14px;font-family:'Bebas Neue',sans-serif;font-size:14px;letter-spacing:1px;cursor:pointer;border:2px solid rgba(255,255,255,0.15);background:transparent;color:var(--text-muted);transition:all 0.15s;">WOMEN'S</button>
       </div>
       <div style="font-size:11px;color:var(--red-light);margin-top:10px;font-weight:600;">⚠️ Wajib pilih salah satu sebelum mendaftar.</div>
+      <div id="gender-closed-note" style="display:none;font-size:11px;color:#E8B04B;margin-top:6px;font-weight:600;"></div>
     </div>
     <div class="form-card" id="advance-gender-note" style="display:none;">
       <div class="form-card-title">Kategori</div>
@@ -336,6 +337,35 @@ Mandiri 144-00-1545610-3 a.n. Anisa Sativa Fillaili<br><br>
 
   let selectedKelas = null;
   let selectedGender = null;
+  const ALL_KELAS = ['rookie','beginner','novice','intermediate','advance'];
+  let regByKey = {};
+  let regLegacy;
+
+  function isGenderOpen(kelas, gender) {
+    const genderKey = gender ? `registration_open:${kelas}:${gender}` : `registration_open:${kelas}`;
+    if (regByKey[genderKey] !== undefined) return regByKey[genderKey] === 'true';
+    const classKey = `registration_open:${kelas}`;
+    if (gender && regByKey[classKey] !== undefined) return regByKey[classKey] === 'true';
+    if (regLegacy !== undefined) return regLegacy === 'true';
+    return true;
+  }
+
+  function isKelasFullyClosed(kelas) {
+    if (kelas === 'advance') return !isGenderOpen('advance', null);
+    return !isGenderOpen(kelas, 'men') && !isGenderOpen(kelas, 'women');
+  }
+
+  async function fetchRegSettings() {
+    try {
+      const res = await fetch(`${SUPABASE_URL}/rest/v1/settings?select=key,value&key=like.registration_open*`, {
+        headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` }
+      });
+      const rows = await res.json();
+      regByKey = {};
+      (rows || []).forEach(r => regByKey[r.key] = r.value);
+      regLegacy = regByKey['registration_open'];
+    } catch(e) { console.log('Gagal ambil status pendaftaran', e); }
+  }
 
   function showToast(msg) {
     const t = document.getElementById('toast');
@@ -374,7 +404,15 @@ Mandiri 144-00-1545610-3 a.n. Anisa Sativa Fillaili<br><br>
     document.getElementById('hero-kelas-sub').textContent = 'Pilih kelas untuk memulai pendaftaran';
   }
 
-  function lanjutDaftar() {
+  async function lanjutDaftar() {
+    await fetchRegSettings();
+
+    if (isKelasFullyClosed(selectedKelas)) {
+      showToast('Pendaftaran kelas ini baru saja ditutup. Silakan pilih kelas lain.');
+      backToKelas();
+      return;
+    }
+
     const k = KELAS_DATA[selectedKelas];
     document.getElementById('form-kelas-title').textContent = k.label;
     document.getElementById('form-kelas-display').textContent = k.label + ' · ' + k.badge;
@@ -392,13 +430,52 @@ Mandiri 144-00-1545610-3 a.n. Anisa Sativa Fillaili<br><br>
     } else {
       genderCard.style.display = 'block';
       advanceNote.style.display = 'none';
-      // reset button styles
       const menBtn = document.getElementById('btn-men');
       const womenBtn = document.getElementById('btn-women');
+      const menOpen = isGenderOpen(selectedKelas, 'men');
+      const womenOpen = isGenderOpen(selectedKelas, 'women');
+
+      // reset dulu ke state netral
+      [menBtn, womenBtn].forEach(b => {
+        b.disabled = false;
+        b.style.cursor = 'pointer';
+        b.style.opacity = '1';
+        b.style.borderColor = 'rgba(255,255,255,0.15)';
+        b.style.color = 'var(--text-muted)';
+        b.style.background = 'transparent';
+      });
+      menBtn.textContent = "MEN'S";
       womenBtn.textContent = "WOMEN'S";
+      menBtn.onclick = () => selectGender('men');
       womenBtn.onclick = () => selectGender('women');
-      menBtn.style.borderColor = 'rgba(255,255,255,0.15)'; menBtn.style.color = 'var(--text-muted)'; menBtn.style.background = 'transparent';
-      womenBtn.style.borderColor = 'rgba(255,255,255,0.15)'; womenBtn.style.color = 'var(--text-muted)'; womenBtn.style.background = 'transparent';
+
+      if (!menOpen) {
+        menBtn.textContent = "MEN'S — DITUTUP";
+        menBtn.disabled = true;
+        menBtn.style.opacity = '0.35';
+        menBtn.style.cursor = 'not-allowed';
+        menBtn.onclick = null;
+      }
+      if (!womenOpen) {
+        womenBtn.textContent = "WOMEN'S — DITUTUP";
+        womenBtn.disabled = true;
+        womenBtn.style.opacity = '0.35';
+        womenBtn.style.cursor = 'not-allowed';
+        womenBtn.onclick = null;
+      }
+
+      const genderNote = document.getElementById('gender-closed-note');
+      if (genderNote) {
+        if (!menOpen && womenOpen) {
+          genderNote.textContent = "⚠️ Pendaftaran Men's untuk kelas ini sudah ditutup. Silakan pilih Women's.";
+          genderNote.style.display = 'block';
+        } else if (!womenOpen && menOpen) {
+          genderNote.textContent = "⚠️ Pendaftaran Women's untuk kelas ini sudah ditutup. Silakan pilih Men's.";
+          genderNote.style.display = 'block';
+        } else {
+          genderNote.style.display = 'none';
+        }
+      }
     }
   }
 
@@ -422,33 +499,20 @@ Mandiri 144-00-1545610-3 a.n. Anisa Sativa Fillaili<br><br>
 
   async function checkRegistrationOpen() {
     try {
-      const res = await fetch(`${SUPABASE_URL}/rest/v1/settings?select=key,value&key=like.registration_open*`, {
-        headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` }
-      });
-      const rows = await res.json();
-      const byKey = {};
-      (rows || []).forEach(r => byKey[r.key] = r.value);
-      const legacy = byKey['registration_open'];
-
-      const isKelasOpen = (kelas) => {
-        const perClassKey = `registration_open:${kelas}`;
-        if (byKey[perClassKey] !== undefined) return byKey[perClassKey] === 'true';
-        if (legacy !== undefined) return legacy === 'true';
-        return true;
-      };
+      await fetchRegSettings();
 
       const params = new URLSearchParams(window.location.search);
       const kelasParam = params.get('kelas');
-      const ALL_KELAS = ['rookie','beginner','novice','intermediate','advance'];
 
       let closed, message;
       if (kelasParam && ALL_KELAS.includes(kelasParam)) {
-        // Kelas spesifik dipilih dari landing page — cek status kelas itu saja
-        closed = !isKelasOpen(kelasParam);
+        // Kelas spesifik dipilih dari landing page — cek kelas ini sudah tertutup total
+        // (kedua gender tertutup, atau Advance tertutup) sebelum blokir seluruh halaman.
+        closed = isKelasFullyClosed(kelasParam);
         message = `Pendaftaran kelas ${KELAS_DATA[kelasParam] ? KELAS_DATA[kelasParam].label : kelasParam} sudah ditutup.<br>Silakan cek kelas lain atau status pendaftaran kamu.`;
       } else {
-        // Belum ada kelas dipilih — hanya blokir kalau SEMUA kelas ditutup
-        closed = ALL_KELAS.every(k => !isKelasOpen(k));
+        // Belum ada kelas dipilih — hanya blokir kalau SEMUA kelas tertutup total
+        closed = ALL_KELAS.every(k => isKelasFullyClosed(k));
         message = 'Masa pendaftaran Piala Merdeka 2026 sudah berakhir.<br>Silakan cek status pendaftaran kamu.';
       }
 
@@ -485,6 +549,10 @@ Mandiri 144-00-1545610-3 a.n. Anisa Sativa Fillaili<br><br>
 
     if (!selectedKelas) { showToast('Pilih kelas dulu'); return; }
     if (!selectedGender) { showToast('Pilih gender dulu'); return; }
+    if (!isGenderOpen(selectedKelas, selectedGender)) {
+      showToast('Pendaftaran kategori ini baru saja ditutup. Silakan refresh halaman.');
+      return;
+    }
     if (!player1) { showToast('Nama pemain 1 wajib diisi'); return; }
     if (!player2) { showToast('Nama pemain 2 wajib diisi'); return; }
     if (!wa1) { showToast('Nomor WhatsApp peserta 1 wajib diisi'); return; }
