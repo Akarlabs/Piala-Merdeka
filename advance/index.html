@@ -127,7 +127,7 @@
 <div class="page-header">
   <div class="cat-badge">Open Level · Doubles</div>
   <div class="page-title">ADVANCE</div>
-  <div class="page-desc">24 pasang · Men's Doubles</div>
+  <div class="page-desc">Men's Doubles</div>
   <div class="controls">
     <div class="phase-tabs" style="flex:1;">
       <button class="phase-tab active" onclick="setPhase('grup',this)">Fase Grup</button>
@@ -155,7 +155,7 @@
   const SUPABASE_URL = 'https://hufwbvouwmdbjhawygxg.supabase.co';
   const SUPABASE_KEY = 'sb_publishable_ajdfMjHRQM4EeFVzYDmSZw_Ozxz5It6';
   const CATEGORY = 'advance';
-  const GROUPS = ['A','B','C','D','E','F','G','H'];
+  const GROUPS = ['A','B','C','D','E','F','G','H','I','J'];
 
   let currentPhase = 'grup';
   let allPairs = [];
@@ -258,6 +258,7 @@
   function renderKnockout(gender) {
     const container = document.getElementById(`${gender}-bracket`);
     const phases = [
+      { key:'round16',      label:'16 Besar' },
       { key:'quarterfinal', label:'Perempat Final · 8 Besar' },
       { key:'semifinal',    label:'Semi Final' },
       { key:'final',        label:'🏆 Grand Final' }

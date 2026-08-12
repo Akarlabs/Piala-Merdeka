@@ -127,7 +127,6 @@
 <div class="page-header">
   <div class="cat-badge">Doubles</div>
   <div class="page-title">INTERMEDIATE</div>
-  <div class="page-desc">24 pasang per gender · 8 grup × 3 pasang</div>
   <div class="controls">
     <div class="gender-tabs">
       <button class="gender-tab active" onclick="setGender('men',this)">👨 Men's Doubles</button>
@@ -167,7 +166,7 @@
   const SUPABASE_URL = 'https://hufwbvouwmdbjhawygxg.supabase.co';
   const SUPABASE_KEY = 'sb_publishable_ajdfMjHRQM4EeFVzYDmSZw_Ozxz5It6';
   const CATEGORY = 'intermediate';
-  const GROUPS = ['A','B','C','D','E','F','G','H'];
+  const GROUPS = ['A','B','C','D','E','F','G','H','I','J'];
 
   let currentGender = 'men';
   let currentPhase = 'grup';
@@ -271,6 +270,7 @@
   function renderKnockout(gender) {
     const container = document.getElementById(`${gender}-bracket`);
     const phases = [
+      { key:'round16',      label:'16 Besar' },
       { key:'quarterfinal', label:'Perempat Final · 8 Besar' },
       { key:'semifinal',    label:'Semi Final' },
       { key:'final',        label:'🏆 Grand Final' }

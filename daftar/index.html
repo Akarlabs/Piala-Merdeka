@@ -226,7 +226,7 @@
   const KELAS_DATA = {
     rookie: {
       label: 'Rookie', badge: 'Doubles',
-      info: '24 pasang per gender · 8 grup × 3 pasang',
+      info: '',
       peraturan: `<strong style="color:#fff;">Kriteria Kemampuan Pemain</strong><br>
 • Tidak banyak memiliki pengalaman bertanding<br>
 • Hanya sering bermain dalam konteks fun game<br>
@@ -248,7 +248,7 @@ Mandiri 144-00-1545610-3 a.n. Anisa Sativa Fillaili<br><br>
     },
     beginner: {
       label: 'Beginner', badge: 'Doubles',
-      info: '30 pasang per gender',
+      info: '',
       peraturan: `<strong style="color:#fff;">Kriteria Kemampuan Pemain</strong><br>
 • Sudah mulai rutin bermain dan mengikuti pertandingan<br>
 • Groundstroke mulai stabil namun belum konsisten dalam tekanan<br>
@@ -271,7 +271,7 @@ Mandiri 144-00-1545610-3 a.n. Anisa Sativa Fillaili<br><br>
     },
     novice: {
       label: 'Novice', badge: 'Doubles',
-      info: '30 pasang per gender',
+      info: '',
       peraturan: `<strong style="color:#fff;">Kriteria Kemampuan Pemain</strong><br>
 • Rutin mengikuti turnamen tenis<br>
 • Groundstroke konsisten dalam rally dan serve<br>
@@ -294,7 +294,7 @@ Mandiri 144-00-1545610-3 a.n. Anisa Sativa Fillaili<br><br>
     },
     intermediate: {
       label: 'Intermediate', badge: 'Doubles',
-      info: '24 pasang per gender · 8 grup × 3 pasang',
+      info: '',
       peraturan: `<strong style="color:#fff;">Kriteria Kemampuan Pemain</strong><br>
 • Rutin mengikuti turnamen tenis di kategori Intermediate<br>
 • Tergolong pemain pada tingkat menengah (mendekati Advance)<br>
@@ -316,7 +316,7 @@ Mandiri 144-00-1545610-3 a.n. Anisa Sativa Fillaili<br><br>
     },
     advance: {
       label: 'Advance', badge: 'Open level',
-      info: "24 pasang · Men's Doubles",
+      info: "Men's Doubles",
       peraturan: `<em style="color:#E8B04B;">Kategori ADVANCE OPEN dibuka khusus untuk MEN'S DOUBLE.</em><br><br>
 <strong style="color:#fff;">Kriteria Kemampuan Pemain</strong><br>
 • Sudah teruji mengikuti banyak turnamen<br>
@@ -382,7 +382,7 @@ Mandiri 144-00-1545610-3 a.n. Anisa Sativa Fillaili<br><br>
         <div>
           <div style="font-size:9px;letter-spacing:2px;color:var(--text-muted);text-transform:uppercase;margin-bottom:4px;">${k.badge}</div>
           <div style="font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:2px;">${k.label}</div>
-          <div style="font-size:11px;color:var(--text-muted);margin-top:2px;">${k.info}</div>
+          ${k.info ? `<div style="font-size:11px;color:var(--text-muted);margin-top:2px;">${k.info}</div>` : ''}
         </div>
         <div style="font-size:20px;color:var(--red-light);">›</div>
       </div>`).join('');
