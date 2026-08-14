@@ -4,6 +4,13 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Admin — Piala Merdeka 2026</title>
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#111111">
+<link rel="icon" href="icon-192.png">
+<link rel="apple-touch-icon" href="icon-192.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="PM Admin">
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow+Condensed:wght@400;600;700;900&family=Barlow:wght@400;500&display=swap" rel="stylesheet">
 <style>
   :root {
@@ -237,6 +244,7 @@
             <label>Fase</label>
             <select id="m-phase" onchange="toggleGroupField()">
               <option value="grup">Fase Grup</option>
+              <option value="round16">16 Besar</option>
               <option value="quarterfinal">Perempat Final</option>
               <option value="semifinal">Semi Final</option>
               <option value="final">Final</option>
@@ -307,6 +315,7 @@
             <label>Fase</label>
             <select id="sc-phase" onchange="loadMatchesForScore()">
               <option value="grup">Fase Grup</option>
+              <option value="round16">16 Besar</option>
               <option value="quarterfinal">Perempat Final</option>
               <option value="semifinal">Semi Final</option>
               <option value="final">Final</option>
@@ -349,6 +358,12 @@
               <option value="approved">Approved</option>
               <option value="pending">Pending</option>
               <option value="rejected">Rejected</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Filter Kota</label>
+            <select id="d-city" onchange="applyDataFilter()">
+              <option value="">Semua</option>
             </select>
           </div>
           <div class="form-group" style="justify-content:flex-end;">
@@ -814,9 +829,35 @@
       allPairs = await pR.json();
       allMatches = await mR.json();
       updateStats();
+      populateCityFilter();
       renderPairsTable();
       renderMatchesTable();
     } catch(e) { showToast('Gagal load data', true); }
+  }
+
+  function normalizeCity(v) {
+    return String(v || '').trim().toLowerCase();
+  }
+  function titleCaseCity(v) {
+    return String(v || '').trim().replace(/\s+/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
+  }
+
+  function populateCityFilter() {
+    const sel = document.getElementById('d-city');
+    if (!sel) return;
+    const current = sel.value;
+    // Kota Asal itu isian bebas (bukan dropdown) pas daftar, jadi "Surabaya" vs
+    // "surabaya" vs " Surabaya " bisa kesimpen beda-beda. Di-normalize dulu biar
+    // gak pecah jadi entri kota yang seharusnya sama.
+    const map = new Map(); // key ternormalisasi -> label tampilan (rapi)
+    allPairs.forEach(p => {
+      const key = normalizeCity(p.city);
+      if (key && !map.has(key)) map.set(key, titleCaseCity(p.city));
+    });
+    const entries = [...map.entries()].sort((a, b) => a[1].localeCompare(b[1], 'id'));
+    sel.innerHTML = '<option value="">Semua</option>' +
+      entries.map(([key, label]) => `<option value="${escAttr(key)}">${label}</option>`).join('');
+    if (map.has(current)) sel.value = current;
   }
 
   function updateStats() {
@@ -1031,7 +1072,8 @@
     return {
       cat: document.getElementById('d-category')?.value || '',
       gender: document.getElementById('d-gender')?.value || '',
-      status: document.getElementById('d-status')?.value || ''
+      status: document.getElementById('d-status')?.value || '',
+      city: document.getElementById('d-city')?.value || ''
     };
   }
 
@@ -1050,9 +1092,9 @@
   const CATEGORY_OPTIONS = ['rookie','beginner','novice','intermediate','advance'];
 
   function renderPairsTable() {
-    const { cat, gender, status } = getDataFilters();
+    const { cat, gender, status, city } = getDataFilters();
     const filtered = allPairs.filter(p =>
-      (!cat || p.category === cat) && (!gender || p.gender === gender) && (!status || p.status === status)
+      (!cat || p.category === cat) && (!gender || p.gender === gender) && (!status || p.status === status) && (!city || normalizeCity(p.city) === city)
     );
     document.getElementById('pairs-count').textContent = `Pasangan (${filtered.length})`;
     const tbody = document.getElementById('pairs-tbody');
@@ -1314,6 +1356,13 @@
             <button class="btn btn-danger" onclick="deleteSponsor('${s.id}')">Hapus</button>
           </div>`).join('')}
       </div>`).join('');
+  }
+</script>
+<script>
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('service-worker.js').catch(err => console.log('SW gagal daftar', err));
+    });
   }
 </script>
 </body>
