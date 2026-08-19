@@ -166,7 +166,21 @@
   const SUPABASE_URL = 'https://hufwbvouwmdbjhawygxg.supabase.co';
   const SUPABASE_KEY = 'sb_publishable_ajdfMjHRQM4EeFVzYDmSZw_Ozxz5It6';
   const CATEGORY = 'novice';
-  const GROUPS = ['A','B','C','D','E','F','G','H','I','J'];
+  const GROUPS = ['A','B','C','D','E','F','G','H','I','J','K','L','M','N','O'];
+
+  // match_time itu teks bebas (misal "08.00 / 24 Agustus 2026"), jadi kita
+  // ekstrak pola jam/tanggal buat sortir daftar pertandingan per grup.
+  function parseMatchTimeSortKey(raw) {
+    const s = String(raw || '').trim();
+    if (!s) return Infinity;
+    let dayNum = 0;
+    const dayMatch = s.match(/(\d{1,2})\s*(jan|feb|mar|apr|mei|jun|jul|agu|sep|okt|nov|des)/i);
+    if (dayMatch) dayNum = parseInt(dayMatch[1], 10);
+    let minutesOfDay = 0;
+    const timeMatch = s.match(/(\d{1,2})[.:](\d{2})/);
+    if (timeMatch) minutesOfDay = parseInt(timeMatch[1], 10) * 60 + parseInt(timeMatch[2], 10);
+    return dayNum * 10000 + minutesOfDay;
+  }
 
   let currentGender = 'men';
   let currentPhase = 'grup';
@@ -225,7 +239,7 @@
     GROUPS.forEach(g => {
       const gPairs = pairs.filter(p => p.group_name === g);
       if (!gPairs.length) return;
-      const gMatches = allMatches.filter(m => m.gender === gender && m.group_name === g && m.phase === 'grup');
+      const gMatches = allMatches.filter(m => m.gender === gender && m.group_name === g && m.phase === 'grup').slice().sort((a,b) => parseMatchTimeSortKey(a.match_time) - parseMatchTimeSortKey(b.match_time));
       const standings = calcStandings(gPairs, gMatches);
       const rankClass = ['rank-1','rank-2','rank-3'];
       const courtInfo = gMatches[0]?.court || '—';

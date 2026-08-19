@@ -524,6 +524,28 @@
   let allPairs = [];
   let allMatches = [];
 
+  // match_time itu field teks bebas (misal "08.00 / 24 Agustus 2026"), bukan
+  // field jam terstruktur — jadi kita coba ekstrak pola tanggal & jam dari
+  // teksnya buat sortir. Ini best-effort: kalau format ditulis konsisten
+  // (jam 2-digit, ada nama bulan), urutannya bakal bener.
+  function parseMatchTimeSortKey(raw) {
+    const s = String(raw || '').trim();
+    if (!s) return Infinity; // yang belum ada jadwalnya taruh paling akhir
+    let dayNum = 0;
+    const dayMatch = s.match(/(\d{1,2})\s*(jan|feb|mar|apr|mei|jun|jul|agu|sep|okt|nov|des)/i);
+    if (dayMatch) dayNum = parseInt(dayMatch[1], 10);
+    let minutesOfDay = 0;
+    const timeMatch = s.match(/(\d{1,2})[.:](\d{2})/);
+    if (timeMatch) minutesOfDay = parseInt(timeMatch[1], 10) * 60 + parseInt(timeMatch[2], 10);
+    return dayNum * 10000 + minutesOfDay;
+  }
+  function sortByTimeThenGroup(a, b) {
+    const ta = parseMatchTimeSortKey(a.match_time);
+    const tb = parseMatchTimeSortKey(b.match_time);
+    if (ta !== tb) return ta - tb;
+    return String(a.group_name || '').localeCompare(String(b.group_name || ''));
+  }
+
   // ---- AUTH ----
   function doLogin() {
     const pwd = document.getElementById('pwd-input').value;
@@ -597,7 +619,7 @@
               <td style="font-family:'Bebas Neue',sans-serif;font-size:20px;color:var(--red-light);">${p.group_name||'—'}</td>
               <td>
                 <select id="newgrp-${p.id}" style="background:var(--gray);border:1px solid rgba(255,255,255,0.1);color:var(--text);padding:6px 10px;font-family:'Bebas Neue',sans-serif;font-size:16px;">
-                  ${['A','B','C','D','E','F','G','H','I','J'].map(g => `<option value="${g}" ${p.group_name===g?'selected':''}>${g}</option>`).join('')}
+                  ${['A','B','C','D','E','F','G','H','I','J','K','L','M','N','O'].map(g => `<option value="${g}" ${p.group_name===g?'selected':''}>${g}</option>`).join('')}
                 </select>
               </td>
             </tr>`).join('')}
@@ -983,9 +1005,10 @@
     const gender = document.getElementById('sc-gender').value;
     const phase = document.getElementById('sc-phase').value;
     const showGender = cat === 'advance';
-    const ms = showGender
+    const ms = (showGender
       ? allMatches.filter(m => m.category === cat && m.phase === phase)
-      : allMatches.filter(m => m.category === cat && m.gender === gender && m.phase === phase);
+      : allMatches.filter(m => m.category === cat && m.gender === gender && m.phase === phase)
+    ).slice().sort(sortByTimeThenGroup);
     const container = document.getElementById('scores-list');
 
     if (!ms.length) {
@@ -1148,7 +1171,7 @@
     const { cat, gender } = getDataFilters();
     const filtered = allMatches.filter(m =>
       (!cat || m.category === cat) && (!gender || m.gender === gender)
-    );
+    ).slice().sort(sortByTimeThenGroup);
     document.getElementById('matches-count').textContent = `Match (${filtered.length})`;
     const tbody = document.getElementById('matches-tbody');
     if (!filtered.length) { tbody.innerHTML = '<tr><td colspan="10" style="text-align:center;color:var(--text-muted);padding:20px;">Belum ada data</td></tr>'; return; }
