@@ -229,6 +229,9 @@
       if (!gPairs.length) return;
       const gMatches = allMatches.filter(m => m.group_name === g && m.phase === 'grup').slice().sort((a,b) => parseMatchTimeSortKey(a.match_time) - parseMatchTimeSortKey(b.match_time));
       const standings = calcStandings(gPairs, gMatches);
+      // LOLOS cuma valid kalau semua pertandingan yang udah dibikin di grup ini
+      // sudah ada skornya — jangan sampai keluar duluan pas grup baru main 1x.
+      const groupComplete = gMatches.length > 0 && gMatches.every(m => m.score1 !== null && m.score2 !== null);
       const rankClass = ['rank-1','rank-2','rank-3'];
       const courtInfo = gMatches[0]?.court || '—';
 
@@ -238,7 +241,7 @@
           <thead><tr><th>Pasangan</th><th>M</th><th>W</th><th>L</th><th>Pts</th></tr></thead>
           <tbody>${standings.map((s,i) => `
             <tr class="${rankClass[i]||''}">
-              <td><span class="rank-num">${i+1}</span><span class="pair-name">${pairName(s.pair)}</span>${i===0&&s.w>0?'<span class="lolos">LOLOS</span>':''}
+              <td><span class="rank-num">${i+1}</span><span class="pair-name">${pairName(s.pair)}</span>${i===0&&s.w>0&&groupComplete?'<span class="lolos">LOLOS</span>':''}
               <div class="pair-city" style="margin-left:28px">${s.pair.city||''}</div></td>
               <td><span class="stat">${s.played}</span></td>
               <td><span class="stat w">${s.w}</span></td>
