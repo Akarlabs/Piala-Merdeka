@@ -250,7 +250,7 @@
       html += `<div class="group-card">
         <div class="group-header"><div class="group-name">GRUP ${g}</div><div class="group-meta">${courtInfo}</div></div>
         <table class="standings-table">
-          <thead><tr><th>Pasangan</th><th>M</th><th>W</th><th>L</th><th>Pts</th></tr></thead>
+          <thead><tr><th>Pasangan</th><th>M</th><th>W</th><th>L</th></tr></thead>
           <tbody>${standings.map((s,i) => `
             <tr class="${rankClass[i]||''}">
               <td><span class="rank-num">${i+1}</span><span class="pair-name">${pairName(s.pair)}</span>${i===0&&s.w>0&&groupComplete?'<span class="lolos">LOLOS</span>':''}
@@ -258,7 +258,6 @@
               <td><span class="stat">${s.played}</span></td>
               <td><span class="stat w">${s.w}</span></td>
               <td><span class="stat l">${s.l}</span></td>
-              <td><span class="stat">${s.pts}</span></td>
             </tr>`).join('')}
           </tbody>
         </table>
